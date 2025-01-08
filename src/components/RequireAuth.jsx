@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 // custom route component to make sure private routes work based on roles
 // is used in App for UserDashboard and AdminDashboard
-function RequireAuth({ children, allowedRoles }) {
+export default function RequireAuth({ children, allowedRoles }) {
   const { authState, setAuthState } = useAuth();
   const [loading, setLoading] = useState(true);
 
@@ -59,5 +59,3 @@ function RequireAuth({ children, allowedRoles }) {
 
   return children;
 }
-
-export default RequireAuth;

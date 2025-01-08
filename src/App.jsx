@@ -1,22 +1,21 @@
+import "./index.css"
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+// import { AuthProvider } from "../context/AuthContext";
 import Login from "./components/Login";
 import UserDashboard from "./components/UserDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import Unauthorized from "./components/Unauthorized";
 import Home from "./components/Home";
 import RequireAuth from "./components/RequireAuth";
-import GlobalStyle from "./styles/GlobalStyle";
 
-function App() {
+export default function App() {
   return (
-    <AuthProvider>
-      <GlobalStyle />
+    // <AuthProvider>
       <div className="content">
         <Router>
           <Routes>
@@ -43,8 +42,6 @@ function App() {
           </Routes>
         </Router>
       </div>
-    </AuthProvider>
+    // </AuthProvider>
   );
 }
-
-export default App;
