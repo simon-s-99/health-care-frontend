@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-// import { AuthProvider } from "../context/AuthContext";
+import AuthProvider from "./context/AuthContext"
 import Login from "./components/Login";
 import UserDashboard from "./components/UserDashboard";
 import AdminDashboard from "./components/AdminDashboard";
@@ -15,7 +15,7 @@ import RequireAuth from "./components/RequireAuth";
 
 export default function App() {
   return (
-    // <AuthProvider>
+    <AuthProvider>
       <div className="content">
         <Router>
           <Routes>
@@ -42,6 +42,6 @@ export default function App() {
           </Routes>
         </Router>
       </div>
-    // </AuthProvider>
+    </AuthProvider>
   );
 }
