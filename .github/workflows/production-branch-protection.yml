@@ -1,0 +1,18 @@
+name: Production Branch Protection
+
+on:
+  pull_request:
+    branches:
+      - production
+
+jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch
+        run: |
+          if [[ ${GITHUB_HEAD_REF} != main ]]; 
+          then
+            echo "Error: Pull request must come from 'main' branch"
+            exit 1
+          fi
