@@ -6,6 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import AuthProvider from "./context/AuthContext"
+import Register from "./components/Register";
 import Login from "./components/Login";
 import UserDashboard from "./components/UserDashboard";
 import AdminDashboard from "./components/AdminDashboard";
@@ -19,6 +20,7 @@ export default function App() {
       <div className="content">
         <Router>
           <Routes>
+            <Route path ="register" elment={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route
