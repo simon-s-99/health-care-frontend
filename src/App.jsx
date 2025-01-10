@@ -20,7 +20,7 @@ export default function App() {
       <div className="content">
         <Router>
           <Routes>
-            <Route path ="register" elment={<Register />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route
