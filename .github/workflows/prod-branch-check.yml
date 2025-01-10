@@ -1,0 +1,19 @@
+name: check-branch
+
+on:
+  pull_request:
+    branches:
+      - production
+  workflow_dispatch:
+
+jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check-branch
+        run: |
+          if [[ ${GITHUB_HEAD_REF} != main ]]; 
+          then
+            echo "Error: Pull request must come from 'main' branch"
+            exit 1
+          fi

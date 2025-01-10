@@ -1,12 +1,3 @@
----
-name: Standard Pull Request
-about: Standard template for a PR.
-title: ''
-labels: ''
-assignees: ''
-
----
-
 ## Your checklist for this pull request
 
 - [ ] The code has been tested & works (i.e. no glaring bugs or hidden breaking changes). *If it does not explain why in description.*
