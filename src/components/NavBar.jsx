@@ -6,6 +6,7 @@ import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
 
+
 export default function NavBar() {
   const {
     authState: { user },
@@ -14,13 +15,13 @@ export default function NavBar() {
   const [isActive, setIsActive] = useState(false);
   const endContent = user ? (
     <p>
-      Welcome {user.name}, logged in as {isAdmin ? "caregiver" : "patient"}
+      Welcome {user.name}, logged in as {isAdmin ? "caregiver" : "patient"} {/* If user or admin, display "caregiver" or "patient" */}
     </p>
   ) : (
-    <Button variant="secondary" className="rounded-xl">
+    <Button variant="secondary" className="rounded-xl"> {/* Otherwise if not logged in, display a login button */}
       <a href="/login">Log in</a>
     </Button>
-  );
+  );endContent
 
   return (
     <nav className="flex flex-row justify-between uppercase tracking-wider">
@@ -34,7 +35,7 @@ export default function NavBar() {
             />
           </a>
         </li>
-        <li className="sm:visible invisible">
+        <li className="sm:visible invisible my-2">
           <a
             className="hover:text-blue-700"
             href={isAdmin ? "/schedule" : "/booking"}
@@ -42,14 +43,14 @@ export default function NavBar() {
             {isAdmin ? "Schedule" : "Booking"}
           </a>
         </li>
-        <li className="sm:visible invisible">
+        <li className="sm:visible invisible my-2">
           <a className="hover:text-blue-700" href="/dashboard">
             Dashboard
           </a>
         </li>
       </ul>
 
-      <span className="sm:inline hidden p-2">{endContent}</span>
+      <span className="sm:inline hidden m-2">{endContent}</span>
       <button
         className="sm:hidden inline z-10"
         onClick={() => setIsActive(!isActive)}
