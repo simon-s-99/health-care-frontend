@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
+import { NavLink } from "react-router-dom";
 
 
 export default function NavBar() {
@@ -19,7 +20,7 @@ export default function NavBar() {
     </p>
   ) : (
     <Button variant="secondary" className="rounded-xl"> {/* Otherwise if not logged in, display a login button */}
-      <a href="/login">Log in</a>
+      <NavLink to="/login">Log in</NavLink>
     </Button>
   );endContent
 
@@ -27,26 +28,26 @@ export default function NavBar() {
     <nav className="flex flex-row justify-between uppercase tracking-wider">
       <ul className="flex flex-row justify-between w-1/2 xl:w-1/4 *:p-2">
         <li className="z-10">
-          <a href="/">
+          <NavLink to="/">
             <img
               className="min-w-[50px] min-h-[50px] hover:scale-110"
               src={isAdmin ? doctorIcon : heartRateIcon}
               alt="Navigation icon"
             />
-          </a>
+          </NavLink>
         </li>
         <li className="sm:visible invisible my-2">
-          <a
+          <NavLink
             className="hover:text-blue-700"
-            href={isAdmin ? "/schedule" : "/booking"}
+            to={isAdmin ? "/schedule" : "/booking"}
           >
             {isAdmin ? "Schedule" : "Booking"}
-          </a>
+          </NavLink>
         </li>
         <li className="sm:visible invisible my-2">
-          <a className="hover:text-blue-700" href="/dashboard">
+          <NavLink className="hover:text-blue-700" to="/dashboard">
             Dashboard
-          </a>
+          </NavLink>
         </li>
       </ul>
 
@@ -65,17 +66,17 @@ export default function NavBar() {
       {isActive && (
         <ul className="bg-blue-400 absolute flex text-center flex-col w-full sm:hidden *:mt-10 pb-4">
           <li>
-            <a
+            <NavLink
               className="block w-full"
-              href={isAdmin ? "/schedule" : "/booking"}
+              to={isAdmin ? "/schedule" : "/booking"}
             >
               {isAdmin ? "Schedule" : "Booking"}
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a className="block w-full" href="/dashboard">
+            <NavLink className="block w-full" to="/dashboard">
               Dashboard
-            </a>
+            </NavLink>
           </li>
           <li>
             <span className="*:bg-transparent *:uppercase *:tracking-wider *:w-full *:text-yellow-300 *:hover:bg-transparent *:h-0">
