@@ -34,17 +34,16 @@ export default function Register() {
       const response = await axios.post(
         "http://localhost:5148/api/auth/register",
         {
-          Firstname: userDetails.firstname,
-          Lastname: userDetails.lastname,
-          Email: userDetails.email,
+          firstname: userDetails.firstname,
+          lastname: userDetails.lastname,
+          email: userDetails.email,
           Phonenumber: userDetails.phonenumber,
           username: userDetails.username,
           password: userDetails.password,
           roles: ["User"]
         },
       );
-      
-
+          
       console.log("Registration successful:", response.data);
       navigate("/login", { replace: true });
     } catch (error) {
