@@ -1,0 +1,18 @@
+# based on close stale issues by Github Actions official account
+# https://github.com/actions/stale
+name: comment-stale-prs
+
+on:
+  schedule:
+    - cron: '50 2 * * MON-FRI' # runs at 02:50 every night, monday-friday
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-pr-message: 'This PR is stale because it has been open for 2 days with no activity. Please review this PR as soon as possible.'
+          days-before-stale: 1
+          days-before-close: '-1' # never close an issue or pr
+          ignore-updates: 'true' # compare days-before-stale to created_at field instead of updated_at field
