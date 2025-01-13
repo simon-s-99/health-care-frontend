@@ -12,7 +12,9 @@ jobs:
     steps:
       - uses: actions/stale@v9
         with:
-          stale-pr-message: 'This PR is stale because it has been open for 1 days with no activity. Please review this PR as soon as possible.'
+          stale-pr-label: 'needs-review'
+          # close-pr-label: (default value: unset) # this should mean that the 'needs-review' label will be removed on certain activity
+          stale-pr-message: 'This PR is stale because it has been open for 1 day(s) with no activity. Please review this PR as soon as possible.'
           days-before-stale: 1
           days-before-close: '-1' # never close an issue or pr
           ignore-updates: 'true' # compare days-before-stale to created_at field instead of updated_at field
