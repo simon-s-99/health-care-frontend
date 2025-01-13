@@ -16,6 +16,10 @@ on:
 jobs:
   requireChecklist:
     runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+      
     steps:
       - uses: mheap/require-checklist-action@v2
         with:
