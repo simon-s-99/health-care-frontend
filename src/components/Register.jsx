@@ -18,6 +18,9 @@ export default function Register() {
   });
   const [error, setError] = useState("");
 
+// Updates the userDetails state with the input field's value.
+// This function is triggered whenever an input field changes.
+// It uses the "name" attribute of the input field to determine which property of the userDetails object to update.
   const handleInputChange = (e) => {
     setUserDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
