@@ -1,4 +1,6 @@
-const FeedbackList = () => {
+import React, {useState, useEffect} from "react";
+
+export default function FeedbackList() {
     const [feedback, setFeedback] = useState([]);
     const [comment, setComment] = useState("");
     const [appointmentId, setAppointmentId] = useState("");
