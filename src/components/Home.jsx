@@ -7,8 +7,6 @@ export default function Home() {
   return (
     <>
       <div>
-        <Button variant="default">Test</Button>
-        <Switch />
         <img src={Logo} />
         <h1>Health Care Appointment App</h1>
         <button>
