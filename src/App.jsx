@@ -12,6 +12,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import Unauthorized from "./components/Unauthorized";
 import Home from "./components/Home";
 import RequireAuth from "./components/RequireAuth";
+import FeedbackList from "./components/Feedback";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
       <div className="content">
         <Router>
           <Routes>
+          <Route path="/feedback" element={<FeedbackList />} />
             <Route path="/login" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route
