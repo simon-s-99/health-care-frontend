@@ -40,7 +40,7 @@ export default function Register() {
           firstname: userDetails.firstname,
           lastname: userDetails.lastname,
           email: userDetails.email,
-          Phonenumber: userDetails.phonenumber,
+          phonenumber: userDetails.phonenumber,
           username: userDetails.username,
           password: userDetails.password,
           roles: ["User"]
