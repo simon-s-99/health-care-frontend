@@ -1,0 +1,22 @@
+# Code copied from example in 
+# https://github.com/marketplace/actions/auto-author-assign
+
+# .github/workflows/auto-author-assign.yml
+name: Auto Author Assign
+
+on:
+  pull_request_target:
+    types: [ opened, reopened ]
+
+permissions:
+  pull-requests: write
+
+# This action automatically assigns the pull request author as an assignee.
+# The auto-author-assign action skips assigning the author when:
+#   -  Someone is already assigned as an assignee
+#   -  The author is a bot
+jobs:
+  assign-author:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: toshimaru/auto-author-assign@v2.1.1
