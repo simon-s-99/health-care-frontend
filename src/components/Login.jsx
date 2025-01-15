@@ -64,10 +64,11 @@ export default function Login() {
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                 Username
               </label>
               <Input
+                id="username"
                 name="username"
                 type="text"
                 value={credentials.username}
@@ -77,10 +78,11 @@ export default function Login() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <Input
+                id="password"
                 name="password"
                 type="password"
                 value={credentials.password}

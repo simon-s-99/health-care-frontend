@@ -50,8 +50,11 @@ export default function Register() {
       console.log("Registration successful:", response.data);
       navigate("/login", { replace: true });
     } catch (error) {
-      console.error("Registration failed:", error.response || error);
-      setError("Registration failed. Please try again.");
+      if (error.response) {
+        // Check the backend response for specific messages
+        const backendMessage = error.response.data.message;
+        setError(backendMessage || "Registration failed. Please try again.");
+      } 
     }
   };
 
@@ -65,10 +68,11 @@ export default function Register() {
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form className="space-y-4" onSubmit={handleRegister}>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor ="firstname" className="block text-sm font-medium text-gray-700">
                 First Name
               </label>
               <Input
+                id="firstname"
                 name="firstname"
                 type="text"
                 value={userDetails.firstname}
@@ -77,10 +81,11 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
                 Last Name
               </label>
               <Input
+                id="lastname"
                 name="lastname"
                 type="text"
                 value={userDetails.lastname}
@@ -89,10 +94,11 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email
               </label>
               <Input
+                id="email"
                 name="email"
                 type="email"
                 value={userDetails.email}
@@ -101,10 +107,11 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="phonenumber" className="block text-sm font-medium text-gray-700">
                 Phone Number
               </label>
               <Input
+                id="phonenumber"
                 name="phonenumber"
                 type="tel"
                 value={userDetails.phonenumber}
@@ -113,10 +120,11 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor ="username" className="block text-sm font-medium text-gray-700">
                 Username
               </label>
               <Input
+                id="username"
                 name="username"
                 type="text"
                 value={userDetails.username}
@@ -125,10 +133,11 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <Input
+                id="password"
                 name="password"
                 type="password"
                 value={userDetails.password}
@@ -137,10 +146,11 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                 Confirm Password
               </label>
               <Input
+                id="confirmPassword"
                 name="confirmPassword"
                 type="password"
                 value={userDetails.confirmPassword}
