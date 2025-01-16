@@ -13,7 +13,7 @@ import Unauthorized from "./components/Unauthorized";
 import Home from "./components/Home";
 import RequireAuth from "./components/RequireAuth";
 import NavBar from "./components/NavBar";
-import Booking from "./components/Booking"
+import BookingsPage from "./components/BookingsPage"
 
 export default function App() {
   return (
@@ -40,7 +40,7 @@ export default function App() {
                 </RequireAuth>
               }
             />
-            <Route path="/booking" element={<Booking />} />
+            <Route path="/booking" element={<BookingsPage />} />
             <Route path="/" element={<Home />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
