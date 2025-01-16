@@ -23,7 +23,7 @@ export default function BookingsPage() {
 
     setError("");
 
-    const patientId = "6788eb1d70d74886af01bc42"; //6787c0bdac13847d0e917f7b
+    const patientId = "6787c0bdac13847d0e917f7b";
     const caregiverId = "6787d1ac02047fbc901e65fd";
     const status = 1;
     const dateCopy = date;
@@ -48,14 +48,14 @@ export default function BookingsPage() {
       setError(e.response.data)
     }
   }
+  async function getUserAppointments() {
+    const { data } = await axios.get(
+      `http://localhost:5148/api/appointment/user?id=${"6787c0bdac13847d0e917f7b"}&isPatient=true`
+    );
+    setBookings(data);
+  }
 
   useEffect(() => {
-    async function getUserAppointments() {
-      const { data } = await axios.get(
-        `http://localhost:5148/api/appointment/user?id=${"6787c0bdac13847d0e917f7b"}&isPatient=true`
-      );
-      setBookings(data);
-    }
     getUserAppointments();
   }, []);
 
