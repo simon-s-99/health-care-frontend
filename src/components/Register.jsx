@@ -50,11 +50,10 @@ export default function Register() {
       console.log("Registration successful:", response.data);
       navigate("/login", { replace: true });
     } catch (error) {
+      
       if (error.response) {
-        // Check the backend response for specific messages
-        const backendMessage = error.response.data.message;
-        setError(backendMessage || "Registration failed. Please try again.");
-      } 
+        setError(error.response.data || "Registration failed. Please try again.");
+      }
     }
   };
 
