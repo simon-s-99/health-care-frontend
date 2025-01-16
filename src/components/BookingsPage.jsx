@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import BookingsList from "./BookingsList";
 import { useAuth } from "../hooks/useAuth";
+import { Button } from "./ui/button";
 
 export default function BookingsPage() {
   const currentDateTime = new Date(Date.now());
@@ -63,7 +64,7 @@ export default function BookingsPage() {
     <div className="flex flex-col justify-center items-center">
       {error && <span className="text-red-500">{error}</span>}
       <form onSubmit={handleSubmit}>
-        <label className="inline-flex gap-2 ">
+        <label className="inline-flex gap-2">
           Time
           <input
             className="border-[1px] border-black"
@@ -72,8 +73,9 @@ export default function BookingsPage() {
             onChange={(e) => setTime(e.target.value)}
           />
         </label>
-        <button type="submit">Submit</button>
+        <Button className="font-bold ml-8 bg-green-700" type="submit">Submit</Button>
         <Calendar
+        className="*:bg-white"
           mode="single"
           disabled={{ before: currentDateTime }}
           selected={date}
