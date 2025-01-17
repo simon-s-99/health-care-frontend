@@ -16,7 +16,7 @@ export default function FeedbackList() {
     const fetchFeedback = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/Feedback`
+          `http://localhost:5148/api/feedback`
         );
         setFeedback(response.data); // Update the feedback list with the fetched data
       } catch (err) {
@@ -37,11 +37,11 @@ export default function FeedbackList() {
     setError(null); // Clear any previous error messages
 
     try {
-      const newFeedback = { comment, appointmentId, patientId, rating };
+      const newFeedback = { appointmentId, patientId, comment, rating};
 
-      // Make a POST request to submit new feedback
+      // Make a POST request to submit new feedback. The headers tells the backend what kind of data to expect in the request body
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/Feedback`,
+        `http://localhost:5148/api/feedback`,
         newFeedback,
         { headers: { "Content-Type": "application/json" } }
       );
