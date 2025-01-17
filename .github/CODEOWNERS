@@ -1,0 +1,8 @@
+# This line sets these users as owners of all files in the repo.
+# When a file that they own is modified by a PR they will be 
+# automatically requested for review when said PR is opened.
+* @simon-s-99 @Samuel-Loof @adamkumlin @gabrielwedin
+
+# This line sets this user as owner of this file meaning they
+# are the administrator & moderator of this file. 
+/.github/CODEOWNERS @simon-s-99

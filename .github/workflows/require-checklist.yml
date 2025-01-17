@@ -1,0 +1,28 @@
+# Copied from enforce-pr-checklist-action
+# https://github.com/upbound/enforce-pr-checklist-action
+
+# A GitHub Action that fails a pull request if there are any incomplete checklists in 
+# the issue body and/or comments. The action is triggered when a pull request is opened 
+# or its first comment (the main pull request message) is edited.
+
+name: Require Checklist
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+  issues:
+    types: [opened, edited, deleted]
+
+jobs:
+  requireChecklist:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+
+    steps:
+      - uses: mheap/require-checklist-action@v2
+        with:
+          requireChecklist: false # If this is true and there are no checklists detected, the action will fail
