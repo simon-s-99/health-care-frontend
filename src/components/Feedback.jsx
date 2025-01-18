@@ -3,12 +3,12 @@ import axios from "axios";
 
 export default function FeedbackList() {
   // State variables to store and manage feedback, form data, and application state.
-  const [feedback, setFeedback] = useState([]); // Stores list of feedback
-  const [comment, setComment] = useState(""); // Stores the user's comment input
-  const [rating, setRating] = useState(0); // Stores the user's selected rating
-  const [appointmentId, setAppointmentId] = useState(""); // Stores the Appointment ID
-  const [patientId, setPatientId] = useState(""); // Stores the Patient ID
-  const [error, setError] = useState(null); // Error messages
+  const [feedback, setFeedback] = useState([]); 
+  const [comment, setComment] = useState(""); 
+  const [rating, setRating] = useState(0); 
+  const [appointmentId, setAppointmentId] = useState(""); 
+  const [patientId, setPatientId] = useState("");
+  const [error, setError] = useState(null); 
   const [loading, setLoading] = useState(false); // Loading state while fetching data
   const [showFeedback, setShowFeedback] = useState(false); // Toggles visibility of feedback list
   const [page, setPage] = useState(1); // Tracks the current page for pagination
@@ -60,7 +60,7 @@ export default function FeedbackList() {
       // Add the new feedback to the top of the existing list
       setFeedback((prevFeedback) => [response.data, ...prevFeedback]);
 
-      // Reset form inputs
+      // Resets form inputs
       setComment("");
       setRating(0);
       setAppointmentId("");
@@ -127,7 +127,7 @@ export default function FeedbackList() {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           className="w-full p-3 border rounded"
-          maxLength={500} // Enforce backend validation limit for comment length
+          maxLength={500} 
           required
         />
 
@@ -158,9 +158,14 @@ export default function FeedbackList() {
               {feedback.map((item) => (
                 <li key={item.id} className="border p-3 rounded">
                   <p>{item.comment}</p>
-                  <p className="text-gray-500">Rating: {item.rating} ★</p>
-                  <p className="text-gray-500">Patient ID: {item.patientId}</p>
-                  <p className="text-gray-500">Appointment ID: {item.appointmentId}</p>
+                  <p className="text-gray-500 flex items-center">
+                    {/* Display the rating as stars */}
+                    {[...Array(item.rating)].map((_, starIndex) => (
+                      <span key={starIndex} className="text-yellow-400 text-xl">
+                        ★
+                      </span>
+                    ))}
+                  </p>
                 </li>
               ))}
             </ul>
