@@ -15,8 +15,28 @@ import Unauthorized from "./components/Unauthorized";
 import Home from "./components/Home";
 import RequireAuth from "./components/RequireAuth";
 import NavBar from "./components/NavBar";
-
+import { useEffect } from "react";
+import axios from "axios";
 export default function App() {
+
+  async function getUserData() {
+    const token = document.cookie.slice(6);
+    const data = await axios.get("http://localhost:5148/api/auth/check", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    console.log(data)
+    // setAuthState({
+    //   isAuthenticated: data.isAuthenticated,
+    //   user: data.user,
+    //   roles: data.roles
+    // })
+  }
+
+  useEffect(() => {
+    getUserData();
+  }, [])
   return (
     <AuthProvider>
       <div className="content">
