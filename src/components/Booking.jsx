@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function Booking({ booking, isAdmin }) {
+  console.log(booking)
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -23,15 +24,15 @@ export default function Booking({ booking, isAdmin }) {
     getUserData();
     const splitDateTime = booking.dateTime.split("T");
     const formattedDate = splitDateTime.shift();
-    const formattedTime = splitDateTime.pop().slice(0, 5);
+    const formattedTime = splitDateTime.pop();
     setDate(formattedDate)
     setTime(formattedTime);
   }, []);
 
   return (
-    <div className="flex flex-row justify-start w-full *:w-1/3 border-[1px] border-black">
+    <div className="flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-blue-300 py-4">
       <span>{name}</span>
-      <span className="border-l-[1px] border-r-[1px] border-black">{date}</span>
+      <span>{date}</span>
       <span>{time}</span>
     </div>
   );

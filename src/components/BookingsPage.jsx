@@ -16,6 +16,7 @@ export default function BookingsPage() {
   const [error, setError] = useState("");
   const [bookings, setBookings] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function book(patientId, caregiverId, dateTime) {
     setError("");
@@ -24,13 +25,14 @@ export default function BookingsPage() {
       setError("Invalid date.");
       return;
     }
+    const utcDateTime = new Date(dateTime).toISOString();
 
     try {
       await axios.post("http://localhost:5148/api/appointment", {
         PatientId: patientId,
         CaregiverId: caregiverId,
         Status: 1,
-        DateTime: dateTime,
+        DateTime: utcDateTime,
       });
     } catch (e) {
       setError(e.response.data);
@@ -41,8 +43,26 @@ export default function BookingsPage() {
     const { data } = await axios.get(
       `http://localhost:5148/api/appointment/user?id=${"6787c0bdac13847d0e917f7b"}&isPatient=true&date=${date}`
     );
-    console.log(data)
-    setBookings(data);
+    const formattedData = [];
+
+    for (let i = 0; i < data.length; i++) {
+      const dateTimeSwedish = new Date(data[i].dateTime).toLocaleDateString(
+        "sv-SE",
+        {
+          timeZone: "Europe/Stockholm",
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+      );
+      const entry = {
+        id: data[i].id,
+        caregiverId: data[i].caregiverId,
+        patientId: data[i].patientId,
+        dateTime: dateTimeSwedish,
+      };
+      formattedData.push(entry);
+    }
+    setBookings(formattedData);
   }
 
   async function getAvailableTimesForDate() {
@@ -61,25 +81,50 @@ export default function BookingsPage() {
         const time = new Date(data[i].availableSlots[j])
           .toLocaleString("sv-SE")
           .split(" ")
-          .pop().slice(0, 5);
+          .pop()
+          .slice(0, 5);
         entry.availableSlots.push(time);
       }
-      formattedData.push(entry)
+      formattedData.push(entry);
     }
     setAvailableTimes(formattedData);
   }
 
-
   useEffect(() => {
     if (date) {
+      setIsLoading(true);
       getAvailableTimesForDate();
       getUserAppointmentsForDate();
+      setIsLoading(false);
     }
   }, [date]);
 
   function handleSetDate(e) {
     const formattedDate = e.toLocaleDateString("sv-SE");
     setDate(formattedDate);
+  }
+
+  function generateSchedule() {
+    let result;
+
+    if (isLoading) {
+      result = <h2>Loading...</h2>;
+    } else if (availableTimes.length > 0 || (bookings.length > 0 && date)) {
+      result = (
+        <BookingsList
+          book={book}
+          bookings={bookings}
+          availableTimes={availableTimes}
+          isAdmin={isAdmin}
+          date={date}
+        />
+      );
+    } else if (date) {
+      result = <h2>No bookings for {date}</h2>;
+    } else {
+      result = <h2>Choose a date to see bookings</h2>;
+    }
+    return result;
   }
   return (
     <div className="flex flex-col justify-center items-center">
@@ -91,17 +136,8 @@ export default function BookingsPage() {
         disabled={{ before: currentDateTime }}
         onSelect={handleSetDate}
       />
-      {availableTimes.length > 0 || bookings.length > 0 && date ? (
-        <BookingsList
-        book={book}
-          bookings={bookings}
-          availableTimes={availableTimes}
-          isAdmin={isAdmin}
-          date={date}
-        />
-      ) : (
-        <h2>No available times for {date}</h2>
-      )}
+
+      {generateSchedule()}
     </div>
   );
 }

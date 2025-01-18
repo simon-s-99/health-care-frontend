@@ -5,17 +5,27 @@ import Booking from "./Booking";
 
 export default function BookingSlot({ time, isAvailable, book, date, caregiverId }) {
 
+  const [caregiver, setCaregiver] = useState(null);
+
+  async function getCaregiver() {
+    const {data} = await axios.get(`http://localhost:5148/api/user?id=${caregiverId}`)
+    setCaregiver(data);
+  }
+  useEffect(() => {
+    if (caregiverId) {
+      getCaregiver();
+    }
+  }, [])
   if (isAvailable) {
     const dateTime = date + "T" + time;
-    console.log(dateTime)
     return (
-      <button onClick={() => book("6787c0bdac13847d0e917f7b", caregiverId, dateTime)} className="border-l-[1px] block h-[7%] w-full border-black my-2 bg-green-300">
-        Book
+      <button onClick={() => book("6787c0bdac13847d0e917f7b", caregiverId, dateTime)} className="flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-green-300 py-4">
+        <span>Available, click to book</span><span>{date} at {time}</span><span>{caregiver && `Caregiver: ${caregiver.firstname} ${caregiver.lastname}`}</span>
       </button>
     );
   }
   return (
-    <div className="border-l-[1px] block h-[7%] w-full border-black my-2 bg-red-300">
+    <div className="border-l-[1px] block h-[7%] w-full border-black my-2">
     </div>
   );
 }

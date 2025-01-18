@@ -4,7 +4,14 @@ import { useEffect, useState } from "react";
 import Booking from "./Booking";
 import BookingSlot from "./BookingSlot";
 
-export default function BookingsList({ availableTimes, isAdmin, bookings, book, date }) {
+export default function BookingsList({
+  availableTimes,
+  isAdmin,
+  bookings,
+  book,
+  date,
+}) {
+
   const timeSlots = [
     "08:00",
     "09:00",
@@ -39,11 +46,13 @@ export default function BookingsList({ availableTimes, isAdmin, bookings, book, 
 
   function generateBookingSlotsForExistingBookings() {
     const bookingSlots = timeSlotElements;
-    let counter = 13;
+    let counter = 13; // Start at 13 after the initial 12 in timeSlotElements
     for (let i = 0; i < bookings.length; i++) {
+      const currentBooking = bookings[i];
       for (let j = 0; j < timeSlots.length; j++) {
-        if (bookings[i].dateTime.includes(timeSlots[j])) {
-          bookingSlots[j] = <Booking key={counter} booking={bookings[i]} />;
+      const currentTimeSlot = timeSlots[j];
+        if (currentBooking.dateTime.includes(currentTimeSlot)) {
+          bookingSlots[j] = <Booking key={counter} booking={currentBooking} />;
         }
       }
       counter++;
@@ -53,29 +62,40 @@ export default function BookingsList({ availableTimes, isAdmin, bookings, book, 
 
   function generateBookingSlotsForAvailableTimes(bookingSlots, counter) {
     for (let i = 0; i < availableTimes.length; i++) {
-      for (let j = 0; j < availableTimes[i].availableSlots.length; j++) {
+      const currentAvailableTime = availableTimes[i];
+      for (let j = 0; j < currentAvailableTime.availableSlots.length; j++) {
+        const currentAvailableSlot = currentAvailableTime.availableSlots[j];
         for (let k = 0; k < timeSlots.length; k++) {
-          if (availableTimes[i].availableSlots[j] === timeSlots[k]) {
-            bookingSlots[k] = <BookingSlot key={counter} isAvailable={true} book={book} date={date} time={timeSlots[k]} caregiverId={availableTimes[i].caregiverId} />;
+          const currentTimeSlot = timeSlots[k];
+          if (currentAvailableSlot === currentTimeSlot) {
+            bookingSlots[k] = (
+              <BookingSlot
+                key={counter}
+                isAvailable={true}
+                book={book}
+                date={date}
+                time={currentAvailableSlot}
+                caregiverId={currentAvailableTime.caregiverId}
+              />
+            );
           }
         }
-        counter++;
       }
-      return bookingSlots;
+      counter++;
     }
+    return bookingSlots;
   }
   function generateBookingSlots() {
     const { bookingSlots, counter } = generateBookingSlotsForExistingBookings();
-    const availableTimeElements = generateBookingSlotsForAvailableTimes(
+    const completeBookingSlots = generateBookingSlotsForAvailableTimes(
       bookingSlots,
       counter
     );
-
-    return availableTimeElements;
+    return completeBookingSlots;
   }
   return (
     <div className="flex flex-row text-center w-full border-2">
-      <ul className="w-fit *:h-[7%] *:my-2">
+      <ul className="w-fit *:h-[7%] *:my-2 *:py-4">
         <li>08:00</li>
         <li>09:00</li>
         <li>10:00</li>
