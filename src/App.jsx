@@ -15,8 +15,6 @@ import Unauthorized from "./components/Unauthorized";
 import Home from "./components/Home";
 import RequireAuth from "./components/RequireAuth";
 import NavBar from "./components/NavBar";
-import { useEffect } from "react";
-import axios from "axios";
 export default function App() {
   return (
     <AuthProvider>
