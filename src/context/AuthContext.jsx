@@ -12,24 +12,11 @@ export default function AuthProvider({ children }) {
   });
 
   async function getUserData() {
-    axios.interceptors.request.use(
-      (response) => {
-        return response;
-      },
-      (error) => {
-        if (error.response && error.response.status === 401) {
-          return Promise.reject("ee");
-        }
-
-        return Promise.reject(error);
-      }
-    );
-
     axios
       .get("http://localhost:5148/api/auth/check", {
         withCredentials: true,
       })
-      .then((res) => {
+      .then((res) => { // If 200, set auth state
         const data = res.data;
         setAuthState({
           isAuthenticated: data.message === "Authenticated",
@@ -39,9 +26,9 @@ export default function AuthProvider({ children }) {
         });
       })
       .catch((error) => {
-        if (error.response && error.response.status === 401) {
+        if (error.response && error.response.status === 401) { // If 404 do not print an error
           console.log("Unauthorized. Please log in.");
-        } else {
+        } else { // On other errors, print the error message
           console.log("Error: ", error);
         }
       });

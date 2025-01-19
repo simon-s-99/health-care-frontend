@@ -42,8 +42,6 @@ export default function Login() {
         roles: roles,
       });
 
-
-
       if (roles.includes("Admin")) {
         console.log("admin role");
         navigate("/admin/dashboard", { replace: true });
