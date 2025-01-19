@@ -50,7 +50,6 @@ export default function FeedbackList() {
     try {
       const newFeedback = { appointmentId, patientId, comment, rating }; // Feedback payload
 
-      // Send feedback data to the backend
       const response = await axios.post(
         `http://localhost:5148/api/feedback`,
         newFeedback,
@@ -66,7 +65,7 @@ export default function FeedbackList() {
       setAppointmentId("");
       setPatientId("");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create feedback"); // Show error if the submission fails
+      setError(err.response?.data?.message || "Failed to create feedback"); 
     }
   };
 
