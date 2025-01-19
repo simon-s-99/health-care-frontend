@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
-  const { authState, setAuthState } = useAuth();
+  const { setAuthState } = useAuth();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     username: "",
@@ -58,7 +58,6 @@ export default function Login() {
   };
 
   return (
-    <AuthContext.Provider value={{authState, setAuthState}}>
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
       <Card className="w-full max-w-md">
         <CardHeader>
@@ -102,6 +101,5 @@ export default function Login() {
         </CardContent>
       </Card>
     </div>
-    </AuthContext.Provider>
   );
 }

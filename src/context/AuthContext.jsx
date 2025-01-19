@@ -12,20 +12,45 @@ export default function AuthProvider({ children }) {
   });
 
   async function getUserData() {
-    const {data} = await axios.get("http://localhost:5148/api/auth/check", {
-      withCredentials: true,
-    });
-    setAuthState({
-      isAuthenticated: data.message === "Authenticated",
-      userId: data.userId,
-      username: data.username,
-      roles: data.roles,
-    });
+    axios.interceptors.request.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          return Promise.reject("ee");
+        }
+
+        return Promise.reject(error);
+      }
+    );
+
+    axios
+      .get("http://localhost:5148/api/auth/check", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        const data = res.data;
+        setAuthState({
+          isAuthenticated: data.message === "Authenticated",
+          userId: data.userId,
+          username: data.username,
+          roles: data.roles,
+        });
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          console.log("Unauthorized. Please log in.");
+        } else {
+          console.log("Error: ", error);
+        }
+      });
   }
 
   useEffect(() => {
-    getUserData();
+    if (!authState.isAuthenticated) getUserData();
   }, []);
+
   return (
     <AuthContext.Provider value={{ authState, setAuthState }}>
       {children}
