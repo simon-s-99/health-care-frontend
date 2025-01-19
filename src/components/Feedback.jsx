@@ -77,7 +77,7 @@ export default function FeedbackList() {
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md">
       {/* Title for the feedback list */}
-      <h2 className="text-xl font-semibold text-center mb-4">Feedback</h2>
+      <h2 className="text-xl font-semibold text-center mb-4">Share your experience</h2>
 
       {/* Display error messages */}
       {error && <p className="text-red-500 text-center">{error}</p>}
@@ -132,7 +132,7 @@ export default function FeedbackList() {
 
         {/* Submit button */}
         <button className="w-full bg-blue-500 text-white p-2 rounded">
-          Submit Feedback
+          Submit
         </button>
       </form>
 
