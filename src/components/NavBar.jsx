@@ -7,23 +7,21 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 
-
 export default function NavBar() {
-  const {
-    authState: { user },
-  } = useAuth();
-  const isAdmin = user && user.roles.includes("Admin");
+  const { authState } = useAuth();
+  const isAdmin = authState && authState.roles?.includes("Admin");
   const [isActive, setIsActive] = useState(false);
-  const endContent = user ? (
+  const endContent = authState.isAuthenticated ? (
     <p>
-      Welcome {user.name}, logged in as {isAdmin ? "caregiver" : "patient"} {/* If user or admin, display "caregiver" or "patient" */}
+      Welcome {authState.username}, logged in as {isAdmin ? "caregiver" : "patient"}
+      {/* If user or admin, display "caregiver" or "patient" */}
     </p>
   ) : (
-    <Button variant="secondary" className="rounded-xl"> {/* Otherwise if not logged in, display a login button */}
+    <Button variant="secondary" className="rounded-xl">
+      {/* Otherwise if not logged in, display a login button */}
       <NavLink to="/login">Log in</NavLink>
     </Button>
-  );endContent
-
+  );
   return (
     <nav className="flex flex-row justify-between uppercase tracking-wider">
       <ul className="flex flex-row justify-between w-1/2 xl:w-1/4 *:p-2">
