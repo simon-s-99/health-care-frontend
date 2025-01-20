@@ -7,17 +7,15 @@ import { useAuth } from "../hooks/useAuth";
 export default function BookingsPage() {
   const currentDateTime = new Date(Date.now());
 
-  const {
-    authState: { user },
-  } = useAuth();
-  const isAdmin = user && user.roles.includes("Admin");
+  const { authState } = useAuth();
+  const isAdmin = authState.roles.includes("Admin");
 
   const [date, setDate] = useState(null);
   const [error, setError] = useState("");
   const [bookings, setBookings] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [showConfirmationMessage, setShowConfirmationMessage] = useState(false);
   async function book(patientId, caregiverId, dateTime) {
     setError("");
 
@@ -34,17 +32,17 @@ export default function BookingsPage() {
         Status: 1,
         DateTime: utcDateTime,
       });
+      setShowConfirmationMessage("Booked!")
     } catch (e) {
       setError(e.response.data);
     }
   }
 
   async function getUserAppointmentsForDate() {
-    const { data } = await axios.get(
-      `http://localhost:5148/api/appointment/user?id=${"6787c0bdac13847d0e917f7b"}&isPatient=true&date=${date}`
+    const {data} = await axios.get(
+      `http://localhost:5148/api/appointment/user?id=${authState.userId}&isPatient=true&date=${date}`
     );
     const formattedData = [];
-
     for (let i = 0; i < data.length; i++) {
       const dateTimeSwedish = new Date(data[i].dateTime).toLocaleDateString(
         "sv-SE",
@@ -117,6 +115,7 @@ export default function BookingsPage() {
           availableTimes={availableTimes}
           isAdmin={isAdmin}
           date={date}
+          showConfirmationMessage={showConfirmationMessage}
         />
       );
     } else if (date) {

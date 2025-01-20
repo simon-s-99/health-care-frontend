@@ -1,9 +1,7 @@
-import { Calendar } from "@/components/ui/calendar";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function Booking({ booking, isAdmin }) {
-  console.log(booking)
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -17,12 +15,12 @@ export default function Booking({ booking, isAdmin }) {
       );
       setName(`${data.firstname} ${data.lastname}`);
     } catch (e) {
-      console.log(e.response.data);
+      console.log(e);
     }
   }
   useEffect(() => {
     getUserData();
-    const splitDateTime = booking.dateTime.split("T");
+    const splitDateTime = booking.dateTime.split(" ");
     const formattedDate = splitDateTime.shift();
     const formattedTime = splitDateTime.pop();
     setDate(formattedDate)
@@ -30,7 +28,7 @@ export default function Booking({ booking, isAdmin }) {
   }, []);
 
   return (
-    <div className="flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-blue-300 py-4">
+    <div className="flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-blue-300 py-4 my-2">
       <span>{name}</span>
       <span>{date}</span>
       <span>{time}</span>

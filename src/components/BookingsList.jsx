@@ -10,8 +10,8 @@ export default function BookingsList({
   bookings,
   book,
   date,
+  showConfirmationMessage
 }) {
-
   const timeSlots = [
     "08:00",
     "09:00",
@@ -44,13 +44,19 @@ export default function BookingsList({
     <BookingSlot key={12} isAvailable={false} time={"20:00"} />,
   ];
 
+  const dateHeading = new Date(date).toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
   function generateBookingSlotsForExistingBookings() {
     const bookingSlots = timeSlotElements;
     let counter = 13; // Start at 13 after the initial 12 in timeSlotElements
     for (let i = 0; i < bookings.length; i++) {
       const currentBooking = bookings[i];
       for (let j = 0; j < timeSlots.length; j++) {
-      const currentTimeSlot = timeSlots[j];
+        const currentTimeSlot = timeSlots[j];
         if (currentBooking.dateTime.includes(currentTimeSlot)) {
           bookingSlots[j] = <Booking key={counter} booking={currentBooking} />;
         }
@@ -76,6 +82,7 @@ export default function BookingsList({
                 date={date}
                 time={currentAvailableSlot}
                 caregiverId={currentAvailableTime.caregiverId}
+                showConfirmationMessage={showConfirmationMessage}
               />
             );
           }
@@ -94,23 +101,26 @@ export default function BookingsList({
     return completeBookingSlots;
   }
   return (
-    <div className="flex flex-row text-center w-full border-2">
-      <ul className="w-fit *:h-[7%] *:my-2 *:py-4">
-        <li>08:00</li>
-        <li>09:00</li>
-        <li>10:00</li>
-        <li>11:00</li>
-        <li>12:00</li>
-        <li>13:00</li>
-        <li>14:00</li>
-        <li>15:00</li>
-        <li>16:00</li>
-        <li>17:00</li>
-        <li>18:00</li>
-        <li>19:00</li>
-        <li>20:00</li>
-      </ul>
-      <div className="w-full">{generateBookingSlots()}</div>
+    <div className="flex flex-col w-full h-full px-4">
+      <h2 className="text-xl text-center font-bold">{dateHeading}</h2>
+      <div className="flex flex-row text-center">
+        <ul className="w-fit *:h-[7%] *:my-2 *:py-4 *:mr-2">
+          <li>08:00</li>
+          <li>09:00</li>
+          <li>10:00</li>
+          <li>11:00</li>
+          <li>12:00</li>
+          <li>13:00</li>
+          <li>14:00</li>
+          <li>15:00</li>
+          <li>16:00</li>
+          <li>17:00</li>
+          <li>18:00</li>
+          <li>19:00</li>
+          <li>20:00</li>
+        </ul>
+        <div className="w-full">{generateBookingSlots()}</div>
+      </div>
     </div>
   );
 }
