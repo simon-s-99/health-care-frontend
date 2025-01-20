@@ -15,33 +15,45 @@ export default function FeedbackList() {
   const [hasMore, setHasMore] = useState(true); // Determines if there is more feedback to fetch
 
   // Fetch feedback data with pagination
-  const fetchFeedback = async () => {
+  const fetchFeedback = async (reset = false) => {
+    if (reset) {
+      // Reset feedback and related states
+      setFeedback([]);
+      setPage(1);
+      setHasMore(true);
+    }
+
     setLoading(true); // Show the loading spinner while fetching data
     try {
       const response = await axios.get(
-        `http://localhost:5148/api/feedback?page=${page}&pageSize=5`
+        `http://localhost:5148/api/feedback?page=${reset ? 1 : page}&pageSize=5`
       );
 
       if (response.data.length === 0) {
         setHasMore(false); // Stop fetching if no more feedback is available
       } else {
-        setFeedback((prevFeedback) => [...prevFeedback, ...response.data]); // Append new feedback to the list
+        const sortedFeedback = response.data.reverse(); // Reverse for newest first
+        setFeedback((prevFeedback) =>
+          reset ? sortedFeedback : [...prevFeedback, ...sortedFeedback]
+        );
         setPage((prevPage) => prevPage + 1); // Increment the page number
       }
     } catch (err) {
-      setError("Failed to fetch feedback"); 
-      console.log(err);
+      setError("Failed to fetch feedback");
+      console.error(err); // Log the error for debugging
     } finally {
       setLoading(false); // Stop the loading spinner after fetching
     }
   };
 
-  // Fetch feedback only when the feedback list is toggled open
-  useEffect(() => {
-    if (showFeedback && feedback.length === 0) {
-      fetchFeedback();
+  // Handle toggling of feedback visibility
+  const toggleFeedback = () => {
+    if (!showFeedback) {
+      // Reset feedback and fetch new data when showing reviews
+      fetchFeedback(true);
     }
-  }, [showFeedback]); // Dependency ensures this only runs when `showFeedback` changes
+    setShowFeedback((prev) => !prev);
+  };
 
   // Handle form submission for submitting feedback
   const handleSubmit = async (e) => {
@@ -145,7 +157,7 @@ export default function FeedbackList() {
 
       {/* Show feedback list toggle button */}
       <button
-        onClick={() => setShowFeedback((prev) => !prev)}
+        onClick={toggleFeedback}
         className="mt-4 w-full bg-gray-500 text-white p-2 rounded"
       >
         {showFeedback ? "Hide Reviews" : "Show Reviews"}
@@ -179,7 +191,7 @@ export default function FeedbackList() {
           {/* Button to load more feedback */}
           {hasMore && !loading && (
             <button
-              onClick={fetchFeedback}
+              onClick={() => fetchFeedback(false)}
               className="w-full bg-blue-500 text-white p-2 rounded"
             >
               Load More Reviews
