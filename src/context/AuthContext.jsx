@@ -26,9 +26,7 @@ export default function AuthProvider({ children }) {
         });
       })
       .catch((error) => {
-        if (error.response && error.response.status === 401) { // If 404 do not print an error
-          console.log("Unauthorized. Please log in.");
-        } else { // On other errors, print the error message
+        if (error.response && error.response.status !== 401) { // If 404 do not print an error
           console.log("Error: ", error);
         }
       });
