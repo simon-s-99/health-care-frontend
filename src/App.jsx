@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import AuthProvider from "./context/AuthContext"
+import AuthProvider from "./context/AuthContext";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import UserDashboard from "./components/UserDashboard";
@@ -15,7 +15,6 @@ import Unauthorized from "./components/Unauthorized";
 import Home from "./components/Home";
 import RequireAuth from "./components/RequireAuth";
 import NavBar from "./components/NavBar";
-
 export default function App() {
   return (
     <AuthProvider>
