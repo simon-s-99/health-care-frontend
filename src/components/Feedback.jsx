@@ -3,12 +3,12 @@ import axios from "axios";
 
 export default function FeedbackList() {
   // State variables to store and manage feedback, form data, and application state.
-  const [feedback, setFeedback] = useState([]); 
-  const [comment, setComment] = useState(""); 
-  const [rating, setRating] = useState(0); 
-  const [appointmentId, setAppointmentId] = useState(""); 
+  const [feedback, setFeedback] = useState([]);
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(0);
+  const [appointmentId, setAppointmentId] = useState("");
   const [patientId, setPatientId] = useState("");
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); // Loading state while fetching data
   const [showFeedback, setShowFeedback] = useState(false); // Toggles visibility of feedback list
   const [page, setPage] = useState(1); // Tracks the current page for pagination
@@ -29,7 +29,8 @@ export default function FeedbackList() {
         setPage((prevPage) => prevPage + 1); // Increment the page number
       }
     } catch (err) {
-      setError("Failed to fetch feedback"); // Show error if the fetch fails
+      setError("Failed to fetch feedback"); 
+      console.log(err);
     } finally {
       setLoading(false); // Stop the loading spinner after fetching
     }
@@ -65,7 +66,7 @@ export default function FeedbackList() {
       setAppointmentId("");
       setPatientId("");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create feedback"); 
+      setError(err.response?.data?.message || "Failed to create feedback");
     }
   };
 
@@ -101,34 +102,40 @@ export default function FeedbackList() {
         </div>
 
         {/* Appointment ID input field */}
-        <input
-          type="text"
-          placeholder="Enter Appointment ID"
-          value={appointmentId}
-          onChange={(e) => setAppointmentId(e.target.value)}
-          className="w-full p-2 border rounded"
-          required
-        />
+        <label className="block">
+          <input
+            type="text"
+            placeholder="Enter Appointment ID"
+            value={appointmentId}
+            onChange={(e) => setAppointmentId(e.target.value)}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </label>
 
         {/* Patient ID input field */}
-        <input
-          type="text"
-          placeholder="Enter Patient ID"
-          value={patientId}
-          onChange={(e) => setPatientId(e.target.value)}
-          className="w-full p-2 border rounded"
-          required
-        />
+        <label className="block">
+          <input
+            type="text"
+            placeholder="Enter Patient ID"
+            value={patientId}
+            onChange={(e) => setPatientId(e.target.value)}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </label>
 
         {/* Comment input field */}
-        <textarea
-          placeholder="Write your feedback here..."
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          className="w-full p-3 border rounded"
-          maxLength={500} 
-          required
-        />
+        <label className="block">
+          <textarea
+            placeholder="Write your feedback here..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className="w-full p-3 border rounded"
+            maxLength={500}
+            required
+          />
+        </label>
 
         {/* Submit button */}
         <button className="w-full bg-blue-500 text-white p-2 rounded">
@@ -169,7 +176,6 @@ export default function FeedbackList() {
               ))}
             </ul>
           )}
-
           {/* Button to load more feedback */}
           {hasMore && !loading && (
             <button
