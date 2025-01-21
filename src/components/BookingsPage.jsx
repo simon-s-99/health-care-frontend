@@ -8,14 +8,13 @@ export default function BookingsPage() {
   const currentDateTime = new Date(Date.now());
 
   const { authState } = useAuth();
-  const isAdmin = authState.roles.includes("Admin");
-
   const [date, setDate] = useState(null);
   const [error, setError] = useState("");
   const [bookings, setBookings] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmationMessage, setShowConfirmationMessage] = useState(false);
+
   async function book(patientId, caregiverId, dateTime) {
     setError("");
 
@@ -23,6 +22,8 @@ export default function BookingsPage() {
       setError("Invalid date.");
       return;
     }
+
+    // Convert to UTC
     const utcDateTime = new Date(dateTime).toISOString();
 
     try {
@@ -76,7 +77,7 @@ export default function BookingsPage() {
         availableSlots: [],
       };
       for (let j = 0; j < data[0].availableSlots.length; j++) {
-        const time = new Date(data[i].availableSlots[j])
+        const time = new Date(data[i].availableSlots[j]) // Get the time exclusively
           .toLocaleString("sv-SE")
           .split(" ")
           .pop()
@@ -113,7 +114,6 @@ export default function BookingsPage() {
           book={book}
           bookings={bookings}
           availableTimes={availableTimes}
-          isAdmin={isAdmin}
           date={date}
           showConfirmationMessage={showConfirmationMessage}
         />
@@ -121,7 +121,7 @@ export default function BookingsPage() {
     } else if (date) {
       result = <h2>No bookings for {date}</h2>;
     } else {
-      result = <h2>Choose a date to see bookings</h2>;
+      result = <h2>Select a date to see bookings</h2>;
     }
     return result;
   }

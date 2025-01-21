@@ -1,12 +1,8 @@
-import { Calendar } from "@/components/ui/calendar";
-import axios from "axios";
-import { useEffect, useState } from "react";
 import Booking from "./Booking";
 import BookingSlot from "./BookingSlot";
 
 export default function BookingsList({
   availableTimes,
-  isAdmin,
   bookings,
   book,
   date,
@@ -50,15 +46,18 @@ export default function BookingsList({
     month: "long",
     day: "numeric",
   });
+  
   function generateBookingSlotsForExistingBookings() {
     const bookingSlots = timeSlotElements;
     let counter = 13; // Start at 13 after the initial 12 in timeSlotElements
+
+    // Loop through each booking and time slot, if the times match, add the booking to the respective time slot
     for (let i = 0; i < bookings.length; i++) {
       const currentBooking = bookings[i];
       for (let j = 0; j < timeSlots.length; j++) {
         const currentTimeSlot = timeSlots[j];
         if (currentBooking.dateTime.includes(currentTimeSlot)) {
-          bookingSlots[j] = <Booking key={counter} booking={currentBooking} />;
+          bookingSlots[j] = <Booking key={counter} booking={currentBooking}/>;
         }
       }
       counter++;
@@ -67,13 +66,14 @@ export default function BookingsList({
   }
 
   function generateBookingSlotsForAvailableTimes(bookingSlots, counter) {
+    // Loop throught each available time, available times in each available time, and each time slot, if the times match, add the available time to the respective time slot
     for (let i = 0; i < availableTimes.length; i++) {
       const currentAvailableTime = availableTimes[i];
       for (let j = 0; j < currentAvailableTime.availableSlots.length; j++) {
         const currentAvailableSlot = currentAvailableTime.availableSlots[j];
         for (let k = 0; k < timeSlots.length; k++) {
           const currentTimeSlot = timeSlots[k];
-          if (currentAvailableSlot === currentTimeSlot) {
+          if (currentAvailableSlot === currentTimeSlot && bookingSlots[k].type.name !== "Booking") { // Do not overwrite existing bookings
             bookingSlots[k] = (
               <BookingSlot
                 key={counter}
