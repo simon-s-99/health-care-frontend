@@ -47,6 +47,12 @@ export default function NavBar() {
             Dashboard
           </NavLink>
         </li>
+        {/* Feedback button */}
+  <li className="sm:visible invisible my-2">
+    <NavLink className="hover:text-blue-700" to="/feedback">
+      Submit feedback
+    </NavLink>
+  </li>
       </ul>
 
       <span className="sm:inline hidden m-2">{endContent}</span>
@@ -76,6 +82,9 @@ export default function NavBar() {
               Dashboard
             </NavLink>
           </li>
+          <NavLink className="block w-full" to="/feedback">
+              Submit your feedback
+            </NavLink>
           <li>
             <span className="*:bg-transparent *:uppercase *:tracking-wider *:w-full *:text-yellow-300 *:hover:bg-transparent *:h-0">
               {endContent}
