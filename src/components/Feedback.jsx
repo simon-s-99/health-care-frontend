@@ -14,31 +14,37 @@ export default function FeedbackList() {
   const [hasMore, setHasMore] = useState(true); // Determines if there is more feedback to fetch
   const [starDistribution, setStarDistribution] = useState({}); // Stores the number of reviews for each star rating
 
+  // Fetch the logged-in user's information from authState
   const { authState } = useAuth();
-  const patientId = authState?.userId; // Ensure patientId is fetched from the logged-in user
+  const patientId = authState?.userId;
 
-  // Log authState whenever it changes
+  // Log authState and patientId whenever they change
   useEffect(() => {
-    console.log("AuthState on mount:", authState); // Log authState to ensure it has the necessary user information.
-    console.log("Extracted patientId:", patientId); // Log extracted patientId.
+    console.log("AuthState on mount:", authState);
+    console.log("Extracted patientId:", patientId);
   }, [authState, patientId]);
 
   // Fetch the user's appointment ID
   useEffect(() => {
     const fetchAppointmentId = async () => {
       try {
-        console.log("Fetching appointments for patientId:", patientId); // Log patientId
-        const response = await axios.get("http://localhost:5148/api/appointment/user", {
-          params: { id: patientId }, // Ensure this matches the backend's expected query parameter
-        });
-        console.log("Fetched appointment data:", response.data); // Log the response
+        if (!patientId) {
+          console.warn("PatientId is missing; fetchAppointmentId will not be triggered.");
+          return;
+        }
 
-        if (response.data && response.data.length > 0) {
+        console.log("Fetching appointments for patientId:", patientId);
+        const response = await axios.get("http://localhost:5148/api/appointment/user", {
+          params: { id: patientId },
+        });
+        console.log("Fetched appointment data:", response.data);
+
+        if (response.data?.length > 0) {
           setAppointmentId(response.data[0].id);
-          console.log("Set appointmentId:", response.data[0].id); // Log the selected appointmentId
+          console.log("Set appointmentId:", response.data[0].id);
         } else {
           console.error("No valid appointments found for patientId:", patientId);
-          setError("No valid appointments found.");
+          setError("No valid appointments found. Please schedule an appointment first.");
         }
       } catch (err) {
         console.error("Error fetching appointment data:", err);
@@ -46,48 +52,42 @@ export default function FeedbackList() {
       }
     };
 
-    if (patientId) {
-      console.log("Triggering fetchAppointmentId useEffect...");
-      fetchAppointmentId();
-    } else {
-      console.warn("PatientId is missing; fetchAppointmentId will not be triggered.");
-    }
+    fetchAppointmentId();
   }, [patientId]);
 
   // Fetch feedback data with pagination
   const fetchFeedback = async (reset = false) => {
     if (reset) {
-      // Reset feedback and related states
-      setFeedback([]);
+      setFeedback([]); // Clear feedback list on reset
       setPage(1);
       setHasMore(true);
     }
 
-    setLoading(true); // Show the loading spinner while fetching data
+    setLoading(true); // Show loading spinner
     try {
-      console.log(`Fetching feedback for page ${reset ? 1 : page}...`);
+      const currentPage = reset ? 1 : page;
+      console.log(`Fetching feedback for page ${currentPage}...`);
       const response = await axios.get(
-        `http://localhost:5148/api/feedback?page=${reset ? 1 : page}&pageSize=5`
+        `http://localhost:5148/api/feedback?page=${currentPage}&pageSize=5`
       );
       console.log("Fetched feedback data:", response.data);
 
       if (response.data.length === 0) {
-        console.log("No more feedback available.");
-        setHasMore(false); // If no more feedback, stop further fetching
+        setHasMore(false); // No more feedback available
       } else {
-        const newFeedback = response.data; // Newly fetched feedback
         const updatedFeedback = reset
-          ? newFeedback // If reset, replace feedback list
-          : [...feedback, ...newFeedback]; // Otherwise, append to the list
+          ? response.data // Replace list on reset
+          : [...feedback, ...response.data]; // Append data otherwise
+
         setFeedback(updatedFeedback);
-        calculateStarDistribution(updatedFeedback); // Update star distribution
+        calculateStarDistribution(updatedFeedback);
         setPage((prevPage) => prevPage + 1); // Increment page for next fetch
       }
     } catch (err) {
       console.error("Failed to fetch feedback:", err);
       setError("Failed to fetch feedback.");
     } finally {
-      setLoading(false); // Stop loading state
+      setLoading(false); // Hide loading spinner
     }
   };
 
@@ -105,7 +105,7 @@ export default function FeedbackList() {
   // Fetch initial feedback when the component mounts
   useEffect(() => {
     console.log("Triggering initial feedback fetch...");
-    fetchFeedback(true); // Fetch feedback with reset on component load
+    fetchFeedback(true); // Fetch feedback on component load
   }, []);
 
   // Handle feedback submission
@@ -116,7 +116,13 @@ export default function FeedbackList() {
       patientId,
       comment,
       rating,
-    }); // Log payload
+    });
+
+    if (!rating) {
+      console.error("Rating is required to submit feedback.");
+      setError("Please select a star rating before submitting feedback.");
+      return;
+    }
 
     if (!appointmentId || !patientId) {
       console.error("Missing appointmentId or patientId.");
@@ -130,14 +136,16 @@ export default function FeedbackList() {
         { appointmentId, patientId, comment, rating },
         { headers: { "Content-Type": "application/json" } }
       );
-      console.log("Feedback submitted successfully:", response.data); // Log success
+      console.log("Feedback submitted successfully:", response.data);
+
+      // Add the new feedback to the top of the list
       setFeedback((prevFeedback) => [response.data, ...prevFeedback]);
-      setComment(""); // Clear the comment input
-      setRating(0); // Reset the rating
+      setComment(""); // Clear comment input
+      setRating(0); // Reset rating
       calculateStarDistribution([response.data, ...feedback]); // Update star distribution
     } catch (err) {
-      console.error("Failed to submit feedback:", err); // Log error
-      setError("Failed to submit feedback."); // Show user-friendly error
+      console.error("Failed to submit feedback:", err);
+      setError("Failed to submit feedback.");
     }
   };
 
@@ -171,7 +179,7 @@ export default function FeedbackList() {
             required
           />
           <button
-            disabled={!appointmentId || !patientId}
+            disabled={!rating}
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             Submit Feedback
@@ -184,7 +192,7 @@ export default function FeedbackList() {
         <h2 className="text-xl font-semibold mb-4 text-center">Feedback for Health care AB</h2>
         <ul className="space-y-4">
           {Object.entries(starDistribution)
-            .sort((a, b) => b[0] - a[0]) // Sort by stars descending
+            .sort((a, b) => b[0] - a[0]) // Sort stars by descending order
             .map(([stars, count]) => (
               <li key={stars} className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -195,26 +203,30 @@ export default function FeedbackList() {
               </li>
             ))}
         </ul>
-        <h3 className="text-lg font-semibold mt-6">Latest Reviews</h3>
+        <h3 className="text-lg font-semibold mt-6">Reviews</h3>
         <ul className="space-y-4">
-          {feedback.slice(0, 5).map((item) => (
+          {feedback.map((item) => (
             <li key={item.id} className="p-3 bg-gray-100 rounded-md">
               <p className="font-medium">{item.comment}</p>
               <div className="flex space-x-1">
                 {[...Array(item.rating)].map((_, starIndex) => (
-                  <span key={starIndex} className="text-yellow-400 text-lg">★</span>
+                  <span key={starIndex} className="text-yellow-400 text-lg">
+                    ★
+                  </span>
                 ))}
               </div>
             </li>
           ))}
         </ul>
-        {hasMore && !loading && (
+        {hasMore ? (
           <button
             onClick={() => fetchFeedback(false)}
             className="mt-4 w-full bg-gray-300 text-black p-2 rounded hover:bg-gray-400"
           >
             Show More Reviews
           </button>
+        ) : (
+          <p className="text-center mt-4 text-gray-500">No more reviews to load.</p>
         )}
       </div>
     </div>
