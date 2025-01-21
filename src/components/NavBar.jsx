@@ -50,7 +50,7 @@ export default function NavBar() {
         {/* Feedback button */}
   <li className="sm:visible invisible my-2">
     <NavLink className="hover:text-blue-700" to="/feedback">
-      Leave a review
+      Submit feedback
     </NavLink>
   </li>
       </ul>
