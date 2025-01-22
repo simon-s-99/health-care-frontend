@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import axios from "axios";
 
 export default function UserDashboard() {
   const {
-    authState: { username },
+    authState
   } = useAuth();
 
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
@@ -13,20 +14,33 @@ export default function UserDashboard() {
 
   useEffect(() => {
     const fetchAppointments = async () => {
-      const mockUpcoming = [
-        { id: 1, date: "2025-01-23", time: "10:00 AM", doctor: "Dr. Smith" },
-        { id: 2, date: "2025-01-25", time: "2:00 PM", doctor: "Dr. Johnson" },
-      ];
-      const mockHistory = [
-        { id: 1, date: "2024-12-20", time: "3:00 PM", doctor: "Dr. Adams" },
-      ];
-      setUpcomingAppointments(mockUpcoming);
-      setAppointmentHistory(mockHistory);
+      try {
+        const response = await axios.get("/api/Appointment/user", {
+          params: { id: authState.userId, isPatient: true },
+        });
+  
+        if (response.data) {
+          const now = new Date();
+  
+          const upcoming = response.data.filter(
+            (appointment) => new Date(appointment.dateTime) >= now
+          );
+  
+          const history = response.data.filter(
+            (appointment) => new Date(appointment.dateTime) < now
+          );
+  
+          setUpcomingAppointments(upcoming);
+          setAppointmentHistory(history);
+        }
+      } catch (error) {
+        console.error("Failed to fetch appointments:", error);
+      }
     };
-
+  
     fetchAppointments();
-  }, []);
-
+  }, [authState.userId]); 
+  
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
@@ -57,14 +71,14 @@ export default function UserDashboard() {
                   >
                     <CardHeader>
                       <CardTitle className="text-lg font-semibold text-gray-800">
-                        {appointment.date}
+                      {new Date(appointment.dateTime).toLocaleDateString()}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-gray-600">Time: {appointment.time}</p>
-                      <p className="text-sm text-gray-600">Doctor: {appointment.doctor}</p>
-                      <button className="mt-4 text-indigo-600 font-semibold hover:underline">
-                        Reschedule
+                      <p className="text-sm text-gray-600">Time: {new Date(appointment.dateTime).toLocaleTimeString()}</p>
+                      <p className="text-sm text-gray-600">Doctor: {appointment.caregiverId}</p>
+                      <button className="mt-4 text-red-600 font-semibold hover:underline">
+                        Cancel
                       </button>
                     </CardContent>
                   </Card>
@@ -86,12 +100,12 @@ export default function UserDashboard() {
                   >
                     <CardHeader>
                       <CardTitle className="text-lg font-semibold text-gray-800">
-                        {appointment.date}
+                      {new Date(appointment.dateTime).toLocaleDateString()}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-gray-600">Time: {appointment.time}</p>
-                      <p className="text-sm text-gray-600">Doctor: {appointment.doctor}</p>
+                      <p className="text-sm text-gray-600">Time: {new Date(appointment.dateTime).toLocaleTimeString()}</p>
+                      <p className="text-sm text-gray-600">Doctor: {appointment.caregiverId}</p>
                     </CardContent>
                   </Card>
                 ))}
