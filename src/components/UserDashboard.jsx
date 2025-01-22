@@ -15,7 +15,7 @@ export default function UserDashboard() {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get("/api/Appointment/user", {
+        const response = await axios.get("http://localhost:5148/api/appointment/user", {
           params: { id: authState.userId, isPatient: true },
         });
   
