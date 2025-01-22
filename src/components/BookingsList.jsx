@@ -6,7 +6,8 @@ export default function BookingsList({
   bookings,
   book,
   date,
-  showConfirmationMessage
+  confirmationMessage,
+  cancelBooking
 }) {
   const timeSlots = [
     "08:00",
@@ -46,7 +47,7 @@ export default function BookingsList({
     month: "long",
     day: "numeric",
   });
-  
+
   function generateBookingSlotsForExistingBookings() {
     const bookingSlots = timeSlotElements;
     let counter = 13; // Start at 13 after the initial 12 in timeSlotElements
@@ -57,10 +58,10 @@ export default function BookingsList({
       for (let j = 0; j < timeSlots.length; j++) {
         const currentTimeSlot = timeSlots[j];
         if (currentBooking.dateTime.includes(currentTimeSlot)) {
-          bookingSlots[j] = <Booking key={counter} booking={currentBooking}/>;
+          bookingSlots[j] = <Booking key={counter} booking={currentBooking} cancelBooking={cancelBooking} confirmationMessage={confirmationMessage} />;
         }
+        counter++;
       }
-      counter++;
     }
     return { bookingSlots, counter };
   }
@@ -73,7 +74,11 @@ export default function BookingsList({
         const currentAvailableSlot = currentAvailableTime.availableSlots[j];
         for (let k = 0; k < timeSlots.length; k++) {
           const currentTimeSlot = timeSlots[k];
-          if (currentAvailableSlot === currentTimeSlot && bookingSlots[k].type.name !== "Booking") { // Do not overwrite existing bookings
+          if (
+            currentAvailableSlot === currentTimeSlot &&
+            bookingSlots[k].type.name !== "Booking"
+          ) {
+            // Do not overwrite existing bookings
             bookingSlots[k] = (
               <BookingSlot
                 key={counter}
@@ -82,13 +87,13 @@ export default function BookingsList({
                 date={date}
                 time={currentAvailableSlot}
                 caregiverId={currentAvailableTime.caregiverId}
-                showConfirmationMessage={showConfirmationMessage}
+                confirmationMessage={confirmationMessage}
               />
             );
+            counter++;
           }
         }
       }
-      counter++;
     }
     return bookingSlots;
   }

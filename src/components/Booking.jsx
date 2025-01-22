@@ -1,7 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-export default function Booking({ booking }) {
+import { Button } from "./ui/button";
+export default function Booking({
+  booking,
+  cancelBooking,
+  confirmationMessage,
+}) {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -27,9 +31,21 @@ export default function Booking({ booking }) {
 
   return (
     <div className="flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-blue-300 py-4 my-2">
-      <span>Caregiver: {name}</span>
-      <span>{date}</span>
-      <span>{time}</span>
+      {!confirmationMessage ? (
+        <>
+          <div className="flex flex-row justify-evenly">
+            <span>Caregiver: {name}</span>
+            <span>{date}</span>
+            <span>{time}</span>
+          </div>
+
+          <div>
+            <Button onClick={() => cancelBooking(booking.id)}>Cancel</Button>
+          </div>
+        </>
+      ) : (
+        <h2>{confirmationMessage}</h2>
+      )}
     </div>
   );
 }

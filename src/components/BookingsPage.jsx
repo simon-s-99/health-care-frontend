@@ -13,7 +13,7 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [showConfirmationMessage, setShowConfirmationMessage] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState(false);
 
   async function book(patientId, caregiverId, dateTime) {
     setError("");
@@ -33,14 +33,25 @@ export default function BookingsPage() {
         Status: 1,
         DateTime: utcDateTime,
       });
-      setShowConfirmationMessage("Booked!")
+      setConfirmationMessage("Booked!");
+    } catch (e) {
+      setError(e.response.data);
+    }
+  }
+
+  async function cancelBooking(appointmentId) {
+    setError("");
+
+    try {
+      await axios.delete(`http://localhost:5148/api/appointment?id=${appointmentId}`);
+      setConfirmationMessage("Booking canceled.");
     } catch (e) {
       setError(e.response.data);
     }
   }
 
   async function getUserAppointmentsForDate() {
-    const {data} = await axios.get(
+    const { data } = await axios.get(
       `http://localhost:5148/api/appointment/user?id=${authState.userId}&isPatient=true&date=${date}`
     );
     const formattedData = [];
@@ -90,13 +101,13 @@ export default function BookingsPage() {
   }
 
   useEffect(() => {
-    if (date) {
+    if (date && authState.userId) {
       setIsLoading(true);
       getAvailableTimesForDate();
       getUserAppointmentsForDate();
       setIsLoading(false);
     }
-  }, [date]);
+  }, [date, authState.userId]);
 
   function handleSetDate(e) {
     const formattedDate = e.toLocaleDateString("sv-SE");
@@ -115,7 +126,8 @@ export default function BookingsPage() {
           bookings={bookings}
           availableTimes={availableTimes}
           date={date}
-          showConfirmationMessage={showConfirmationMessage}
+          confirmationMessage={confirmationMessage}
+          cancelBooking={cancelBooking}
         />
       );
     } else if (date) {

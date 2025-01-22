@@ -10,7 +10,7 @@ export default function BookingSlot({
   book,
   date,
   caregiverId,
-  showConfirmationMessage,
+  confirmationMessage,
 }) {
   const [caregiver, setCaregiver] = useState(null);
   const { authState } = useAuth();
@@ -30,29 +30,35 @@ export default function BookingSlot({
     const dateTime = date + "T" + time;
 
     return (
-      <button
-        onClick={() => book(authState.userId, caregiverId, dateTime)}
-        className={
-          !showConfirmationMessage
-            ? "flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-green-300 py-4"
-            : "w-full border-[1px] border-gray-500 bg-green-300 py-4 text-center"
-        }
-      >
-        {!showConfirmationMessage ? (
-          <>
-            <span>Available, click to book</span>
-            <span>
-              {date} at {time}
-            </span>
-            <span>
-              {caregiver &&
-                `Caregiver: ${caregiver.firstname} ${caregiver.lastname}`}
-            </span>
-          </>
+      <>
+        {authState.userId ? (
+          <button
+            onClick={() => book(authState.userId, caregiverId, dateTime)}
+            className={
+              !confirmationMessage
+                ? "flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-green-300 py-4"
+                : "w-full border-[1px] border-gray-500 bg-green-300 py-4 text-center"
+            }
+          >
+            {!showConfirmationMessage ? (
+              <>
+                <span>Available, click to book</span>
+                <span>
+                  {date} at {time}
+                </span>
+                <span>
+                  {caregiver &&
+                    `Caregiver: ${caregiver.firstname} ${caregiver.lastname}`}
+                </span>
+              </>
+            ) : (
+              <span>Booked!</span>
+            )}
+          </button>
         ) : (
-          <span>Booked!</span>
+          <h2>{confirmationMessage}</h2>
         )}
-      </button>
+      </>
     );
   }
   return (
