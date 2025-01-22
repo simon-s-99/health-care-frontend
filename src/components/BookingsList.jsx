@@ -7,6 +7,7 @@ export default function BookingsList({
   book,
   date,
   confirmationMessage,
+  setConfirmationMessage,
   cancelBooking
 }) {
   const timeSlots = [
@@ -58,7 +59,7 @@ export default function BookingsList({
       for (let j = 0; j < timeSlots.length; j++) {
         const currentTimeSlot = timeSlots[j];
         if (currentBooking.dateTime.includes(currentTimeSlot)) {
-          bookingSlots[j] = <Booking key={counter} booking={currentBooking} cancelBooking={cancelBooking} confirmationMessage={confirmationMessage} />;
+          bookingSlots[j] = <Booking key={counter} booking={currentBooking} cancelBooking={cancelBooking} confirmationMessage={confirmationMessage} setConfirmationMessage={setConfirmationMessage}/>;
         }
         counter++;
       }
@@ -88,6 +89,7 @@ export default function BookingsList({
                 time={currentAvailableSlot}
                 caregiverId={currentAvailableTime.caregiverId}
                 confirmationMessage={confirmationMessage}
+                setConfirmationMessage={setConfirmationMessage}
               />
             );
             counter++;

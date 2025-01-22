@@ -13,7 +13,7 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [confirmationMessage, setConfirmationMessage] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
 
   async function book(patientId, caregiverId, dateTime) {
     setError("");
@@ -128,6 +128,7 @@ export default function BookingsPage() {
           date={date}
           confirmationMessage={confirmationMessage}
           cancelBooking={cancelBooking}
+          setConfirmationMessage={setConfirmationMessage}
         />
       );
     } else if (date) {

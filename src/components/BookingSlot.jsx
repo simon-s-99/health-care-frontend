@@ -11,6 +11,7 @@ export default function BookingSlot({
   date,
   caregiverId,
   confirmationMessage,
+  setConfirmationMessage
 }) {
   const [caregiver, setCaregiver] = useState(null);
   const { authState } = useAuth();
@@ -24,6 +25,7 @@ export default function BookingSlot({
   useEffect(() => {
     if (caregiverId) {
       getCaregiver();
+      setConfirmationMessage("")
     }
   }, []);
   if (isAvailable) {

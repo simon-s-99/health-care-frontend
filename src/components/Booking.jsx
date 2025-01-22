@@ -5,6 +5,7 @@ export default function Booking({
   booking,
   cancelBooking,
   confirmationMessage,
+  setConfirmationMessage
 }) {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
@@ -27,6 +28,7 @@ export default function Booking({
     const formattedTime = splitDateTime.pop();
     setDate(formattedDate);
     setTime(formattedTime);
+    setConfirmationMessage("")
   }, []);
 
   return (
