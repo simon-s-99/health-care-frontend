@@ -31,7 +31,7 @@ export default function BookingSlot({
 
     return (
       <>
-        {authState.userId ? (
+        {authState.userId && authState.roles.includes("User") ? (
           <button
             onClick={() => book(authState.userId, caregiverId, dateTime)}
             className={
@@ -40,7 +40,7 @@ export default function BookingSlot({
                 : "w-full border-[1px] border-gray-500 bg-green-300 py-4 text-center"
             }
           >
-            {!showConfirmationMessage ? (
+            {!confirmationMessage ? (
               <>
                 <span>Available, click to book</span>
                 <span>
@@ -52,11 +52,26 @@ export default function BookingSlot({
                 </span>
               </>
             ) : (
-              <span>Booked!</span>
+              <span>{confirmationMessage}</span>
             )}
           </button>
         ) : (
-          <h2>{confirmationMessage}</h2>
+          <div
+            className={
+              !confirmationMessage
+                ? "flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-green-300 py-4"
+                : "w-full border-[1px] border-gray-500 bg-green-300 py-4 text-center"
+            }
+          >
+            <span>Available, click to book</span>
+            <span>
+              {date} at {time}
+            </span>
+            <span>
+              {caregiver &&
+                `Caregiver: ${caregiver.firstname} ${caregiver.lastname}`}
+            </span>
+          </div>
         )}
       </>
     );
