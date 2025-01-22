@@ -5,12 +5,10 @@ import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import axios from "axios";
 
 export default function UserDashboard() {
-  const {
-    authState
-  } = useAuth();
-
+  const { authState } = useAuth();
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
   const [appointmentHistory, setAppointmentHistory] = useState([]);
+  const [caregiverNames, setCaregiverNames] = useState({}); 
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -18,29 +16,49 @@ export default function UserDashboard() {
         const response = await axios.get("http://localhost:5148/api/appointment/user", {
           params: { id: authState.userId, isPatient: true },
         });
-  
+
         if (response.data) {
           const now = new Date();
-  
+
           const upcoming = response.data.filter(
             (appointment) => new Date(appointment.dateTime) >= now
           );
-  
+
           const history = response.data.filter(
             (appointment) => new Date(appointment.dateTime) < now
           );
-  
+
           setUpcomingAppointments(upcoming);
           setAppointmentHistory(history);
+
+          // Fetch caregivers' names
+          const caregiverIds = [
+            ...new Set([
+              ...upcoming.map((appointment) => appointment.caregiverId),
+              ...history.map((appointment) => appointment.caregiverId),
+            ]),
+          ];
+
+          caregiverIds.forEach(async (caregiverId) => {
+            try {
+              const { data } = await axios.get(`http://localhost:5148/api/user?id=${caregiverId}`);
+              setCaregiverNames((prevNames) => ({
+                ...prevNames,
+                [caregiverId]: `${data.firstname} ${data.lastname}`,
+              }));
+            } catch (error) {
+              console.error("Error fetching caregiver data:", error);
+            }
+          });
         }
       } catch (error) {
         console.error("Failed to fetch appointments:", error);
       }
     };
-  
+
     fetchAppointments();
-  }, [authState.userId]); 
-  
+  }, [authState.userId]);
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
@@ -71,12 +89,13 @@ export default function UserDashboard() {
                   >
                     <CardHeader>
                       <CardTitle className="text-lg font-semibold text-gray-800">
-                      {new Date(appointment.dateTime).toLocaleDateString()}
+                        {new Date(appointment.dateTime).toLocaleDateString()}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-gray-600">Time: {new Date(appointment.dateTime).toLocaleTimeString()}</p>
-                      <p className="text-sm text-gray-600">Doctor: {appointment.caregiverId}</p>
+                      <p className="text-sm text-gray-600">Doctor: {caregiverNames[appointment.caregiverId]}
+                      </p>
                       <button className="mt-4 text-red-600 font-semibold hover:underline">
                         Cancel
                       </button>
@@ -100,12 +119,13 @@ export default function UserDashboard() {
                   >
                     <CardHeader>
                       <CardTitle className="text-lg font-semibold text-gray-800">
-                      {new Date(appointment.dateTime).toLocaleDateString()}
+                        {new Date(appointment.dateTime).toLocaleDateString()}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-gray-600">Time: {new Date(appointment.dateTime).toLocaleTimeString()}</p>
-                      <p className="text-sm text-gray-600">Doctor: {appointment.caregiverId}</p>
+                      <p className="text-sm text-gray-600">Doctor: {caregiverNames[appointment.caregiverId]}
+                      </p>
                     </CardContent>
                   </Card>
                 ))}
