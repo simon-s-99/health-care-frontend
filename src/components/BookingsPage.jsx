@@ -3,11 +3,17 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import BookingsList from "./BookingsList";
 import { useAuth } from "../hooks/useAuth";
+import BookingPopup from "./BookingPopup";
 
 export default function BookingsPage() {
   const currentDateTime = new Date(Date.now());
   const { authState } = useAuth();
 
+  const [popup, setPopup] = useState({
+    isOpen: false,
+    label: "",
+    handleFunction: null,
+  });
   const [date, setDate] = useState(null);
   const [error, setError] = useState("");
   const [bookings, setBookings] = useState([]);
@@ -50,24 +56,25 @@ export default function BookingsPage() {
       setError(e.response.data);
     }
   }
-  
+
   function handleSetDate(e) {
     const formattedDate = e.toLocaleDateString("sv-SE");
     setDate(formattedDate);
   }
-  
+
   function generateSchedule() {
     let result;
-    
+
     if (availabilites.length > 0 || (bookings.length > 0 && date)) {
       result = (
         <BookingsList
-        loggedInUser={authState}
-        createBooking={createBooking}
-        bookings={bookings}
-        availabilites={availabilites}
-        date={date}
-        cancelBooking={cancelBooking}
+          setPopup={setPopup}
+          loggedInUser={authState}
+          createBooking={createBooking}
+          bookings={bookings}
+          availabilites={availabilites}
+          date={date}
+          cancelBooking={cancelBooking}
         />
       );
     } else if (date) {
@@ -101,7 +108,7 @@ export default function BookingsPage() {
         patientId: data[i].patientId,
         dateTime: dateTimeSwedish,
       };
-      
+
       formattedData.push(entry);
     }
     setBookings(formattedData);
@@ -130,7 +137,7 @@ export default function BookingsPage() {
     }
     setAvailabilites(formattedData);
   }
-  
+
   useEffect(() => {
     if (date && authState.userId) {
       getAvailabilitesForDate();
@@ -148,7 +155,23 @@ export default function BookingsPage() {
         disabled={{ before: currentDateTime }}
         onSelect={handleSetDate}
       />
-      {generateSchedule()}
+      <div
+        className={
+          popup && popup.isOpen
+            ? "-z-10 w-1/2 opacity-50 text-center"
+            : "w-1/2 text-center"
+        }
+      >
+        {generateSchedule()}
+      </div>
+      {popup && popup.isOpen && (
+        <BookingPopup
+          isOpen={popup.isOpen}
+          label={popup.label}
+          handleFunction={popup.handleFunction}
+          setPopup={setPopup}
+        />
+      )}
     </div>
   );
 }

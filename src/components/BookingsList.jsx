@@ -8,6 +8,7 @@ export default function BookingsList({
   createBooking,
   date,
   cancelBooking,
+  setPopup
 }) {
   const timeSlots = [
     <BookingSlot key={0} isAvailable={false} time={"08:00"} />,
@@ -47,6 +48,7 @@ export default function BookingsList({
               key={counter}
               booking={currentBooking}
               cancelBooking={cancelBooking}
+              setPopup={setPopup}
             />
           );
         }
@@ -76,6 +78,7 @@ export default function BookingsList({
               createBooking={createBooking}
               date={date}
               availability={currentAvailability}
+              setPopup={setPopup}
             />
           );
           counter++;
