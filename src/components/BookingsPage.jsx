@@ -6,18 +6,11 @@ import { useAuth } from "../hooks/useAuth";
 
 export default function BookingsPage() {
   const currentDateTime = new Date(Date.now());
-
-  // const { authState } = useAuth();
-  const userid = "6787c0bdac13847d0e917f7b";
-  const [loggedInUser, setLoggedInUser] = useState({
-    userId: userid,
-    roles: ["User"],
-  });
+  const { authState } = useAuth();
   const [date, setDate] = useState(null);
   const [error, setError] = useState("");
   const [bookings, setBookings] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState("");
 
   async function book(patientId, caregiverId, dateTime) {
@@ -59,7 +52,7 @@ export default function BookingsPage() {
 
   async function getUserAppointmentsForDate() {
     const { data } = await axios.get(
-      `http://localhost:5148/api/appointment/user?id=${userid}&isPatient=true&date=${date}`
+      `http://localhost:5148/api/appointment/user?id=${authState.userId}&isPatient=true&date=${date}`
     );
     const formattedData = [];
     for (let i = 0; i < data.length; i++) {
@@ -106,13 +99,11 @@ export default function BookingsPage() {
   }
 
   useEffect(() => {
-    if (date && userid) {
-      setIsLoading(true);
+    if (date && authState.userId) {
       getAvailableTimesForDate();
       getUserAppointmentsForDate();
-      setIsLoading(false);
     }
-  }, [date, userid]);
+  }, [date]);
 
   function handleSetDate(e) {
     const formattedDate = e.toLocaleDateString("sv-SE");
@@ -122,12 +113,10 @@ export default function BookingsPage() {
   function generateSchedule() {
     let result;
 
-    if (isLoading) {
-      result = <h2>Loading...</h2>;
-    } else if (availableTimes.length > 0 || (bookings.length > 0 && date)) {
+    if (availableTimes.length > 0 || (bookings.length > 0 && date)) {
       result = (
         <BookingsList
-          loggedInUser={loggedInUser}
+          loggedInUser={authState}
           book={book}
           bookings={bookings}
           availableTimes={availableTimes}
