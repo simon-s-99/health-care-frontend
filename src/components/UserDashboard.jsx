@@ -104,7 +104,13 @@ export default function UserDashboard() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-gray-600">Time: {new Date(appointment.dateTime).toLocaleTimeString()}</p>
+                      <p className="text-sm text-gray-600">
+                        Time: {new Date(appointment.dateTime).toLocaleTimeString('sv-SE', { 
+                          timeZone: 'UTC',
+                          hour: "2-digit",
+                          minute: "2-digit" 
+                        })}
+                      </p>
                       <p className="text-sm text-gray-600">Doctor: {caregiverNames[appointment.caregiverId]}
                       </p>
                       <button
