@@ -1,16 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-export default function Booking({
-  booking,
-  cancelBooking,
-}) {
+import BookingPopup from "./BookingPopup";
+export default function Booking({ booking, cancelBooking }) {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   function handleCancelBooking() {
+    setIsOpen(false);
     const success = cancelBooking(booking.id);
 
     if (success) {
@@ -49,11 +49,20 @@ export default function Booking({
           </div>
 
           <div>
-            <Button onClick={handleCancelBooking}>Cancel</Button>
+            <Button onClick={() => setIsOpen(true)}>Cancel</Button>
           </div>
         </>
       ) : (
         <h2>{confirmationMessage}</h2>
+      )}
+
+      {isOpen && (
+        <BookingPopup
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          handleFunction={handleCancelBooking}
+          label={"Cancel booking?"}
+        />
       )}
     </div>
   );

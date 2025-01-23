@@ -93,7 +93,7 @@ export default function BookingsList({
     return completeBookingSlots;
   }
   return (
-    <div className="flex flex-col w-full h-full px-4">
+    <div className="flex flex-col w-full h-full px-4 mb-[10%]">
       <h2 className="text-xl text-center font-bold">{dateHeading}</h2>
       <div className="flex flex-row text-center">
         <ul className="w-fit *:h-[7%] *:my-2 *:py-4 *:mr-2">

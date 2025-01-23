@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import BookingPopup from "./BookingPopup";
 
 export default function BookingSlot({
   loggedInUser,
@@ -10,8 +11,11 @@ export default function BookingSlot({
 }) {
   const [caregiver, setCaregiver] = useState(null);
   const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
-  function handleBook() {
+  function handleCreateBooking() {
+    setIsOpen(false);
+    
     const dateTime = date + "T" + availability.time;
     const success = createBooking(
       loggedInUser.userId,
@@ -40,7 +44,7 @@ export default function BookingSlot({
       <>
         {loggedInUser.userId && loggedInUser.roles.includes("User") ? (
           <button
-            onClick={handleBook}
+            onClick={() => setIsOpen(true)}
             className={
               !confirmationMessage
                 ? "flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-green-300 py-4"
@@ -72,6 +76,15 @@ export default function BookingSlot({
                 `Caregiver: ${caregiver.firstname} ${caregiver.lastname}`}
             </span>
           </div>
+        )}
+
+        {isOpen && (
+          <BookingPopup
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            handleFunction={handleCreateBooking}
+            label={"Place booking?"}
+          />
         )}
       </>
     );
