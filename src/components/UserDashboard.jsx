@@ -59,6 +59,17 @@ export default function UserDashboard() {
     fetchAppointments();
   }, [authState.userId]);
 
+  const onCancelAppointment = async (appointmentId) => {
+    try {
+      await axios.delete(`http://localhost:5148/api/appointment`, {
+        params: { id: appointmentId },
+      });
+      setUpcomingAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
+    } catch (error) {
+      console.error("Error canceling appointment:", error);
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
@@ -96,7 +107,9 @@ export default function UserDashboard() {
                       <p className="text-sm text-gray-600">Time: {new Date(appointment.dateTime).toLocaleTimeString()}</p>
                       <p className="text-sm text-gray-600">Doctor: {caregiverNames[appointment.caregiverId]}
                       </p>
-                      <button className="mt-4 text-red-600 font-semibold hover:underline">
+                      <button
+                      onClick={() => onCancelAppointment(appointment.id)} 
+                      className="mt-4 text-red-600 font-semibold hover:underline">
                         Cancel
                       </button>
                     </CardContent>
