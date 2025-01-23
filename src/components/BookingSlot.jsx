@@ -5,6 +5,7 @@ import Booking from "./Booking";
 import { useAuth } from "../hooks/useAuth";
 
 export default function BookingSlot({
+  loggedInUser,
   time,
   isAvailable,
   book,
@@ -14,7 +15,6 @@ export default function BookingSlot({
   setConfirmationMessage
 }) {
   const [caregiver, setCaregiver] = useState(null);
-  const { authState } = useAuth();
 
   async function getCaregiver() {
     const { data } = await axios.get(
@@ -33,9 +33,9 @@ export default function BookingSlot({
 
     return (
       <>
-        {authState.userId && authState.roles.includes("User") ? (
+        {loggedInUser.userId && loggedInUser.roles.includes("User") ? (
           <button
-            onClick={() => book(authState.userId, caregiverId, dateTime)}
+            onClick={() => book(loggedInUser.userId, caregiverId, dateTime)}
             className={
               !confirmationMessage
                 ? "flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-green-300 py-4"

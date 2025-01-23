@@ -7,7 +7,12 @@ import { useAuth } from "../hooks/useAuth";
 export default function BookingsPage() {
   const currentDateTime = new Date(Date.now());
 
-  const { authState } = useAuth();
+  // const { authState } = useAuth();
+  const userid = "6787c0bdac13847d0e917f7b";
+  const [loggedInUser, setLoggedInUser] = useState({
+    userId: userid,
+    roles: ["User"],
+  });
   const [date, setDate] = useState(null);
   const [error, setError] = useState("");
   const [bookings, setBookings] = useState([]);
@@ -43,7 +48,9 @@ export default function BookingsPage() {
     setError("");
 
     try {
-      await axios.delete(`http://localhost:5148/api/appointment?id=${appointmentId}`);
+      await axios.delete(
+        `http://localhost:5148/api/appointment?id=${appointmentId}`
+      );
       setConfirmationMessage("Booking canceled.");
     } catch (e) {
       setError(e.response.data);
@@ -52,7 +59,7 @@ export default function BookingsPage() {
 
   async function getUserAppointmentsForDate() {
     const { data } = await axios.get(
-      `http://localhost:5148/api/appointment/user?id=${authState.userId}&isPatient=true&date=${date}`
+      `http://localhost:5148/api/appointment/user?id=${userid}&isPatient=true&date=${date}`
     );
     const formattedData = [];
     for (let i = 0; i < data.length; i++) {
@@ -82,32 +89,30 @@ export default function BookingsPage() {
 
     const formattedData = [];
     for (let i = 0; i < data.length; i++) {
+      const time = new Date(data[i].dateTime) // Get the time exclusively
+        .toLocaleString("sv-SE")
+        .split(" ")
+        .pop()
+        .slice(0, 5);
+
       const entry = {
         id: data[i].id,
         caregiverId: data[i].caregiverId,
-        availableSlots: [],
+        time: time,
       };
-      for (let j = 0; j < data[0].availableSlots.length; j++) {
-        const time = new Date(data[i].availableSlots[j]) // Get the time exclusively
-          .toLocaleString("sv-SE")
-          .split(" ")
-          .pop()
-          .slice(0, 5);
-        entry.availableSlots.push(time);
-      }
       formattedData.push(entry);
     }
     setAvailableTimes(formattedData);
   }
 
   useEffect(() => {
-    if (date && authState.userId) {
+    if (date && userid) {
       setIsLoading(true);
       getAvailableTimesForDate();
       getUserAppointmentsForDate();
       setIsLoading(false);
     }
-  }, [date, authState.userId]);
+  }, [date, userid]);
 
   function handleSetDate(e) {
     const formattedDate = e.toLocaleDateString("sv-SE");
@@ -122,6 +127,7 @@ export default function BookingsPage() {
     } else if (availableTimes.length > 0 || (bookings.length > 0 && date)) {
       result = (
         <BookingsList
+          loggedInUser={loggedInUser}
           book={book}
           bookings={bookings}
           availableTimes={availableTimes}

@@ -2,13 +2,14 @@ import Booking from "./Booking";
 import BookingSlot from "./BookingSlot";
 
 export default function BookingsList({
+  loggedInUser,
   availableTimes,
   bookings,
   book,
   date,
   confirmationMessage,
   setConfirmationMessage,
-  cancelBooking
+  cancelBooking,
 }) {
   const timeSlots = [
     "08:00",
@@ -59,7 +60,15 @@ export default function BookingsList({
       for (let j = 0; j < timeSlots.length; j++) {
         const currentTimeSlot = timeSlots[j];
         if (currentBooking.dateTime.includes(currentTimeSlot)) {
-          bookingSlots[j] = <Booking key={counter} booking={currentBooking} cancelBooking={cancelBooking} confirmationMessage={confirmationMessage} setConfirmationMessage={setConfirmationMessage}/>;
+          bookingSlots[j] = (
+            <Booking
+              key={counter}
+              booking={currentBooking}
+              cancelBooking={cancelBooking}
+              confirmationMessage={confirmationMessage}
+              setConfirmationMessage={setConfirmationMessage}
+            />
+          );
         }
         counter++;
       }
@@ -71,29 +80,27 @@ export default function BookingsList({
     // Loop throught each available time, available times in each available time, and each time slot, if the times match, add the available time to the respective time slot
     for (let i = 0; i < availableTimes.length; i++) {
       const currentAvailableTime = availableTimes[i];
-      for (let j = 0; j < currentAvailableTime.availableSlots.length; j++) {
-        const currentAvailableSlot = currentAvailableTime.availableSlots[j];
-        for (let k = 0; k < timeSlots.length; k++) {
-          const currentTimeSlot = timeSlots[k];
-          if (
-            currentAvailableSlot === currentTimeSlot &&
-            bookingSlots[k].type.name !== "Booking"
-          ) {
-            // Do not overwrite existing bookings
-            bookingSlots[k] = (
-              <BookingSlot
-                key={counter}
-                isAvailable={true}
-                book={book}
-                date={date}
-                time={currentAvailableSlot}
-                caregiverId={currentAvailableTime.caregiverId}
-                confirmationMessage={confirmationMessage}
-                setConfirmationMessage={setConfirmationMessage}
-              />
-            );
-            counter++;
-          }
+      for (let k = 0; k < timeSlots.length; k++) {
+        const currentTimeSlot = timeSlots[k];
+        if (
+          currentAvailableTime.time === currentTimeSlot &&
+          bookingSlots[k].type.name !== "Booking"
+        ) {
+          // Do not overwrite existing bookings
+          bookingSlots[k] = (
+            <BookingSlot
+              key={counter}
+              loggedInUser={loggedInUser}
+              isAvailable={true}
+              book={book}
+              date={date}
+              time={currentAvailableTime.time}
+              caregiverId={currentAvailableTime.caregiverId}
+              confirmationMessage={confirmationMessage}
+              setConfirmationMessage={setConfirmationMessage}
+            />
+          );
+          counter++;
         }
       }
     }
