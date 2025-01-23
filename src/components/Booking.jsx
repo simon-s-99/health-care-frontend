@@ -19,10 +19,10 @@ export default function Booking({
       setConfirmationMessage("Something went wrong.");
     }
   }
-  async function getUserData() {
+  async function getCaregiverData() {
     try {
       const { data } = await axios.get(
-        `http://localhost:5148/api/user?id=${booking.patientId}`
+        `http://localhost:5148/api/user?id=${booking.caregiverId}`
       );
       setName(`${data.firstname} ${data.lastname}`);
     } catch (e) {
@@ -30,7 +30,7 @@ export default function Booking({
     }
   }
   useEffect(() => {
-    getUserData();
+    getCaregiverData();
     const splitDateTime = booking.dateTime.split(" ");
     const formattedDate = splitDateTime.shift();
     const formattedTime = splitDateTime.pop();
