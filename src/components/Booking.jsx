@@ -4,13 +4,21 @@ import { Button } from "./ui/button";
 export default function Booking({
   booking,
   cancelBooking,
-  confirmationMessage,
-  setConfirmationMessage
 }) {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [confirmationMessage, setConfirmationMessage] = useState("");
 
+  function handleCancelBooking() {
+    const success = cancelBooking(booking.id);
+
+    if (success) {
+      setConfirmationMessage("Booking cancelled.");
+    } else {
+      setConfirmationMessage("Something went wrong.");
+    }
+  }
   async function getUserData() {
     try {
       const { data } = await axios.get(
@@ -28,11 +36,10 @@ export default function Booking({
     const formattedTime = splitDateTime.pop();
     setDate(formattedDate);
     setTime(formattedTime);
-    setConfirmationMessage("")
   }, []);
 
   return (
-    <div className="flex flex-row justify-start w-full *:w-1/3 border-[1px] border-gray-500 bg-blue-300 py-4 my-2">
+    <div className="flex flex-row justify-center w-full *:w-1/3 border-[1px] border-gray-500 bg-blue-300 py-4 my-2">
       {!confirmationMessage ? (
         <>
           <div className="flex flex-row justify-evenly">
@@ -42,7 +49,7 @@ export default function Booking({
           </div>
 
           <div>
-            <Button onClick={() => cancelBooking(booking.id)}>Cancel</Button>
+            <Button onClick={handleCancelBooking}>Cancel</Button>
           </div>
         </>
       ) : (

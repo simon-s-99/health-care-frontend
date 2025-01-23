@@ -3,31 +3,13 @@ import BookingSlot from "./BookingSlot";
 
 export default function BookingsList({
   loggedInUser,
-  availableTimes,
+  availabilites,
   bookings,
-  book,
+  createBooking,
   date,
-  confirmationMessage,
-  setConfirmationMessage,
   cancelBooking,
 }) {
   const timeSlots = [
-    "08:00",
-    "09:00",
-    "10:00",
-    "11:00",
-    "12:00",
-    "13:00",
-    "14:00",
-    "15:00",
-    "16:00",
-    "17:00",
-    "18:00",
-    "19:00",
-    "20:00",
-  ];
-
-  const timeSlotElements = [
     <BookingSlot key={0} isAvailable={false} time={"08:00"} />,
     <BookingSlot key={1} isAvailable={false} time={"09:00"} />,
     <BookingSlot key={2} isAvailable={false} time={"10:00"} />,
@@ -51,22 +33,20 @@ export default function BookingsList({
   });
 
   function generateBookingSlotsForExistingBookings() {
-    const bookingSlots = timeSlotElements;
-    let counter = 13; // Start at 13 after the initial 12 in timeSlotElements
+    const bookingSlots = timeSlots;
+    let counter = 13; // Start at 13 after the initial 12 in timeSlots
 
     // Loop through each booking and time slot, if the times match, add the booking to the respective time slot
     for (let i = 0; i < bookings.length; i++) {
       const currentBooking = bookings[i];
-      for (let j = 0; j < timeSlots.length; j++) {
-        const currentTimeSlot = timeSlots[j];
-        if (currentBooking.dateTime.includes(currentTimeSlot)) {
+      for (let j = 0; j < bookingSlots.length; j++) {
+        const currentTimeSlot = bookingSlots[j];
+        if (currentBooking.dateTime.includes(currentTimeSlot.props.time)) {
           bookingSlots[j] = (
             <Booking
               key={counter}
               booking={currentBooking}
               cancelBooking={cancelBooking}
-              confirmationMessage={confirmationMessage}
-              setConfirmationMessage={setConfirmationMessage}
             />
           );
         }
@@ -77,13 +57,14 @@ export default function BookingsList({
   }
 
   function generateBookingSlotsForAvailableTimes(bookingSlots, counter) {
-    // Loop throught each available time, available times in each available time, and each time slot, if the times match, add the available time to the respective time slot
-    for (let i = 0; i < availableTimes.length; i++) {
-      const currentAvailableTime = availableTimes[i];
-      for (let k = 0; k < timeSlots.length; k++) {
-        const currentTimeSlot = timeSlots[k];
+
+    // Loop through each available time, available times in each available time, and each time slot, if the times match, add the available time to the respective time slot
+    for (let i = 0; i < availabilites.length; i++) {
+      const currentAvailability = availabilites[i];
+      for (let k = 0; k < bookingSlots.length; k++) {
+        const currentTimeSlot = bookingSlots[k];
         if (
-          currentAvailableTime.time === currentTimeSlot &&
+          currentAvailability.time === currentTimeSlot.props.time &&
           bookingSlots[k].type.name !== "Booking"
         ) {
           // Do not overwrite existing bookings
@@ -92,12 +73,9 @@ export default function BookingsList({
               key={counter}
               loggedInUser={loggedInUser}
               isAvailable={true}
-              book={book}
+              createBooking={createBooking}
               date={date}
-              time={currentAvailableTime.time}
-              caregiverId={currentAvailableTime.caregiverId}
-              confirmationMessage={confirmationMessage}
-              setConfirmationMessage={setConfirmationMessage}
+              availability={currentAvailability}
             />
           );
           counter++;
