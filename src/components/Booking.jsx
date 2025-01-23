@@ -52,13 +52,13 @@ export default function Booking({ booking, cancelBooking, setPopup }) {
               onClick={() =>
                 setPopup({
                   isOpen: true,
-                  label: "Cancel booking?",
+                  label: "Cancel appointment?",
                   handleFunction: handleCancelBooking,
                   setPopup: setPopup
                 })
               }
             >
-              Cancel
+              Cancel appointment
             </Button>
           </div>
         </>
