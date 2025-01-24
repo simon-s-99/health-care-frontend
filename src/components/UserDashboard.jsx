@@ -18,7 +18,7 @@ export default function UserDashboard() {
         });
 
         if (response.data) {
-          const now = new Date();
+          const now = new Date(Date.now());
 
           const upcoming = response.data.filter(
             (appointment) => new Date(appointment.dateTime) >= now
@@ -106,9 +106,9 @@ export default function UserDashboard() {
                     <CardContent>
                       <p className="text-sm text-gray-600">
                         Time: {new Date(appointment.dateTime).toLocaleTimeString('sv-SE', { 
-                          timeZone: 'UTC',
+                          timeZone: 'Europe/Stockholm',
                           hour: "2-digit",
-                          minute: "2-digit" 
+                          minute: "2-digit",
                         })}
                       </p>
                       <p className="text-sm text-gray-600">Doctor: {caregiverNames[appointment.caregiverId]}
@@ -142,7 +142,11 @@ export default function UserDashboard() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-gray-600">Time: {new Date(appointment.dateTime).toLocaleTimeString()}</p>
+                      <p className="text-sm text-gray-600">Time: {new Date(appointment.dateTime).toLocaleTimeString("sv-SE", {
+                        timeZone: "Europe/Stockholm",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      })}</p>
                       <p className="text-sm text-gray-600">Doctor: {caregiverNames[appointment.caregiverId]}
                       </p>
                     </CardContent>
