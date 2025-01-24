@@ -44,9 +44,11 @@ export default function Login() {
       if (roles.includes("Admin")) {
         console.log("admin role");
         navigate("/admin/dashboard", { replace: true });
+        window.location.reload();
       } else {
         console.log("user");
         navigate("/user/dashboard", { replace: true });
+        window.location.reload();
       }
     } catch (error) {
       console.error("Login failed:", error.response || error);
