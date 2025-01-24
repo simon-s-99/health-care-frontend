@@ -21,7 +21,10 @@ export default function Booking({ booking, cancelBooking, setPopup }) {
   async function getCaregiverData() {
     try {
       const { data } = await axios.get(
-        `http://localhost:5148/api/user?id=${booking.caregiverId}`
+        `http://localhost:5148/api/user?id=${booking.caregiverId}`,
+        {
+          withCredentials: true,
+        }
       );
       setName(`${data.firstname} ${data.lastname}`);
     } catch (e) {
@@ -54,7 +57,7 @@ export default function Booking({ booking, cancelBooking, setPopup }) {
                   isOpen: true,
                   label: "Cancel appointment?",
                   handleFunction: handleCancelBooking,
-                  setPopup: setPopup
+                  setPopup: setPopup,
                 })
               }
             >

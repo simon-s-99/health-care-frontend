@@ -32,12 +32,16 @@ export default function BookingsPage() {
     const utcDateTime = new Date(dateTime).toISOString();
 
     try {
-      await axios.post("http://localhost:5148/api/appointment", {
-        PatientId: patientId,
-        CaregiverId: caregiverId,
-        Status: 1,
-        DateTime: utcDateTime,
-      });
+      await axios.post(
+        "http://localhost:5148/api/appointment",
+        {
+          PatientId: patientId,
+          CaregiverId: caregiverId,
+          Status: 1,
+          DateTime: utcDateTime,
+        },
+        { withCredentials: true }
+      );
       return true; // Post succeeded
     } catch (e) {
       setError(e.response.data);
@@ -49,7 +53,10 @@ export default function BookingsPage() {
 
     try {
       await axios.delete(
-        `http://localhost:5148/api/appointment?id=${appointmentId}`
+        `http://localhost:5148/api/appointment?id=${appointmentId}`,
+        {
+          withCredentials: true,
+        }
       );
       return true;
     } catch (e) {
@@ -87,7 +94,10 @@ export default function BookingsPage() {
 
   async function getUserAppointmentsForDate() {
     const { data } = await axios.get(
-      `http://localhost:5148/api/appointment/user?id=${authState.userId}&isPatient=true&date=${date}`
+      `http://localhost:5148/api/appointment/user?id=${authState.userId}&isPatient=true&date=${date}`,
+      {
+        withCredentials: true,
+      }
     );
 
     const formattedData = [];
@@ -116,7 +126,10 @@ export default function BookingsPage() {
 
   async function getAvailabilitesForDate() {
     const { data } = await axios.get(
-      `http://localhost:5148/api/availability/date?date=${date}`
+      `http://localhost:5148/api/availability/date?date=${date}`,
+      {
+        withCredentials: true,
+      }
     );
 
     const formattedData = [];

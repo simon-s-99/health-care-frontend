@@ -29,22 +29,32 @@ export default function FeedbackList() {
     const fetchAppointmentId = async () => {
       try {
         if (!patientId) {
-          console.warn("PatientId is missing; fetchAppointmentId will not be triggered.");
+          console.warn(
+            "PatientId is missing; fetchAppointmentId will not be triggered."
+          );
           return;
         }
 
         console.log("Fetching appointments for patientId:", patientId);
-        const response = await axios.get("http://localhost:5148/api/appointment/user", {
-          params: { id: patientId },
-        });
+        const response = await axios.get(
+          "http://localhost:5148/api/appointment/user",
+          {
+            params: { id: patientId },
+          }
+        );
         console.log("Fetched appointment data:", response.data);
 
         if (response.data?.length > 0) {
           setAppointmentId(response.data[0].id);
           console.log("Set appointmentId:", response.data[0].id);
         } else {
-          console.error("No valid appointments found for patientId:", patientId);
-          setError("No valid appointments found. Please schedule an appointment first.");
+          console.error(
+            "No valid appointments found for patientId:",
+            patientId
+          );
+          setError(
+            "No valid appointments found. Please schedule an appointment first."
+          );
         }
       } catch (err) {
         console.error("Error fetching appointment data:", err);
@@ -126,7 +136,9 @@ export default function FeedbackList() {
 
     if (!appointmentId || !patientId) {
       console.error("Missing appointmentId or patientId.");
-      setError("You need a valid appointment and patient ID to submit feedback.");
+      setError(
+        "You need a valid appointment and patient ID to submit feedback."
+      );
       return;
     }
 
@@ -134,7 +146,9 @@ export default function FeedbackList() {
       const response = await axios.post(
         "http://localhost:5148/api/feedback",
         { appointmentId, patientId, comment, rating },
-        { headers: { "Content-Type": "application/json" } }
+        {
+          headers: { "Content-Type": "application/json" },
+        }
       );
       console.log("Feedback submitted successfully:", response.data);
 
@@ -153,7 +167,9 @@ export default function FeedbackList() {
     <div className="max-w-lg mx-auto p-6 bg-gray-50">
       {/* Feedback Form */}
       <div className="p-6 bg-white shadow-md rounded-md">
-        <h2 className="text-xl font-semibold mb-4 text-center">Share Your Experience</h2>
+        <h2 className="text-xl font-semibold mb-4 text-center">
+          Share Your Experience
+        </h2>
         {error && <p className="text-red-500 text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex justify-center space-x-2">
@@ -189,7 +205,9 @@ export default function FeedbackList() {
 
       {/* Feedback Statistics and Reviews */}
       <div className="p-6 bg-white shadow-md rounded-md mt-6">
-        <h2 className="text-xl font-semibold mb-4 text-center">Feedback for Health care AB</h2>
+        <h2 className="text-xl font-semibold mb-4 text-center">
+          Feedback for Health care AB
+        </h2>
         <ul className="space-y-4">
           {Object.entries(starDistribution)
             .sort((a, b) => b[0] - a[0]) // Sort stars by descending order
@@ -226,7 +244,9 @@ export default function FeedbackList() {
             Show More Reviews
           </button>
         ) : (
-          <p className="text-center mt-4 text-gray-500">No more reviews to load.</p>
+          <p className="text-center mt-4 text-gray-500">
+            No more reviews to load.
+          </p>
         )}
       </div>
     </div>

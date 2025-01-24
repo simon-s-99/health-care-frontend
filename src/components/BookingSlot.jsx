@@ -7,7 +7,7 @@ export default function BookingSlot({
   createBooking,
   date,
   availability,
-  setPopup
+  setPopup,
 }) {
   const [caregiver, setCaregiver] = useState(null);
   const [confirmationMessage, setConfirmationMessage] = useState("");
@@ -29,7 +29,10 @@ export default function BookingSlot({
   }
   async function getCaregiver() {
     const { data } = await axios.get(
-      `http://localhost:5148/api/user?id=${availability.caregiverId}`
+      `http://localhost:5148/api/user?id=${availability.caregiverId}`,
+      {
+        withCredentials: true,
+      }
     );
     setCaregiver(data);
   }
