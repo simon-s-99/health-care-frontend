@@ -15,11 +15,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       authorize: async (credentials) => {
         let user = null; // set here so that we explicitly have to set it
         
+        // TODO - change this before production so env variable points to correct secret
         const baseUrl: string | undefined = process.env.BACKEND_API_HTTP;
 
         if (!baseUrl) {
-          console.error("Could not retrieve env variable 'BACKEND_API'");
-          return;
+          throw new Error("Could not retrieve env variable 'BACKEND_API'");
         }
 
         const requestUrl: string = (baseUrl as string).concat("/Auth/login");
@@ -33,12 +33,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           user = response.data;
         } catch (error) {
-          console.error(error + " OR " + "Invalid e-mail or password.");
+          throw new Error(error + "");
         }
 
         if (!user) {
-          console.error("no user found"); // No user found
-          throw new Error("Invalid credentials.");
+          throw new Error("Invalid credentials."); // No user found
         }
 
         // return user object with their profile data
@@ -93,7 +92,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 //     }),
 //   ],
 //   pages: {
-//     si gnIn: "/Auth/login",
+//     signIn: "/Auth/login",
 //   },
 //   callbacks: {
 //     async jwt({ token, account }) {
