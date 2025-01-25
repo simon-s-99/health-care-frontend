@@ -8,7 +8,7 @@ export default function BookingsList({
   createBooking,
   date,
   cancelBooking,
-  setPopup
+  setPopup,
 }) {
   const timeSlots = [
     <BookingSlot key={0} isAvailable={false} time={"08:00"} />,
@@ -59,14 +59,16 @@ export default function BookingsList({
   }
 
   function generateBookingSlotsForAvailableTimes(bookingSlots, counter) {
-
     // Loop through each available time, available times in each available time, and each time slot, if the times match, add the available time to the respective time slot
     for (let i = 0; i < availabilites.length; i++) {
       const currentAvailability = availabilites[i];
       for (let k = 0; k < bookingSlots.length; k++) {
         const currentTimeSlot = bookingSlots[k];
         if (
-          currentAvailability.time === currentTimeSlot.props.time &&
+          new Date(currentAvailability.dateTime).toLocaleTimeString("sv-SE", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }) === currentTimeSlot.props.time &&
           bookingSlots[k].type.name !== "Booking"
         ) {
           // Do not overwrite existing bookings
@@ -95,6 +97,7 @@ export default function BookingsList({
     );
     return completeBookingSlots;
   }
+
   return (
     <div className="flex flex-col w-full h-full px-4 mb-[10%]">
       <h2 className="text-xl text-center font-bold">{dateHeading}</h2>

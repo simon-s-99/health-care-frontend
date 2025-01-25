@@ -17,7 +17,9 @@ export default function BookingsPage() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState("");
   const [bookings, setBookings] = useState([]);
-  const [availabilites, setAvailabilites] = useState([]);
+  const [allAvailabilites, setAllAvailabilites] = useState([]);
+  const [currentAvailabilites, setCurrentAvailabilites] = useState([]);
+  const [firstAvailableSlot, setFirstAvailableSlot] = useState(null);
 
   async function createBooking(patientId, caregiverId, dateTime) {
     setError("");
@@ -71,21 +73,28 @@ export default function BookingsPage() {
 
   function generateSchedule() {
     let result;
-
-    if (availabilites.length > 0 || (bookings.length > 0 && date)) {
+    if (currentAvailabilites.length > 0 || (bookings.length > 0 && date)) {
       result = (
         <BookingsList
           setPopup={setPopup}
           loggedInUser={authState}
           createBooking={createBooking}
           bookings={bookings}
-          availabilites={availabilites}
+          currentAvailabilites={currentAvailabilites}
           date={date}
           cancelBooking={cancelBooking}
         />
       );
-    } else if (date) {
-      result = <h2>No bookings for {date}</h2>;
+    } else if (date && firstAvailableSlot) {
+      result = (
+        <div>
+          <h2 className="font-bold">No bookings for {date}</h2>
+          <p>
+            Next available time on{" "}
+            {new Date(firstAvailableSlot.dateTime).toLocaleDateString("sv-SE")}
+          </p>
+        </div>
+      );
     } else {
       result = <h2>Select a date to see bookings</h2>;
     }
@@ -124,39 +133,67 @@ export default function BookingsPage() {
     setBookings(formattedData);
   }
 
-  async function getAvailabilitesForDate() {
+  async function getAllAvailabilites() {
     const { data } = await axios.get(
-      `http://localhost:5148/api/availability/date?date=${date}`,
+      `http://localhost:5148/api/availability/all`,
       {
         withCredentials: true,
       }
     );
-
     const formattedData = [];
     for (let i = 0; i < data.length; i++) {
-      const time = new Date(data[i].dateTime) // Get the time exclusively
-        .toLocaleString("sv-SE")
-        .split(" ")
-        .pop()
-        .slice(0, 5);
+      const dateTimeSwedish = new Date(data[i].dateTime).toLocaleDateString(
+        "sv-SE",
+        {
+          timeZone: "Europe/Stockholm",
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+      );
 
       const entry = {
         id: data[i].id,
         caregiverId: data[i].caregiverId,
-        time: time,
+        dateTime: dateTimeSwedish,
       };
-
       formattedData.push(entry);
     }
-    setAvailabilites(formattedData);
+    setAllAvailabilites(formattedData);
+  }
+
+  function filterAvailabilitesForSelectedDate() {
+    const allAvailabilitesCopy = allAvailabilites;
+    const availabilitesForDate = allAvailabilitesCopy.filter(
+      (a) =>
+        new Date(a.dateTime).toLocaleDateString("sv-SE") ==
+        new Date(date).toLocaleDateString("sv-SE")
+    );
+    setCurrentAvailabilites(availabilitesForDate);
+  }
+
+  // Get the first available time after the selected date
+  function getFirstAvailability() {
+    const allAvailabilitesCopy = allAvailabilites;
+    const availability = allAvailabilitesCopy.filter(
+      (a) =>
+        new Date(a.dateTime).toLocaleDateString("sv-SE") >
+        new Date(date).toLocaleDateString("sv-SE")
+    )[0];
+
+    setFirstAvailableSlot(availability);
   }
 
   useEffect(() => {
     if (date && authState.userId) {
-      getAvailabilitesForDate();
       getUserAppointmentsForDate();
+      filterAvailabilitesForSelectedDate();
+      getFirstAvailability();
     }
   }, [date]);
+
+  useEffect(() => {
+    getAllAvailabilites();
+  }, []);
 
   return (
     <div className="flex flex-col justify-center items-center">

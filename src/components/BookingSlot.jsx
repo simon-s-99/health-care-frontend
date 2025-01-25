@@ -15,7 +15,7 @@ export default function BookingSlot({
   function handleCreateBooking() {
     setPopup(null);
 
-    const dateTime = date + "T" + availability.time;
+    const dateTime = date + "T" + new Date(availability.dateTime).toLocaleTimeString("sv-SE", {hour: "2-digit", minute: "2-digit"});
     const success = createBooking(
       loggedInUser.userId,
       availability.caregiverId,
