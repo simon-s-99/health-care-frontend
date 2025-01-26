@@ -8,14 +8,18 @@ export default function UserDashboard() {
   const { authState } = useAuth();
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
   const [appointmentHistory, setAppointmentHistory] = useState([]);
-  const [caregiverNames, setCaregiverNames] = useState({}); 
+  const [caregiverNames, setCaregiverNames] = useState({});
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get("http://localhost:5148/api/appointment/user", {
-          params: { id: authState.userId, isPatient: true },
-        });
+        const response = await axios.get(
+          "http://localhost:5148/api/appointment/user",
+          {
+            params: { id: authState.userId, isPatient: true },
+            withCredentials: true,
+          }
+        );
 
         if (response.data) {
           const now = new Date(Date.now());
@@ -41,7 +45,12 @@ export default function UserDashboard() {
 
           caregiverIds.forEach(async (caregiverId) => {
             try {
-              const { data } = await axios.get(`http://localhost:5148/api/user?id=${caregiverId}`);
+              const { data } = await axios.get(
+                `http://localhost:5148/api/user?id=${caregiverId}`,
+                {
+                  withCredentials: true,
+                }
+              );
               setCaregiverNames((prevNames) => ({
                 ...prevNames,
                 [caregiverId]: `${data.firstname} ${data.lastname}`,
@@ -63,8 +72,11 @@ export default function UserDashboard() {
     try {
       await axios.delete(`http://localhost:5148/api/appointment`, {
         params: { id: appointmentId },
+        withCredentials: true,
       });
-      setUpcomingAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
+      setUpcomingAppointments((prev) =>
+        prev.filter((a) => a.id !== appointmentId)
+      );
     } catch (error) {
       console.error("Error canceling appointment:", error);
     }
@@ -90,7 +102,9 @@ export default function UserDashboard() {
           </TabsList>
 
           <TabsContent value="upcoming">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Upcoming Appointments</h2>
+            <h2 className="text-xl font-bold text-gray-700 mb-4">
+              Upcoming Appointments
+            </h2>
             {upcomingAppointments.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
                 {upcomingAppointments.map((appointment) => (
@@ -105,17 +119,23 @@ export default function UserDashboard() {
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-gray-600">
-                        Time: {new Date(appointment.dateTime).toLocaleTimeString('sv-SE', { 
-                          timeZone: 'Europe/Stockholm',
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                        Time:{" "}
+                        {new Date(appointment.dateTime).toLocaleTimeString(
+                          "sv-SE",
+                          {
+                            timeZone: "Europe/Stockholm",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
                       </p>
-                      <p className="text-sm text-gray-600">Doctor: {caregiverNames[appointment.caregiverId]}
+                      <p className="text-sm text-gray-600">
+                        Doctor: {caregiverNames[appointment.caregiverId]}
                       </p>
                       <button
-                      onClick={() => onCancelAppointment(appointment.id)} 
-                      className="mt-4 text-red-600 font-semibold hover:underline">
+                        onClick={() => onCancelAppointment(appointment.id)}
+                        className="mt-4 text-red-600 font-semibold hover:underline"
+                      >
                         Cancel
                       </button>
                     </CardContent>
@@ -123,12 +143,16 @@ export default function UserDashboard() {
                 ))}
               </div>
             ) : (
-              <p className="text-center text-gray-500 italic">No upcoming appointments scheduled.</p>
+              <p className="text-center text-gray-500 italic">
+                No upcoming appointments scheduled.
+              </p>
             )}
           </TabsContent>
 
           <TabsContent value="history">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Appointment History</h2>
+            <h2 className="text-xl font-bold text-gray-700 mb-4">
+              Appointment History
+            </h2>
             {appointmentHistory.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
                 {appointmentHistory.map((appointment) => (
@@ -142,19 +166,28 @@ export default function UserDashboard() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-gray-600">Time: {new Date(appointment.dateTime).toLocaleTimeString("sv-SE", {
-                        timeZone: "Europe/Stockholm",
-                        hour: "2-digit",
-                        minute: "2-digit"
-                      })}</p>
-                      <p className="text-sm text-gray-600">Doctor: {caregiverNames[appointment.caregiverId]}
+                      <p className="text-sm text-gray-600">
+                        Time:{" "}
+                        {new Date(appointment.dateTime).toLocaleTimeString(
+                          "sv-SE",
+                          {
+                            timeZone: "Europe/Stockholm",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Doctor: {caregiverNames[appointment.caregiverId]}
                       </p>
                     </CardContent>
                   </Card>
                 ))}
               </div>
             ) : (
-              <p className="text-center text-gray-500 italic">No past appointments found.</p>
+              <p className="text-center text-gray-500 italic">
+                No past appointments found.
+              </p>
             )}
           </TabsContent>
         </Tabs>
