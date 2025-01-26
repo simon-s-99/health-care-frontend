@@ -1,6 +1,6 @@
 import axios from "axios";
-// button to handle logout, you can change this as you want
-// does not have to look or be like this but you can see how to use the logout call
+import { Button } from "./ui/button";
+
 export default function Logout() {
   const handleLogout = () => {
     axios
@@ -12,12 +12,16 @@ export default function Logout() {
         }
       )
       .then((response) => {
-        window.location.href = "/login";
+        window.location.href = "/home";
       })
       .catch((error) => {
         console.error("Error logging out:", error);
       });
   };
 
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <Button variant="secondary" className="rounded-xl" onClick={handleLogout}>
+      Logout
+    </Button>
+  );
 };
