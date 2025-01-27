@@ -1,7 +1,8 @@
-import heartRateIcon from "../assets/heart-rate-icon.svg";
-import doctorIcon from "../assets/doctor-icon.svg";
+import heartRateIcon from "@/public/heart-rate-icon.svg";
+import doctorIcon from "@/public/doctor-icon.svg";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function NavBar() {
   const { authState } = useAuth();
@@ -15,39 +16,39 @@ export default function NavBar() {
   ) : (
     <Button variant="secondary" className="rounded-xl">
       {/* Otherwise if not logged in, display a login button */}
-      <NavLink to="/login">Log in</NavLink>
+      <Link to="/login">Log in</Link>
     </Button>
   );
   return (
     <nav className="flex flex-row justify-between uppercase tracking-wider">
       <ul className="flex flex-row justify-between w-1/2 xl:w-1/4 *:p-2">
         <li className="z-10">
-          <NavLink to="/">
-            <img
+          <Link to="/">
+            <image
               className="min-w-[50px] min-h-[50px] hover:scale-110"
-              src={isAdmin ? doctorIcon : heartRateIcon}
+              //src={isAdmin ? doctorIcon : heartRateIcon}
               alt="Navigation icon"
             />
-          </NavLink>
+          </Link>
         </li>
         <li className="sm:visible invisible my-2">
-          <NavLink
+          <Link
             className="hover:text-blue-700"
             to={isAdmin ? "/schedule" : "/booking"}
           >
             {isAdmin ? "Schedule" : "Booking"}
-          </NavLink>
+          </Link>
         </li>
         <li className="sm:visible invisible my-2">
-          <NavLink className="hover:text-blue-700" to="/dashboard">
+          <Link className="hover:text-blue-700" to="/dashboard">
             Dashboard
-          </NavLink>
+          </Link>
         </li>
         {/* Feedback button */}
   <li className="sm:visible invisible my-2">
-    <NavLink className="hover:text-blue-700" to="/feedback">
+    <Link className="hover:text-blue-700" to="/feedback">
       Submit feedback
-    </NavLink>
+    </Link>
   </li>
       </ul>
 
@@ -66,21 +67,21 @@ export default function NavBar() {
       {isActive && (
         <ul className="bg-blue-400 absolute flex text-center flex-col w-full sm:hidden *:mt-10 pb-4">
           <li>
-            <NavLink
+            <Link
               className="block w-full"
               to={isAdmin ? "/schedule" : "/booking"}
             >
               {isAdmin ? "Schedule" : "Booking"}
-            </NavLink>
+            </Link>
           </li>
           <li>
-            <NavLink className="block w-full" to="/dashboard">
+            <Link className="block w-full" to="/dashboard">
               Dashboard
-            </NavLink>
+            </Link>
           </li>
-          <NavLink className="block w-full" to="/feedback">
+          <Link className="block w-full" to="/feedback">
               Submit your feedback
-            </NavLink>
+            </Link>
           <li>
             <span className="*:bg-transparent *:uppercase *:tracking-wider *:w-full *:text-yellow-300 *:hover:bg-transparent *:h-0">
               {endContent}

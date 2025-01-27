@@ -3,16 +3,19 @@ import ExampleServerSideUseAuth from "@/components/auth/ExampleServerSideUseAuth
 import SignInButton from "@/components/auth/SignInButton";
 import SignOutButton from "@/components/auth/SignOutButton";
 
-import React from "react";
 import { Button } from "../components/ui/button";
-import Logo from "../assets/health_care_logo.svg";
-import experiencedTeam from "../assets/experienced-team.jpg"; 
-import doctorpatient from "../assets/doctorpatient-image.jpg";
+import Logo from "@/public/health_care_logo.svg";
+import experiencedTeam from "@/public/experienced-team.jpg"; 
+import doctorpatient from "@/public/doctorpatient-image.jpg";
+import Image from "next/image";
+import NavBar from "@/components/NavBar";
 
 export default async function Home() {
   return (
     <>
       <header>
+        {/* <NavBar /> */}
+
         <div className="px-4 py-2 rounded-md bg-green-400 hover:bg-green-600">
           <SignInButton />
         </div>
@@ -53,7 +56,7 @@ export default async function Home() {
 <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       {/* Hero Section */}
       <div className="text-center py-3 bg-gradient-to-r from-green-200 to-green-400 text-black w-full">
-        <img src={Logo} alt="Health Care Logo" className="h-48 mx-auto mb-6 animate-pulse" />
+        <Image src={Logo} alt="Health Care Logo" className="h-48 mx-auto mb-6 animate-pulse" />
         <h1 className="text-4xl font-bold mb-4">
           Welcome to Health Care AB
         </h1>
@@ -63,10 +66,10 @@ export default async function Home() {
         </p>
         <div className="flex justify-center space-x-4 mt-6">
           <Button asChild variant="outline" size="lg" className="text-black">
-            <Link to="/register">Get Started</Link>
+            {/* <Link to="/register">Get Started</Link> */}
           </Button>
           <Button asChild variant="secondary" size="lg">
-            <Link to="/login">Login</Link>
+            {/* <Link to="/login">Login</Link> */}
           </Button>
         </div>
       </div>
@@ -77,7 +80,7 @@ export default async function Home() {
         <div className="grid md:grid-cols-2 gap-8">
           <div className="flex flex-col items-center">
             <div className="flex justify-center items-center w-full h-64 overflow-hidden rounded-lg shadow-md mb-4 bg-green-100">
-              <img
+              <Image
                 src={experiencedTeam}
                 alt="Expert Doctor"
                 className="w-auto h-full object-contain"
@@ -91,7 +94,7 @@ export default async function Home() {
           </div>
           <div className="flex flex-col items-center">
             <div className="flex justify-center items-center w-full h-64 overflow-hidden rounded-lg shadow-md mb-4 bg-green-100">
-              <img
+              <Image
                 src={doctorpatient}
                 alt="Medical Team"
                 className="w-auto h-full object-contain"
@@ -113,9 +116,9 @@ export default async function Home() {
           Join our community today and experience world-class healthcare
           services that put you first.
         </p>
-        <Button asChild variant="primary" size="lg" className="bg-white text-green-600">
-          <Link to="/register">Join Now</Link>
-        </Button>
+        {/* <Button asChild variant="primary" size="lg" className="bg-white text-green-600"> */}
+          {/* <Link to="/register">Join Now</Link> */}
+        {/* </Button> */}
       </div>
     </div>
 

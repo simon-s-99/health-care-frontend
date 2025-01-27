@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Logo from "../assets/health_care_logo.svg";
+import Logo from "@/public/health_care_logo.svg";
 import { useSession } from "next-auth/react";
 
 export default function UserDashboard() {

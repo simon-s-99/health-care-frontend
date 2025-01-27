@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 export default function Register() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
     firstname: "",
     lastname: "",
@@ -21,11 +20,15 @@ export default function Register() {
 // Updates the userDetails state with the input field's value.
 // This function is triggered whenever an input field changes.
 // It uses the "name" attribute of the input field to determine which property of the userDetails object to update.
-  const handleInputChange = (e) => {
-    setUserDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
+
+    const inputValue = e.target.value;
+    const inputName = e.target.name;
+
+    setUserDetails((prev) => ({ ...prev, [inputName]: inputValue }));
   };
 
-  const handleRegister = async (e) => {
+  async function handleRegister(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (userDetails.password !== userDetails.confirmPassword) {
@@ -48,11 +51,12 @@ export default function Register() {
       );
           
       console.log("Registration successful:", response.data);
-      navigate("/login", { replace: true });
+      // navigate("/login", { replace: true });
     } catch (error) {
       
-      if (error.response) {
-        setError(error.response.data || "Registration failed. Please try again.");
+      if (error) {
+        setError("Registration failed. Please try again.");
+        console.error(error)
       }
     }
   };
@@ -65,7 +69,7 @@ export default function Register() {
         </CardHeader>
         <CardContent>
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-          <form className="space-y-4" onSubmit={handleRegister}>
+          <form className="space-y-4" onSubmit={(e) => handleRegister(e)}>
             <div>
               <label htmlFor ="firstname" className="block text-sm font-medium text-gray-700">
                 First Name
@@ -75,7 +79,7 @@ export default function Register() {
                 name="firstname"
                 type="text"
                 value={userDetails.firstname}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
                 required
               />
             </div>
@@ -88,7 +92,7 @@ export default function Register() {
                 name="lastname"
                 type="text"
                 value={userDetails.lastname}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
                 required
               />
             </div>
@@ -101,7 +105,7 @@ export default function Register() {
                 name="email"
                 type="email"
                 value={userDetails.email}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
                 required
               />
             </div>
@@ -114,7 +118,7 @@ export default function Register() {
                 name="phonenumber"
                 type="tel"
                 value={userDetails.phonenumber}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
                 required
               />
             </div>
@@ -127,7 +131,7 @@ export default function Register() {
                 name="username"
                 type="text"
                 value={userDetails.username}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
                 required
               />
             </div>
@@ -140,7 +144,7 @@ export default function Register() {
                 name="password"
                 type="password"
                 value={userDetails.password}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
                 required
               />
             </div>
@@ -153,7 +157,7 @@ export default function Register() {
                 name="confirmPassword"
                 type="password"
                 value={userDetails.confirmPassword}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
                 required
               />
             </div>
