@@ -76,20 +76,21 @@ const Profile = () => {
         "http://localhost:5148/api/Auth/Update",
         account,
         {
-          withCredentials: true, // Ensure cookies (e.g., jwt) are sent
+          withCredentials: true, // Ensure cookies (jwt) are sent
         }
       );
 
       setIsDirty(false);
 
       if (response.status === 200) {
+        setError("");
         alert(response.data.message || "Profile updated successfully!");
-      } else {
-        alert("Something went wrong while updating the profile.");
       }
     } catch (error) {
-      console.error("Failed to update profile:", error);
-      alert("Failed to update profile.");
+      console.error("Error updating profile:", error.response?.data || error);
+      const errorMessage =
+        error.response?.data?.errors?.join(", ") || "Failed to update profile.";
+      setError(errorMessage); // Display the errors in the UI
     } finally {
       setIsSavingAccount(false);
     }
@@ -113,14 +114,21 @@ const Profile = () => {
   // Change the users password
   const changePassword = async () => {
     setIsChangingPassword(true);
+    setError(""); // Clear any previous errors
+
     try {
       if (passwords.newPassword !== passwords.confirmPassword) {
         setError("New password and confirmation do not match.");
         return;
       }
 
+      if (!passwords.newPassword || !passwords.confirmPassword) {
+        setError("New password and confirmation password are required.");
+        return;
+      }
+
       // Send a request to the server to change the password
-      const response = await axios.patch(
+      const response = await axios.post(
         "http://localhost:5148/api/Auth/change-password",
         {
           currentPassword: passwords.currentPassword,
@@ -128,20 +136,27 @@ const Profile = () => {
           confirmPassword: passwords.confirmPassword,
         },
         {
-          withCredentials: true, // Ensure cookies (e.g., jwt) are sent
+          withCredentials: true,
         }
       );
 
       if (response.status === 200) {
+        setError(""); // Clear any errors
         alert(response.data.message || "Password changed successfully!");
       } else {
-        alert("Unexpected error while changing the password.");
+        setError("Unexpected error while changing the password.");
       }
     } catch (error) {
-      console.error("Failed to change password:", error);
-      alert("Failed to change password.");
+      console.error("Error changing password:", error.response?.data || error);
+
+      // Extract the error message from the server response, if available
+      const errorMessage =
+        error.response?.data ||
+        error.response?.data?.message ||
+        "Failed to change password.";
+      setError(errorMessage); // Display the specific error message to the user
     } finally {
-      setIsChangingPassword(false);
+      setIsChangingPassword(false); // End the loading state
     }
   };
 
@@ -150,13 +165,12 @@ const Profile = () => {
   }
 
   return (
-    <main className="max-w-3x1 mx-auto mt-10 p-4">
-      {/* ShadCN Tabs Component */}
-      <section aria-labelledby="profile-tabs">
+    <main className="flex justify-center items-center min-h-screen bg-gray-100">
+      <section className="w-full max-w-lg mx-auto bg-white p-6 shadow-md rounded-lg">
         <Tabs defaultValue="account" className="w-full">
-          {/* Tabs List: Switch between Account and Password tabs */}
-          <nav aria-label="Profile Tabs">
-            <TabsList>
+          {/* Tabs List */}
+          <nav aria-label="Profile Tabs" className="text-center mb-4">
+            <TabsList className="justify-center">
               <TabsTrigger value="account">Account</TabsTrigger>
               <TabsTrigger value="password">Password</TabsTrigger>
             </TabsList>
@@ -164,13 +178,12 @@ const Profile = () => {
 
           {/* Account Tab */}
           <TabsContent value="account">
-            <section aria-labelledby="account-section">
-              <h2 id="account-section" className="text-lg font-semibold">
+            <section aria-labelledby="account-section" className="text-center">
+              <h2 id="account-section" className="text-lg font-semibold mb-4">
                 Account
               </h2>
-              {error && <p className="text-red-600">{error}</p>}
-              {/*Error message*/}
-              <form className="flex flex-col gap-4">
+              {error && <p className="text-red-600 mb-2">{error}</p>}
+              <form className="flex flex-col gap-4 items-center">
                 {/* First Name Input */}
                 <InputField
                   label="First Name"
@@ -178,6 +191,7 @@ const Profile = () => {
                   value={account.firstname}
                   onChange={handleAccountChange}
                   required={true}
+                  className="w-full max-w-lg"
                 />
 
                 {/* Last Name Input */}
@@ -187,6 +201,7 @@ const Profile = () => {
                   value={account.lastname}
                   onChange={handleAccountChange}
                   required={true}
+                  className="w-full max-w-md"
                 />
 
                 {/* Email Input */}
@@ -197,6 +212,7 @@ const Profile = () => {
                   value={account.email}
                   onChange={handleAccountChange}
                   required={true}
+                  className="w-full max-w-md"
                 />
 
                 {/* Phone Number Input */}
@@ -207,6 +223,7 @@ const Profile = () => {
                   value={account.phonenumber}
                   onChange={handleAccountChange}
                   required={true}
+                  className="w-full max-w-md"
                 />
 
                 {/* Username Input */}
@@ -216,13 +233,14 @@ const Profile = () => {
                   value={account.username}
                   onChange={handleAccountChange}
                   required={true}
+                  className="w-full max-w-md"
                 />
 
                 {/* Save Changes Button */}
                 <button
                   type="button"
                   onClick={saveAccountDetails}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md mt-4"
                   disabled={isSavingAccount}
                 >
                   {isSavingAccount ? "Saving..." : "Save Changes"}
@@ -233,18 +251,17 @@ const Profile = () => {
 
           {/* Password Tab */}
           <TabsContent value="password">
-            <section aria-labelledby="password-section">
-              <h2 id="password-section" className="text-lg font-semibold">
+            <section aria-labelledby="password-section" className="text-center">
+              <h2 id="password-section" className="text-lg font-semibold mb-4">
                 Password
               </h2>
-              {error && <p className="text-red-600">{error}</p>}
-              {/* Display error */}
-              <form className="flex flex-col gap-4">
+              {error && <p className="text-red-600 mb-2">{error}</p>}
+              <form className="flex flex-col gap-4 items-center">
                 {/* Current Password Input */}
-                <div>
+                <div className="w-full max-w-md">
                   <label
-                    className="block text-sm font-medium"
                     htmlFor="currentPassword"
+                    className="block text-sm font-medium"
                   >
                     Current Password
                   </label>
@@ -255,13 +272,15 @@ const Profile = () => {
                     value={passwords.currentPassword}
                     onChange={handlePasswordChange}
                     className="w-full p-2 border rounded-md"
+                    autoComplete="current-password"
                   />
                 </div>
+
                 {/* New Password Input */}
-                <div>
+                <div className="w-full max-w-md">
                   <label
-                    className="block text-sm font-medium"
                     htmlFor="newPassword"
+                    className="block text-sm font-medium"
                   >
                     New Password
                   </label>
@@ -272,13 +291,15 @@ const Profile = () => {
                     value={passwords.newPassword}
                     onChange={handlePasswordChange}
                     className="w-full p-2 border rounded-md"
+                    autoComplete="new-password"
                   />
                 </div>
+
                 {/* Confirm New Password Input */}
-                <div>
+                <div className="w-full max-w-md">
                   <label
-                    className="block text-sm font-medium"
                     htmlFor="confirmPassword"
+                    className="block text-sm font-medium"
                   >
                     Confirm New Password
                   </label>
@@ -289,13 +310,15 @@ const Profile = () => {
                     value={passwords.confirmPassword}
                     onChange={handlePasswordChange}
                     className="w-full p-2 border rounded-md"
+                    autoComplete="new-password"
                   />
                 </div>
+
                 {/* Change Password Button */}
                 <button
                   type="button"
                   onClick={changePassword}
-                  className="px-4 py-2 bg-green-500 text-white rounded-md"
+                  className="px-4 py-2 bg-green-500 text-white rounded-md mt-4"
                   disabled={isChangingPassword}
                 >
                   {isChangingPassword ? "Changing..." : "Change Password"}
