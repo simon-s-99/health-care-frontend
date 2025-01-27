@@ -1,11 +1,14 @@
+'use client';
 import heartRateIcon from "@/public/heart-rate-icon.svg";
 import doctorIcon from "@/public/doctor-icon.svg";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Link from "next/link";
+import useAuth from "@/hooks/useAuth";
+import Image from "next/image";
 
 export default function NavBar() {
-  const { authState } = useAuth();
+  const authState = useAuth();
   const isAdmin = authState && authState.roles?.includes("Admin");
   const [isActive, setIsActive] = useState(false);
   const endContent = authState.isAuthenticated ? (
@@ -16,17 +19,17 @@ export default function NavBar() {
   ) : (
     <Button variant="secondary" className="rounded-xl">
       {/* Otherwise if not logged in, display a login button */}
-      <Link to="/login">Log in</Link>
+      <Link href="/login">Log in</Link>
     </Button>
   );
   return (
     <nav className="flex flex-row justify-between uppercase tracking-wider">
       <ul className="flex flex-row justify-between w-1/2 xl:w-1/4 *:p-2">
         <li className="z-10">
-          <Link to="/">
-            <image
+          <Link href="/">
+            <Image
               className="min-w-[50px] min-h-[50px] hover:scale-110"
-              //src={isAdmin ? doctorIcon : heartRateIcon}
+              src={isAdmin ? doctorIcon : heartRateIcon}
               alt="Navigation icon"
             />
           </Link>
@@ -34,19 +37,19 @@ export default function NavBar() {
         <li className="sm:visible invisible my-2">
           <Link
             className="hover:text-blue-700"
-            to={isAdmin ? "/schedule" : "/booking"}
+            href={isAdmin ? "/schedule" : "/booking"}
           >
             {isAdmin ? "Schedule" : "Booking"}
           </Link>
         </li>
         <li className="sm:visible invisible my-2">
-          <Link className="hover:text-blue-700" to="/dashboard">
+          <Link className="hover:text-blue-700" href="/dashboard">
             Dashboard
           </Link>
         </li>
         {/* Feedback button */}
   <li className="sm:visible invisible my-2">
-    <Link className="hover:text-blue-700" to="/feedback">
+    <Link className="hover:text-blue-700" href="/feedback">
       Submit feedback
     </Link>
   </li>
@@ -57,11 +60,11 @@ export default function NavBar() {
         className="sm:hidden inline z-10"
         onClick={() => setIsActive(!isActive)}
       >
-        {isActive ? (
+        {/* {isActive ? (
           <RiCloseLargeFill className="w-[50px] h-[50px]" />
         ) : (
           <RxHamburgerMenu className="w-[50px] h-[50px]" />
-        )}
+        )} */}
       </button>
 
       {isActive && (
@@ -69,17 +72,17 @@ export default function NavBar() {
           <li>
             <Link
               className="block w-full"
-              to={isAdmin ? "/schedule" : "/booking"}
+              href={isAdmin ? "/schedule" : "/booking"}
             >
               {isAdmin ? "Schedule" : "Booking"}
             </Link>
           </li>
           <li>
-            <Link className="block w-full" to="/dashboard">
+            <Link className="block w-full" href="/dashboard">
               Dashboard
             </Link>
           </li>
-          <Link className="block w-full" to="/feedback">
+          <Link className="block w-full" href="/feedback">
               Submit your feedback
             </Link>
           <li>

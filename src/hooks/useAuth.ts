@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import { AuthenticatedUser } from "@/lib/types";
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export default function useAuth(): AuthenticatedUser {
+  const { authState } = useContext(AuthContext);
+  return authState;
+}

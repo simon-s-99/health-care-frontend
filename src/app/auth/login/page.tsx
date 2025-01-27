@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
-import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import useAuth from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRouter } from "next/router";
+import { AuthenticatedUser } from "@/lib/types";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function Login() {
-  const { setAuthState } = useAuth();
-  const navigate = useNavigate();
+  const { setAuthState } = useContext(AuthContext);
+  const router = useRouter();
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -31,27 +33,11 @@ export default function Login() {
         }
       );
 
-      console.log("Login successful:", JSON.stringify(response.data));
+      setAuthState(response.data);
 
-      const { loggedInUser, roles } = response.data;
-
-      setAuthState({
-        isAuthenticated: true,
-        user: loggedInUser,
-        roles: roles,
-      });
-
-      if (roles.includes("Admin")) {
-        console.log("admin role");
-        navigate("/admin/dashboard", { replace: true });
-        window.location.reload();
-      } else {
-        console.log("user");
-        navigate("/user/dashboard", { replace: true });
-        window.location.reload();
-      }
+      router.push("/");
     } catch (error) {
-      console.error("Login failed:", error.response || error);
+      console.error("Login failed: " + error);
       setError("Invalid username or password");
     }
   };

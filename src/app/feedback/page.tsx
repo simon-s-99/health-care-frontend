@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+import useAuth from "@/hooks/useAuth";
 
 export default function FeedbackList() {
   // State variables to store and manage feedback, form data, and application state.
@@ -14,8 +14,8 @@ export default function FeedbackList() {
   const [starDistribution, setStarDistribution] = useState({}); // Stores the number of reviews for each star rating
 
   // Fetch the logged-in user's information from authState
-  const session = useSession();
-  const patientId = session.data?.user?.id;
+  const user = useAuth()
+  const patientId = user.userId;
 
   // Fetch the user's appointment ID
   useEffect(() => {
@@ -47,6 +47,10 @@ export default function FeedbackList() {
 
     fetchAppointmentId();
   }, [patientId]);
+
+  useEffect(() => {
+    
+  })
 
   // Fetch feedback data with pagination
   const fetchFeedback = async (reset = false) => {
@@ -82,10 +86,10 @@ export default function FeedbackList() {
   };
 
   // Calculate the distribution of feedback by star ratings
-  const calculateStarDistribution = (feedbackList: unknown[]) => { // TODO: Add Feedback type
+  const calculateStarDistribution = (FeedbackList) => {
     console.log("Calculating star distribution...");
     const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }; // Initialize all ratings to 0
-    feedbackList.forEach((item) => {
+    FeedbackList.forEach((item) => {
       distribution[item.rating] = (distribution[item.rating] || 0) + 1; // Increment count for each rating
     });
     console.log("Updated star distribution:", distribution);
@@ -99,7 +103,7 @@ export default function FeedbackList() {
   }, []);
 
   // Handle feedback submission
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log("Submitting feedback with:", {
       appointmentId,
@@ -137,7 +141,7 @@ export default function FeedbackList() {
       console.error("Failed to submit feedback:", err);
       setError("Failed to submit feedback.");
     }
-  };
+  }
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-gray-50">
