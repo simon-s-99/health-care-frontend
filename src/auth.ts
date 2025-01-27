@@ -1,7 +1,6 @@
 import axios from "axios";
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-//import { URL } from "url" // url object is disallowed when using next-auth due to problems with edge runtime
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: process.env.NODE_ENV !== "production", // allow debug messages in console in dev mode
@@ -15,7 +14,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         let user = null; // set to null here so that we explicitly have to set it
-        
+
         // TODO - change this before production so env variable points to correct secret
         const baseUrl: string | undefined = process.env.BACKEND_API_HTTP;
 

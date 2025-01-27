@@ -1,11 +1,7 @@
 import heartRateIcon from "../assets/heart-rate-icon.svg";
 import doctorIcon from "../assets/doctor-icon.svg";
-import { useAuth } from "../hooks/useAuth";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { RiCloseLargeFill } from "react-icons/ri";
-import { NavLink } from "react-router-dom";
 
 export default function NavBar() {
   const { authState } = useAuth();
