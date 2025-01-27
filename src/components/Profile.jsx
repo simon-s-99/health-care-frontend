@@ -10,6 +10,8 @@ const Profile = () => {
   const [isSavingAccount, setIsSavingAccount] = useState(false); // Indicates if account update is in progress
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [error, setError] = useState("");
+  const [successAccount, setSuccessAccount] = useState("");
+  const [successPassword, setSuccessPassword] = useState("");
 
   // Account details
   const [account, setAccount] = useState({
@@ -71,6 +73,8 @@ const Profile = () => {
   const saveAccountDetails = async () => {
     setIsSavingAccount(true); // Indicate that the account update is in progress
     setError(""); // Reset error state
+    setSuccessAccount("");
+    setSuccessPassword("");
     try {
       const response = await axios.patch(
         "http://localhost:5148/api/Auth/Update",
@@ -84,7 +88,9 @@ const Profile = () => {
 
       if (response.status === 200) {
         setError("");
-        alert(response.data.message || "Profile updated successfully!");
+        setSuccessAccount(
+          response.data.message || "Profile updated successfully!"
+        );
       }
     } catch (error) {
       console.error("Error updating profile:", error.response?.data || error);
@@ -115,6 +121,8 @@ const Profile = () => {
   const changePassword = async () => {
     setIsChangingPassword(true);
     setError(""); // Clear any previous errors
+    setSuccessPassword("");
+    setSuccessAccount("");
 
     try {
       if (passwords.newPassword !== passwords.confirmPassword) {
@@ -142,7 +150,9 @@ const Profile = () => {
 
       if (response.status === 200) {
         setError(""); // Clear any errors
-        alert(response.data.message || "Password changed successfully!");
+        setSuccessPassword(
+          response.data.message || "Password changed successfully!"
+        );
       } else {
         setError("Unexpected error while changing the password.");
       }
@@ -183,6 +193,9 @@ const Profile = () => {
                 Account
               </h2>
               {error && <p className="text-red-600 mb-2">{error}</p>}
+              {successAccount && (
+                <p className="text-green-600 mb-2">{successAccount}</p>
+              )}
               <form className="flex flex-col gap-4 items-center">
                 {/* First Name Input */}
                 <InputField
@@ -255,7 +268,13 @@ const Profile = () => {
               <h2 id="password-section" className="text-lg font-semibold mb-4">
                 Password
               </h2>
+
+              {/* Error and Success Messages */}
               {error && <p className="text-red-600 mb-2">{error}</p>}
+              {successPassword && (
+                <p className="text-green-600 mb-2">{successPassword}</p>
+              )}
+
               <form className="flex flex-col gap-4 items-center">
                 {/* Current Password Input */}
                 <div className="w-full max-w-md">
