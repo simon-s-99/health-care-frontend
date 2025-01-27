@@ -6,16 +6,27 @@ import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
+import profileIcon from "../assets/profile-icon.jpg";
 
 export default function NavBar() {
   const { authState } = useAuth();
   const isAdmin = authState && authState.roles?.includes("Admin");
   const [isActive, setIsActive] = useState(false);
   const endContent = authState.isAuthenticated ? (
-    <p>
-      Welcome {authState.username}, logged in as {isAdmin ? "caregiver" : "patient"}
-      {/* If user or admin, display "caregiver" or "patient" */}
-    </p>
+    <div className="flex items-center gap-2">
+      <p>
+        Welcome {authState.username}, logged in as{" "}
+        {isAdmin ? "caregiver" : "patient"}
+      </p>
+      {/* Profile icon */}
+      <NavLink to="/profileInterface">
+        <img
+          src={profileIcon}
+          alt="Profile icon"
+          className="w-8 h-8 rounded-full border border-gray-300 hover:scale-110"
+        />
+      </NavLink>
+    </div>
   ) : (
     <Button variant="secondary" className="rounded-xl">
       {/* Otherwise if not logged in, display a login button */}
@@ -48,11 +59,11 @@ export default function NavBar() {
           </NavLink>
         </li>
         {/* Feedback button */}
-  <li className="sm:visible invisible my-2">
-    <NavLink className="hover:text-blue-700" to="/feedback">
-      Submit feedback
-    </NavLink>
-  </li>
+        <li className="sm:visible invisible my-2">
+          <NavLink className="hover:text-blue-700" to="/feedback">
+            Submit feedback
+          </NavLink>
+        </li>
       </ul>
 
       <span className="sm:inline hidden m-2">{endContent}</span>
@@ -83,8 +94,8 @@ export default function NavBar() {
             </NavLink>
           </li>
           <NavLink className="block w-full" to="/feedback">
-              Submit your feedback
-            </NavLink>
+            Submit your feedback
+          </NavLink>
           <li>
             <span className="*:bg-transparent *:uppercase *:tracking-wider *:w-full *:text-yellow-300 *:hover:bg-transparent *:h-0">
               {endContent}
