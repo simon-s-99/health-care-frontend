@@ -15,6 +15,8 @@ import Home from "./components/Home";
 import RequireAuth from "./components/RequireAuth";
 import FeedbackList from "./components/Feedback";
 import NavBar from "./components/NavBar";
+import BookingsPage from "./components/BookingsPage";
+
 export default function App() {
   return (
     <AuthProvider>
@@ -31,6 +33,14 @@ export default function App() {
               element={
                 <RequireAuth allowedRoles={["User", "Admin"]}>
                   <Dashboard />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/booking"
+              element={
+                <RequireAuth allowedRoles={["User"]}>
+                  <BookingsPage />
                 </RequireAuth>
               }
             />

@@ -64,8 +64,11 @@ export default function Dashboard() {
     try {
       await axios.delete(`http://localhost:5148/api/appointment`, {
         params: { id: appointmentId },
+        withCredentials: true,
       });
-      setUpcomingAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
+      setUpcomingAppointments((prev) =>
+        prev.filter((a) => a.id !== appointmentId)
+      );
     } catch (error) {
       console.error("Error canceling appointment:", error);
     }
@@ -92,7 +95,9 @@ export default function Dashboard() {
 
           {/* Upcoming Appointments */}
           <TabsContent value="upcoming">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Upcoming Appointments</h2>
+            <h2 className="text-xl font-bold text-gray-700 mb-4">
+              Upcoming Appointments
+            </h2>
             {upcomingAppointments.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
                 {upcomingAppointments.map((appointment) => (
@@ -127,13 +132,17 @@ export default function Dashboard() {
                 ))}
               </div>
             ) : (
-              <p className="text-center text-gray-500 italic">No upcoming appointments scheduled.</p>
+              <p className="text-center text-gray-500 italic">
+                No upcoming appointments scheduled.
+              </p>
             )}
           </TabsContent>
 
           {/* Appointment History */}
           <TabsContent value="history">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Appointment History</h2>
+            <h2 className="text-xl font-bold text-gray-700 mb-4">
+              Appointment History
+            </h2>
             {appointmentHistory.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
                 {appointmentHistory.map((appointment) => (
@@ -162,7 +171,9 @@ export default function Dashboard() {
                 ))}
               </div>
             ) : (
-              <p className="text-center text-gray-500 italic">No past appointments found.</p>
+              <p className="text-center text-gray-500 italic">
+                No past appointments found.
+              </p>
             )}
           </TabsContent>
         </Tabs>
