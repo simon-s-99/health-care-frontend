@@ -18,14 +18,16 @@ export default function NavBar() {
         Welcome {authState.username}, logged in as{" "}
         {isAdmin ? "caregiver" : "patient"}
       </p>
-      {/* Profile icon */}
-      <NavLink to="/profileInterface">
-        <img
-          src={profileIcon}
-          alt="Profile icon"
-          className="w-8 h-8 rounded-full border border-gray-300 hover:scale-110"
-        />
-      </NavLink>
+      {/* Profile Icon*/}
+      {authState.isAuthenticated && (
+        <NavLink to="/profile">
+          <img
+            src={profileIcon}
+            alt="Profile icon"
+            className="w-8 h-8 rounded-full border border-gray-300 hover:scale-110"
+          />
+        </NavLink>
+      )}
     </div>
   ) : (
     <Button variant="secondary" className="rounded-xl">

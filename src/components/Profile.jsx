@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import axios from "axios";
 import InputField from "@/components/InputField";
-import { Prompt } from "react-router-dom";
 
 const Profile = () => {
   // Loading states
@@ -29,20 +28,28 @@ const Profile = () => {
   });
 
   // Fetch the user data
+
+  // The || "" ensures that if any of the values are null, undefined, or otherwise "falsy," it falls back to an empty string.
+  // It ensures the UI won't crash if the backend unexpectedly doesn't send a specific field (e.g. firstname is missing)
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("/api/auth/profile");
+        const response = await axios.get(
+          "http://localhost:5148/api/Auth/profile",
+          {
+            withCredentials: true, // send cookies (jwt)
+          }
+        );
         setAccount({
-          firstname: response.data.firstname,
-          lastname: response.data.lastname,
-          email: response.data.email,
-          phonenumber: response.data.phonenumber,
-          username: response.data.username,
+          firstname: response.data.firstname || "",
+          lastname: response.data.lastname || "",
+          email: response.data.email || "",
+          phonenumber: response.data.phonenumber || "",
+          username: response.data.username || "",
         });
       } catch (err) {
-        console.error("Failed to fetch user data:", err);
-        setError("Failed to load profile data.");
+        console.error("Failed to fetch user data:", err.response || err);
+        setError("Failed to load profile data. Please log in again.");
       } finally {
         setIsLoading(false);
       }
@@ -53,7 +60,11 @@ const Profile = () => {
 
   const handleAccountChange = (e) => {
     setAccount({ ...account, [e.target.name]: e.target.value });
-    setIsDirty(true);
+    setIsDirty(true); // Mark form as dirty if changes are made
+  };
+
+  const handlePasswordChange = (e) => {
+    setPasswords({ ...passwords, [e.target.name]: e.target.value });
   };
 
   // Save the updated details
@@ -61,7 +72,14 @@ const Profile = () => {
     setIsSavingAccount(true); // Indicate that the account update is in progress
     setError(""); // Reset error state
     try {
-      const response = await axios.patch("/api/auth/update", account);
+      const response = await axios.patch(
+        "http://localhost:5148/api/Auth/Update",
+        account,
+        {
+          withCredentials: true, // Ensure cookies (e.g., jwt) are sent
+        }
+      );
+
       setIsDirty(false);
 
       if (response.status === 200) {
@@ -77,18 +95,18 @@ const Profile = () => {
     }
   };
 
+  /// Warn user before leaving the page if there are unsaved changes
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       if (isDirty) {
         event.preventDefault();
-        event.returnValue = "";
+        event.returnValue = ""; // Display browser confirmation dialog
       }
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload); // Cleanup on unmount
     };
   }, [isDirty]);
 
@@ -102,10 +120,17 @@ const Profile = () => {
       }
 
       // Send a request to the server to change the password
-      const response = await axios.patch("/api/auth/change-password", {
-        currentPassword: passwords.currentPassword,
-        newPassword: passwords.newPassword,
-      });
+      const response = await axios.patch(
+        "http://localhost:5148/api/Auth/change-password",
+        {
+          currentPassword: passwords.currentPassword,
+          newPassword: passwords.newPassword,
+          confirmPassword: passwords.confirmPassword,
+        },
+        {
+          withCredentials: true, // Ensure cookies (e.g., jwt) are sent
+        }
+      );
 
       if (response.status === 200) {
         alert(response.data.message || "Password changed successfully!");
@@ -126,11 +151,6 @@ const Profile = () => {
 
   return (
     <main className="max-w-3x1 mx-auto mt-10 p-4">
-      <Prompt
-        when={isDirty}
-        message="You have unsaved changes. Are you sure you want to leave?"
-      />
-
       {/* ShadCN Tabs Component */}
       <section aria-labelledby="profile-tabs">
         <Tabs defaultValue="account" className="w-full">
