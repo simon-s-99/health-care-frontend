@@ -1,5 +1,3 @@
-import ExampleClientSideUseAuth from "@/components/auth/ExampleClientSideUseAuth";
-import ExampleServerSideUseAuth from "@/components/auth/ExampleServerSideUseAuth";
 import SignInButton from "@/components/auth/SignInButton";
 import SignOutButton from "@/components/auth/SignOutButton";
 

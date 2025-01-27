@@ -1,4 +1,4 @@
-import ServerSideRequireAuth from '@/components/auth/ServerSideRequireAuth'
+import ServerSideRequireAuth from '@/components/ServerSideRequireAuth'
 
 export default function layout({
   children,
