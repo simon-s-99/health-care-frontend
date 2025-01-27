@@ -15,13 +15,13 @@ export default function Dashboard() {
     const fetchAppointments = async () => {
       try {
         const response = await axios.get("http://localhost:5148/api/appointment/user", {
-          params: { id: authState.userId, isPatient: !isAdmin }, // isPatient is true for users, false for admins
+          params: { id: authState.userId, isPatient: !isAdmin },
+          withCredentials: true,
         });
 
         if (response.data) {
           const now = new Date(Date.now());
 
-          // Separate upcoming and past appointments
           const upcoming = response.data.filter(
             (appointment) => new Date(appointment.dateTime) >= now
           );
@@ -46,6 +46,7 @@ export default function Dashboard() {
               setUserNames((prevNames) => ({
                 ...prevNames,
                 [userId]: `${data.firstname} ${data.lastname}`,
+                withCredentials: true,
               }));
             } catch (error) {
               console.error("Error fetching user data:", error);
