@@ -62,7 +62,7 @@ export default function NavBar() {
           </NavLink>
         </li>
         <li className="sm:visible invisible my-2">
-          <NavLink className="hover:text-blue-700" to="/dashboard">
+          <NavLink className="hover:text-blue-700" to={isAdmin ? "/dashboard/admin" : "/dashboard/user"}>
             Dashboard
           </NavLink>
         </li>
@@ -89,15 +89,12 @@ export default function NavBar() {
       {isActive && (
         <ul className="bg-blue-400 absolute flex text-center flex-col w-full sm:hidden *:mt-10 pb-4">
           <li>
-            <NavLink
-              className="block w-full"
-              to={isAdmin ? "/schedule" : "/booking"}
-            >
-              {isAdmin ? "Schedule" : "Booking"}
+            <NavLink className="block w-full" to="/booking">
+              Booking
             </NavLink>
           </li>
           <li>
-            <NavLink className="block w-full" to="/dashboard">
+            <NavLink className="block w-full" to={"/dashboard/user"}>
               Dashboard
             </NavLink>
           </li>
