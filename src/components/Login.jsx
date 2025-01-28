@@ -41,15 +41,14 @@ export default function Login() {
         roles: roles,
       });
 
-      if (roles.includes("Admin")) {
-        console.log("admin role");
-        navigate("/admin/dashboard", { replace: true });
+      if (roles.includes("Admin") || roles.includes("User")) {
+        navigate("/dashboard", { replace: true });
         window.location.reload();
       } else {
-        console.log("user");
-        navigate("/user/dashboard", { replace: true });
-        window.location.reload();
+        console.error("Unauthorized access. No valid role found.");
+        navigate("/unauthorized", { replace: true }); // Navigate to an unauthorized
       }
+      
     } catch (error) {
       console.error("Login failed:", error.response || error);
       setError("Invalid username or password");

@@ -9,8 +9,7 @@ import {
 import AuthProvider from "./context/AuthContext";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import UserDashboard from "./components/UserDashboard";
-import AdminDashboard from "./components/AdminDashboard";
+import Dashboard from "./components/Dashboard";
 import Unauthorized from "./components/Unauthorized";
 import Home from "./components/Home";
 import RequireAuth from "./components/RequireAuth";
@@ -30,18 +29,10 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route
-              path="/dashboard/user"
+              path="/dashboard"
               element={
-                <RequireAuth allowedRoles={["User"]}>
-                  <UserDashboard />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/dashboard/admin"
-              element={
-                <RequireAuth allowedRoles={["Admin"]}>
-                  <AdminDashboard />
+                <RequireAuth allowedRoles={["User", "Admin"]}>
+                  <Dashboard />
                 </RequireAuth>
               }
             />

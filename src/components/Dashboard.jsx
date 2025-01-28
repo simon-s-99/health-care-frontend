@@ -4,22 +4,20 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import axios from "axios";
 
-export default function UserDashboard() {
+export default function Dashboard() {
   const { authState } = useAuth();
+  const isAdmin = authState && authState.roles?.includes("Admin");
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
   const [appointmentHistory, setAppointmentHistory] = useState([]);
-  const [caregiverNames, setCaregiverNames] = useState({});
+  const [userNames, setUserNames] = useState({}); // Stores names of doctors (for users) or patients (for admins)
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5148/api/appointment/user",
-          {
-            params: { id: authState.userId, isPatient: true },
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get("http://localhost:5148/api/appointment/user", {
+          params: { id: authState.userId, isPatient: !isAdmin },
+          withCredentials: true,
+        });
 
         if (response.data) {
           const now = new Date(Date.now());
@@ -27,7 +25,6 @@ export default function UserDashboard() {
           const upcoming = response.data.filter(
             (appointment) => new Date(appointment.dateTime) >= now
           );
-
           const history = response.data.filter(
             (appointment) => new Date(appointment.dateTime) < now
           );
@@ -35,28 +32,24 @@ export default function UserDashboard() {
           setUpcomingAppointments(upcoming);
           setAppointmentHistory(history);
 
-          // Fetch caregivers' names
-          const caregiverIds = [
+          // Fetch user names (doctors for users, patients for admins)
+          const userIds = [
             ...new Set([
-              ...upcoming.map((appointment) => appointment.caregiverId),
-              ...history.map((appointment) => appointment.caregiverId),
+              ...upcoming.map((appointment) => isAdmin ? appointment.patientId : appointment.caregiverId),
+              ...history.map((appointment) => isAdmin ? appointment.patientId : appointment.caregiverId),
             ]),
           ];
 
-          caregiverIds.forEach(async (caregiverId) => {
+          userIds.forEach(async (userId) => {
             try {
-              const { data } = await axios.get(
-                `http://localhost:5148/api/user?id=${caregiverId}`,
-                {
-                  withCredentials: true,
-                }
-              );
-              setCaregiverNames((prevNames) => ({
+              const { data } = await axios.get(`http://localhost:5148/api/user?id=${userId}`);
+              setUserNames((prevNames) => ({
                 ...prevNames,
-                [caregiverId]: `${data.firstname} ${data.lastname}`,
+                [userId]: `${data.firstname} ${data.lastname}`,
+                withCredentials: true,
               }));
             } catch (error) {
-              console.error("Error fetching caregiver data:", error);
+              console.error("Error fetching user data:", error);
             }
           });
         }
@@ -66,7 +59,7 @@ export default function UserDashboard() {
     };
 
     fetchAppointments();
-  }, [authState.userId]);
+  }, [authState.userId, isAdmin]);
 
   const onCancelAppointment = async (appointmentId) => {
     try {
@@ -101,6 +94,7 @@ export default function UserDashboard() {
             </TabsTrigger>
           </TabsList>
 
+          {/* Upcoming Appointments */}
           <TabsContent value="upcoming">
             <h2 className="text-xl font-bold text-gray-700 mb-4">
               Upcoming Appointments
@@ -119,18 +113,14 @@ export default function UserDashboard() {
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-gray-600">
-                        Time:{" "}
-                        {new Date(appointment.dateTime).toLocaleTimeString(
-                          "sv-SE",
-                          {
-                            timeZone: "Europe/Stockholm",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
+                        Time: {new Date(appointment.dateTime).toLocaleTimeString("sv-SE", {
+                          timeZone: "Europe/Stockholm",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </p>
                       <p className="text-sm text-gray-600">
-                        Doctor: {caregiverNames[appointment.caregiverId]}
+                        {isAdmin ? "Patient" : "Doctor"}: {userNames[isAdmin ? appointment.patientId : appointment.caregiverId]}
                       </p>
                       <button
                         onClick={() => onCancelAppointment(appointment.id)}
@@ -149,6 +139,7 @@ export default function UserDashboard() {
             )}
           </TabsContent>
 
+          {/* Appointment History */}
           <TabsContent value="history">
             <h2 className="text-xl font-bold text-gray-700 mb-4">
               Appointment History
@@ -167,18 +158,14 @@ export default function UserDashboard() {
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-gray-600">
-                        Time:{" "}
-                        {new Date(appointment.dateTime).toLocaleTimeString(
-                          "sv-SE",
-                          {
-                            timeZone: "Europe/Stockholm",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
+                        Time: {new Date(appointment.dateTime).toLocaleTimeString("sv-SE", {
+                          timeZone: "Europe/Stockholm",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </p>
                       <p className="text-sm text-gray-600">
-                        Doctor: {caregiverNames[appointment.caregiverId]}
+                        {isAdmin ? "Patient" : "Doctor"}: {userNames[isAdmin ? appointment.patientId : appointment.caregiverId]}
                       </p>
                     </CardContent>
                   </Card>
