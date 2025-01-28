@@ -30,7 +30,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route
-              path="/user/dashboard"
+              path="/dashboard/user"
               element={
                 <RequireAuth allowedRoles={["User"]}>
                   <UserDashboard />
@@ -38,7 +38,7 @@ export default function App() {
               }
             />
             <Route
-              path="/admin/dashboard"
+              path="/dashboard/admin"
               element={
                 <RequireAuth allowedRoles={["Admin"]}>
                   <AdminDashboard />

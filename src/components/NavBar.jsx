@@ -15,19 +15,20 @@ export default function NavBar() {
   const endContent = authState.isAuthenticated ? (
     <div className="flex items-center gap-4">
       <p>
-        Welcome {authState.username}, logged in as {isAdmin ? "caregiver" : "patient"}
+        Welcome {authState.username}, logged in as{" "}
+        {isAdmin ? "caregiver" : "patient"}
       </p>
       <Logout />
     </div>
   ) : (
     <div className="flex gap-4">
-    <Button variant="secondary" className="rounded-xl">
-      <NavLink to="/register">Register</NavLink>
-    </Button>
-    <Button variant="secondary" className="rounded-xl">
-      <NavLink to="/login">Log in</NavLink>
-    </Button>
-  </div>
+      <Button variant="secondary" className="rounded-xl">
+        <NavLink to="/register">Register</NavLink>
+      </Button>
+      <Button variant="secondary" className="rounded-xl">
+        <NavLink to="/login">Log in</NavLink>
+      </Button>
+    </div>
   );
   return (
     <nav className="flex flex-row justify-between uppercase tracking-wider">
@@ -50,16 +51,16 @@ export default function NavBar() {
           </NavLink>
         </li>
         <li className="sm:visible invisible my-2">
-          <NavLink className="hover:text-blue-700" to="/dashboard">
+          <NavLink className="hover:text-blue-700" to={isAdmin ? "/dashboard/admin" : "/dashboard/user"}>
             Dashboard
           </NavLink>
         </li>
         {/* Feedback button */}
-  <li className="sm:visible invisible my-2">
-    <NavLink className="hover:text-blue-700" to="/feedback">
-      Submit feedback
-    </NavLink>
-  </li>
+        <li className="sm:visible invisible my-2">
+          <NavLink className="hover:text-blue-700" to="/feedback">
+            Submit feedback
+          </NavLink>
+        </li>
       </ul>
 
       <span className="sm:inline hidden m-2">{endContent}</span>
@@ -77,21 +78,18 @@ export default function NavBar() {
       {isActive && (
         <ul className="bg-blue-400 absolute flex text-center flex-col w-full sm:hidden *:mt-10 pb-4">
           <li>
-            <NavLink
-              className="block w-full"
-              to={isAdmin ? "/schedule" : "/booking"}
-            >
-              {isAdmin ? "Schedule" : "Booking"}
+            <NavLink className="block w-full" to="/booking">
+              Booking
             </NavLink>
           </li>
           <li>
-            <NavLink className="block w-full" to="/dashboard">
+            <NavLink className="block w-full" to={"/dashboard/user"}>
               Dashboard
             </NavLink>
           </li>
           <NavLink className="block w-full" to="/feedback">
-              Submit your feedback
-            </NavLink>
+            Submit your feedback
+          </NavLink>
           <li>
             <span className="*:bg-transparent *:uppercase *:tracking-wider *:w-full *:text-yellow-300 *:hover:bg-transparent *:h-0">
               {endContent}
