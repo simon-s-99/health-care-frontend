@@ -46,7 +46,9 @@ export default function NavBar() {
           </Link>
         </li>
         <li className="sm:visible invisible my-2">
-          <Link className="hover:text-blue-700" href="/dashboard">
+          <Link className="hover:text-blue-700"
+            href={"/dashboard" + (isAdmin ? "/admin" : "/user").toString()}
+          >
             Dashboard
           </Link>
         </li>

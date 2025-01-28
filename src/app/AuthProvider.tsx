@@ -20,7 +20,6 @@ export const AuthContext = createContext<AuthContext>({
 });
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
-  //const cookieStore = async () => (await cookies()).get('jwt');
   const [authState, setAuthState] = useState<AuthenticatedUser>({
     isAuthenticated: false,
     userId: "",
@@ -35,12 +34,14 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       })
       .then((res) => { // If 200, set auth state
         const data = res.data;
+        console.log("data == ", data);
         setAuthState({
           isAuthenticated: data.message === "Authenticated",
           userId: data.userId,
           username: data.username,
           roles: data.roles,
         });
+        console.log("authstate == ", authState);
       })
       .catch((error) => {
         if (error.response && error.response.status !== 401) { // If 404 do not print an error
@@ -53,7 +54,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     if (!authState.isAuthenticated) {
       getUserData();
     }
-  }, [authState]);
+  });
 
   return (
     <AuthContext.Provider value={{ authState, setAuthState }}>
