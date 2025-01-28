@@ -1,6 +1,5 @@
 import { FaHeartbeat } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
-import heartRateIcon from "../assets/heart-rate-icon.svg";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "./ui/button";
 import { useState } from "react";
@@ -8,7 +7,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 import profileIcon from "../assets/profile-icon.jpg";
-import Logout from "./Logout";
+import Logout from "./auth/Logout";
 
 export default function NavBar() {
   const { authState } = useAuth();
@@ -51,7 +50,7 @@ export default function NavBar() {
               <FaUserDoctor alt="Doctor icon with navigation when clicked"
                 className="min-w-16 min-h-16 hover:scale-105" /> :
               <FaHeartbeat alt="Heart with heartbeat icon with navigation when clicked"
-              className="min-w-16 min-h-16 hover:scale-105"/>}
+                className="min-w-16 min-h-16 hover:scale-105" />}
           </NavLink>
         </li>
         <li className="sm:visible invisible my-2">

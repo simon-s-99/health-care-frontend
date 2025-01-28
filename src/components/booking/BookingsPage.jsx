@@ -2,7 +2,7 @@ import { Calendar } from "@/components/ui/calendar";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import BookingsList from "./BookingsList";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import BookingPopup from "./BookingPopup";
 
 export default function BookingsPage() {

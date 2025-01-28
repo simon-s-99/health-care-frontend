@@ -7,16 +7,16 @@ import {
 } from "react-router-dom";
 
 import AuthProvider from "./context/AuthContext";
-import Register from "./components/Register";
-import Login from "./components/Login";
+import Register from "./components/auth/Register";
+import Login from "./components/auth/Login";
 import Dashboard from "./components/Dashboard";
-import Unauthorized from "./components/Unauthorized";
+import Unauthorized from "./components/auth/Unauthorized";
 import Home from "./components/Home";
-import RequireAuth from "./components/RequireAuth";
+import RequireAuth from "./components/auth/RequireAuth";
 import FeedbackList from "./components/Feedback";
 import NavBar from "./components/NavBar";
-import BookingsPage from "./components/BookingsPage";
-import Profile from "./components/Profile";
+import BookingsPage from "./components/booking/BookingsPage";
+import Profile from "./components/profile/Profile";
 
 export default function App() {
   return (
