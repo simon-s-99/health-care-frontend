@@ -1,5 +1,6 @@
+import { FaHeartbeat } from "react-icons/fa";
+import { FaUserDoctor } from "react-icons/fa6";
 import heartRateIcon from "../assets/heart-rate-icon.svg";
-import doctorIcon from "../assets/doctor-icon.svg";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "./ui/button";
 import { useState } from "react";
@@ -46,11 +47,11 @@ export default function NavBar() {
       <ul className="flex flex-row justify-between w-1/2 xl:w-1/4 *:p-2">
         <li className="z-10">
           <NavLink to="/">
-            <img
-              className="min-w-[50px] min-h-[50px] hover:scale-110"
-              src={isAdmin ? doctorIcon : heartRateIcon}
-              alt="Navigation icon"
-            />
+            {isAdmin ?
+              <FaUserDoctor alt="Doctor icon with navigation when clicked"
+                className="min-w-16 min-h-16 hover:scale-105" /> :
+              <FaHeartbeat alt="Heart with heartbeat icon with navigation when clicked"
+              className="min-w-16 min-h-16 hover:scale-105"/>}
           </NavLink>
         </li>
         <li className="sm:visible invisible my-2">
