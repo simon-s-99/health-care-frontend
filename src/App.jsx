@@ -16,6 +16,7 @@ import RequireAuth from "./components/RequireAuth";
 import FeedbackList from "./components/Feedback";
 import NavBar from "./components/NavBar";
 import BookingsPage from "./components/BookingsPage";
+import Profile from "./components/Profile";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Router>
           <NavBar />
           <Routes>
+            <Route path="/Profile" element={<Profile />} />
             <Route path="/feedback" element={<FeedbackList />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />

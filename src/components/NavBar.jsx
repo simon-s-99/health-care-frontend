@@ -6,6 +6,7 @@ import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
+import profileIcon from "../assets/profile-icon.jpg";
 import Logout from "./Logout";
 
 export default function NavBar() {
@@ -13,12 +14,22 @@ export default function NavBar() {
   const isAdmin = authState && authState.roles?.includes("Admin");
   const [isActive, setIsActive] = useState(false);
   const endContent = authState.isAuthenticated ? (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2">
       <p>
         Welcome {authState.username}, logged in as{" "}
         {isAdmin ? "caregiver" : "patient"}
       </p>
       <Logout />
+      {/* Profile Icon*/}
+      {authState.isAuthenticated && (
+        <NavLink to="/profile">
+          <img
+            src={profileIcon}
+            alt="Profile icon"
+            className="w-8 h-8 rounded-full border border-gray-300 hover:scale-110"
+          />
+        </NavLink>
+      )}
     </div>
   ) : (
     <div className="flex gap-4">
