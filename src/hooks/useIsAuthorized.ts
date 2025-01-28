@@ -1,11 +1,11 @@
-import useAuth from "@/hooks/useAuth";
-import { AuthenticatedUser } from "@/lib/types";
+import { AuthContext } from "@/context/AuthContext";
+import { useContext } from "react";
 
 export default function useIsAuthorized(requiredRoles: string[]): boolean {
-  const user: AuthenticatedUser = useAuth();
+  const { authState } = useContext(AuthContext);
 
-  if (requiredRoles && user.roles &&
-    requiredRoles.some((role) => user.roles!.includes(role))) {
+  if (requiredRoles && authState.roles &&
+    requiredRoles.some((role) => authState.roles!.includes(role))) {
     return true;
   }
 

@@ -1,13 +1,15 @@
-import useAuth from "@/hooks/useAuth";
+'use client';
 import NoAuthRedirectTo from "@/app/auth/NoAuthRedirectTo";
+import { AuthContext } from "@/context/AuthContext";
+import { useContext } from "react";
 
 export default function RequireAuth({ children }: { children: React.ReactNode }) {
-    const user = useAuth();
+    const { authState } = useContext(AuthContext);
 
     return (
         <>
             {
-                user.isAuthenticated ?
+                authState.isAuthenticated ?
                     <>
                         {children}
                     </>

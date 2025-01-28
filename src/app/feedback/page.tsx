@@ -1,7 +1,7 @@
 'use client';
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useContext } from "react";
 import axios from "axios";
-import useAuth from "@/hooks/useAuth";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function FeedbackList() {
   // State variables to store and manage feedback, form data, and application state.
@@ -15,8 +15,8 @@ export default function FeedbackList() {
   const [starDistribution, setStarDistribution] = useState({}); // Stores the number of reviews for each star rating
 
   // Fetch the logged-in user's information from authState
-  const user = useAuth()
-  const patientId = user.userId;
+  const { authState } = useContext(AuthContext);
+  const patientId = authState.userId;
 
   // Fetch the user's appointment ID
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function FeedbackList() {
   }, [patientId]);
 
   useEffect(() => {
-    
+
   })
 
   // Fetch feedback data with pagination
@@ -156,9 +156,8 @@ export default function FeedbackList() {
               <span
                 key={index}
                 aria-label={`Rate ${index + 1} stars`}
-                className={`text-3xl cursor-pointer ${
-                  index < rating ? "text-yellow-400" : "text-gray-300"
-                }`}
+                className={`text-3xl cursor-pointer ${index < rating ? "text-yellow-400" : "text-gray-300"
+                  }`}
                 onClick={() => setRating(index + 1)}
               >
                 ★

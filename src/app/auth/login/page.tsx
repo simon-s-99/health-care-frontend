@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
+import { AuthenticatedUser } from "@/lib/types";
 
 export default function Login() {
   const { setAuthState } = useContext(AuthContext);
@@ -33,7 +34,17 @@ export default function Login() {
         }
       );
 
-      setAuthState(response.data);
+      console.log("response data == ", response.data)
+      console.log("response data as authed user == ", response.data);
+      if (response.status === 200) {
+        const authenticatedUser: AuthenticatedUser = {} as AuthenticatedUser;
+        authenticatedUser.isAuthenticated = true;
+        authenticatedUser.roles = (response.data as AuthenticatedUser).roles;
+        authenticatedUser.userId = (response.data as AuthenticatedUser).userId;
+        authenticatedUser.username = (response.data as AuthenticatedUser).username;
+        console.log("response data formatted authed user == ", authenticatedUser);
+        setAuthState(authenticatedUser);
+      }
 
       router.push("/");
     } catch (error) {

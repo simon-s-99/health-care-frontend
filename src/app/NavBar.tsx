@@ -2,13 +2,15 @@
 import heartRateIcon from "@/public/heart-rate-icon.svg";
 import doctorIcon from "@/public/doctor-icon.svg";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Link from "next/link";
-import useAuth from "@/hooks/useAuth";
 import Image from "next/image";
+import { AuthContext } from "@/context/AuthContext";
+import { RiCloseLargeFill } from "react-icons/ri";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 export default function NavBar() {
-  const authState = useAuth();
+  const { authState } = useContext(AuthContext);
   const isAdmin = authState && authState.roles?.includes("Admin");
   const [isActive, setIsActive] = useState(false);
   const endContent = authState.isAuthenticated ? (
@@ -22,7 +24,7 @@ export default function NavBar() {
       <Link href="/auth/login">Log in</Link>
     </Button>
   );
-  
+
   return (
     <nav className="flex flex-row justify-between uppercase tracking-wider">
       <ul className="flex flex-row justify-between w-1/2 xl:w-1/4 *:p-2">
@@ -49,11 +51,11 @@ export default function NavBar() {
           </Link>
         </li>
         {/* Feedback button */}
-  <li className="sm:visible invisible my-2">
-    <Link className="hover:text-blue-700" href="/feedback">
-      Submit feedback
-    </Link>
-  </li>
+        <li className="sm:visible invisible my-2">
+          <Link className="hover:text-blue-700" href="/feedback">
+            Submit feedback
+          </Link>
+        </li>
       </ul>
 
       <span className="sm:inline hidden m-2">{endContent}</span>
@@ -61,11 +63,11 @@ export default function NavBar() {
         className="sm:hidden inline z-10"
         onClick={() => setIsActive(!isActive)}
       >
-        {/* {isActive ? (
+        {isActive ? (
           <RiCloseLargeFill className="w-[50px] h-[50px]" />
         ) : (
           <RxHamburgerMenu className="w-[50px] h-[50px]" />
-        )} */}
+        )}
       </button>
 
       {isActive && (
@@ -84,8 +86,8 @@ export default function NavBar() {
             </Link>
           </li>
           <Link className="block w-full" href="/feedback">
-              Submit your feedback
-            </Link>
+            Submit your feedback
+          </Link>
           <li>
             <span className="*:bg-transparent *:uppercase *:tracking-wider *:w-full *:text-yellow-300 *:hover:bg-transparent *:h-0">
               {endContent}

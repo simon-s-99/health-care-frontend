@@ -1,3 +1,4 @@
+'use client';
 import ServerSideRequireAuth from '@/app/auth/RequireAuth'
 
 export default function layout({
