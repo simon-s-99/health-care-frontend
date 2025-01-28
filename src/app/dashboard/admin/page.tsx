@@ -1,7 +1,15 @@
-export default function page() {
+import Image from "next/image";
+import Logo from "@/public/health_care_logo.svg";
+import useAuth from "@/hooks/useAuth";
+
+export default function AdminDashboard() {
+  const user = useAuth();
+
   return (
-    <div className="bg-blue-200">
-      <p>This is the ADMIN dashboard</p>
+    <div>
+      <Image alt="Health Care company logo" src={Logo} />
+      <h2>Admin Dashboard</h2>
+      <p>Welcome, {user.username}!</p>
     </div>
-  )
+  );
 }

@@ -19,9 +19,10 @@ export default function NavBar() {
   ) : (
     <Button variant="secondary" className="rounded-xl">
       {/* Otherwise if not logged in, display a login button */}
-      <Link href="/login">Log in</Link>
+      <Link href="/auth/login">Log in</Link>
     </Button>
   );
+  
   return (
     <nav className="flex flex-row justify-between uppercase tracking-wider">
       <ul className="flex flex-row justify-between w-1/2 xl:w-1/4 *:p-2">

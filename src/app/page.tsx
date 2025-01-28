@@ -4,6 +4,7 @@ import experiencedTeam from "@/public/experienced-team.jpg";
 import doctorpatient from "@/public/doctorpatient-image.jpg";
 import Image from "next/image";
 import NavBar from "@/app/NavBar";
+import Link from "next/link";
 
 export default async function Home() {
   return (
@@ -11,31 +12,6 @@ export default async function Home() {
       <header>
         <NavBar />
       </header>
-
-      {/* <NavBar />
-      <Routes>
-        <Route path="/feedback" element={<FeedbackList />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route
-          path="/user/dashboard"
-          element={
-            <RequireAuth allowedRoles={["User"]}>
-              <UserDashboard />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <RequireAuth allowedRoles={["Admin"]}>
-              <AdminDashboard />
-            </RequireAuth>
-          }
-        />
-        <Route path="/" element={<Home />} />
-        <Route path="*" element={<Navigate href="/" replace />} /> */}
 
       <div className="flex flex-col items-center justify-center min-h-screen bg-white">
         {/* Hero Section */}
@@ -49,11 +25,11 @@ export default async function Home() {
             experienced professionals is here to provide you with the best care.
           </p>
           <div className="flex justify-center space-x-4 mt-6">
-            <Button asChild variant="outline" size="lg" className="text-black">
-              {/* <Link href="/register">Get Started</Link> */}
+            <Button asChild variant="secondary" size="lg" className="text-black">
+              <Link href="/auth/register">Get Started</Link>
             </Button>
             <Button asChild variant="secondary" size="lg">
-              {/* <Link href="/login">Login</Link> */}
+              <Link href="/auth/login">Login</Link>
             </Button>
           </div>
         </div>
@@ -100,9 +76,9 @@ export default async function Home() {
             Join our community today and experience world-class healthcare
             services that put you first.
           </p>
-          {/* <Button asChild variant="primary" size="lg" className="bg-white text-green-600"> */}
-          {/* <Link href="/register">Join Now</Link> */}
-          {/* </Button> */}
+          <Button asChild variant="secondary" size="lg" className="bg-white text-green-600">
+            <Link href="/auth/register">Join Now</Link>
+          </Button>
         </div>
       </div>
 

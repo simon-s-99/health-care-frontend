@@ -1,6 +1,7 @@
 import axios from "axios";
-// button to handle logout, you can change this as you want
-// does not have to look or be like this but you can see how to use the logout call
+
+// button to handle logout
+
 export default function Logout() {
   const handleLogout = () => {
     axios
@@ -11,7 +12,7 @@ export default function Logout() {
           withCredentials: true,
         }
       )
-      .then((response) => {
+      .then(() => {
         window.location.href = "/login";
       })
       .catch((error) => {

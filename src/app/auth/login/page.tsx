@@ -1,11 +1,10 @@
-import { useContext, useState } from "react";
+'use client';
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import axios from "axios";
-import useAuth from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRouter } from "next/router";
-import { AuthenticatedUser } from "@/lib/types";
+import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 
 export default function Login() {
@@ -17,11 +16,12 @@ export default function Login() {
   });
   const [error, setError] = useState("");
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCredentials((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleLogin = async (e) => {
+
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
