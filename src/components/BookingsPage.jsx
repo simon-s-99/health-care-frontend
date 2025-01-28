@@ -80,7 +80,7 @@ export default function BookingsPage() {
           loggedInUser={authState}
           createBooking={createBooking}
           bookings={bookings}
-          currentAvailabilites={currentAvailabilites}
+          availabilites={currentAvailabilites}
           date={date}
           cancelBooking={cancelBooking}
         />
@@ -135,10 +135,7 @@ export default function BookingsPage() {
 
   async function getAllAvailabilites() {
     const { data } = await axios.get(
-      `http://localhost:5148/api/availability/all`,
-      {
-        withCredentials: true,
-      }
+      "http://localhost:5148/api/availability/all"
     );
     const formattedData = [];
     for (let i = 0; i < data.length; i++) {

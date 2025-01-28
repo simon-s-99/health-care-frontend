@@ -40,6 +40,7 @@ export default function FeedbackList() {
           "http://localhost:5148/api/appointment/user",
           {
             params: { id: patientId },
+            withCredentials: true
           }
         );
         console.log("Fetched appointment data:", response.data);
