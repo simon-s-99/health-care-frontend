@@ -4,7 +4,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import BookingsList from "./BookingsList";
 import BookingPopup from "./BookingPopup";
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/app/AuthProvider";
 
 export default function BookingsPage() {
   const currentDateTime = new Date(Date.now());
@@ -22,7 +22,7 @@ export default function BookingsPage() {
   const [currentAvailabilites, setCurrentAvailabilites] = useState([]);
   const [firstAvailableSlot, setFirstAvailableSlot] = useState(null);
 
-  async function createBooking(patientId, caregiverId, dateTime) {
+  async function createBooking(patientId: string, caregiverId: string, dateTime: string) {
     setError("");
 
     // If date is in the past
@@ -46,12 +46,12 @@ export default function BookingsPage() {
         { withCredentials: true }
       );
       return true; // Post succeeded
-    } catch (e) {
-      setError(e.response.data);
+    } catch (error) {
+      setError(error + "");
     }
   }
 
-  async function cancelBooking(appointmentId) {
+  async function cancelBooking(appointmentId: string) {
     setError("");
 
     try {
@@ -62,8 +62,8 @@ export default function BookingsPage() {
         }
       );
       return true;
-    } catch (e) {
-      setError(e.response.data);
+    } catch (error) {
+      setError(error + "");
     }
   }
 

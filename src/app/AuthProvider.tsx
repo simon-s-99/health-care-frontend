@@ -20,6 +20,7 @@ export const AuthContext = createContext<AuthContext>({
 });
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
+  //const cookieStore = async () => (await cookies()).get('jwt');
   const [authState, setAuthState] = useState<AuthenticatedUser>({
     isAuthenticated: false,
     userId: "",
@@ -49,8 +50,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }
 
   useEffect(() => {
-    if (!authState.isAuthenticated) getUserData();
-  }, [authState.isAuthenticated]);
+    if (!authState.isAuthenticated) {
+      getUserData();
+    }
+  }, [authState]);
 
   return (
     <AuthContext.Provider value={{ authState, setAuthState }}>

@@ -1,6 +1,16 @@
+import type { Appointment, AuthenticatedUser, Availability, Popup } from "@/lib/types";
 import Booking from "./Booking";
 import BookingSlot from "./BookingSlot";
 
+interface Props {
+  loggedInUser: AuthenticatedUser;
+  availabilites: Availability[];
+  bookings: Appointment[];
+  createBooking: (patientId: string, caregiverId: string, dateTime: string) => boolean;
+  date: string;
+  cancelBooking: (appointmentId: string) => boolean;
+  setPopup: React.Dispatch<React.SetStateAction<Popup>>;
+}
 export default function BookingsList({
   loggedInUser,
   availabilites,
@@ -9,7 +19,7 @@ export default function BookingsList({
   date,
   cancelBooking,
   setPopup,
-}) {
+}: Props) {
   const timeSlots = [
     <BookingSlot key={0} isAvailable={false} time={"08:00"} />,
     <BookingSlot key={1} isAvailable={false} time={"09:00"} />,
@@ -58,7 +68,7 @@ export default function BookingsList({
     return { bookingSlots, counter };
   }
 
-  function generateBookingSlotsForAvailableTimes(bookingSlots, counter) {
+  function generateBookingSlotsForAvailableTimes(bookingSlots, counter: number) {
     // Loop through each available time, available times in each available time, and each time slot, if the times match, add the available time to the respective time slot
     for (let i = 0; i < availabilites.length; i++) {
       const currentAvailability = availabilites[i];

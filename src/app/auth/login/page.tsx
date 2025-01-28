@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/app/AuthProvider";
 import { AuthenticatedUser } from "@/lib/types";
 
 export default function Login() {

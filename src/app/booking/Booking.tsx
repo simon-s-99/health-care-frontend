@@ -1,9 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import BookingPopup from "./BookingPopup";
+import { Button } from "@/components/ui/button"
+import { Appointment, Popup } from "@/lib/types";
 
-export default function Booking({ booking, cancelBooking, setPopup }) {
+interface Props {
+  booking: Appointment;
+  cancelBooking: (appointmentId: string) => boolean;
+  setPopup: React.Dispatch<React.SetStateAction<Popup>>;
+}
+
+export default function Booking({ booking, cancelBooking, setPopup }: Props) {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -11,7 +17,12 @@ export default function Booking({ booking, cancelBooking, setPopup }) {
 
   function handleCancelBooking() {
     setPopup(null);
-    const success = cancelBooking(booking.id);
+
+    if (!booking.id) {
+      throw new Error("Booking ID is null or undefined.");
+    }
+
+    const success = cancelBooking(booking.id!);
 
     if (success) {
       setConfirmationMessage("Booking cancelled.");
@@ -19,27 +30,29 @@ export default function Booking({ booking, cancelBooking, setPopup }) {
       setConfirmationMessage("Something went wrong.");
     }
   }
-  async function getCaregiverData() {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:5148/api/user?id=${booking.caregiverId}`,
-        {
-          withCredentials: true,
-        }
-      );
-      setName(`${data.firstname} ${data.lastname}`);
-    } catch (e) {
-      console.log(e);
-    }
-  }
+
   useEffect(() => {
+    async function getCaregiverData() {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:5148/api/user?id=${booking.caregiverId}`,
+          {
+            withCredentials: true,
+          }
+        );
+        setName(`${data.firstname} ${data.lastname}`);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
     getCaregiverData();
     const splitDateTime = booking.dateTime.split(" ");
     const formattedDate = splitDateTime.shift();
     const formattedTime = splitDateTime.pop();
-    setDate(formattedDate);
-    setTime(formattedTime);
-  }, []);
+    setDate(formattedDate as string);
+    setTime(formattedTime as string);
+  }, [booking]);
 
   return (
     <div className="flex flex-row justify-center w-full *:w-1/3 border-[1px] border-gray-500 bg-blue-300 py-4 my-2">

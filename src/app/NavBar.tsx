@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useContext, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/app/AuthProvider";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { RxHamburgerMenu } from "react-icons/rx";
 

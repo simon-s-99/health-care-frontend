@@ -3,16 +3,11 @@ import Logo from "@/public/health_care_logo.svg";
 import experiencedTeam from "@/public/experienced-team.jpg";
 import doctorpatient from "@/public/doctorpatient-image.jpg";
 import Image from "next/image";
-import NavBar from "@/app/NavBar";
 import Link from "next/link";
 
 export default async function Home() {
   return (
     <>
-      <header>
-        <NavBar />
-      </header>
-
       <div className="flex flex-col items-center justify-center min-h-screen bg-white">
         {/* Hero Section */}
         <div className="text-center py-3 bg-gradient-to-r from-green-200 to-green-400 text-black w-full">

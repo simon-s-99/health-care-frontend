@@ -1,11 +1,18 @@
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button"
+import { Popup } from "@/lib/types";
 
+interface Props {
+  label: string;
+  isOpen: boolean;
+  setPopup: React.Dispatch<React.SetStateAction<Popup>>;
+  handleFunction: () => void;
+}
 export default function BookingPopup({
   label,
   isOpen,
   setPopup,
   handleFunction,
-}) {
+}: Props) {
   return (
     <div onClick={() => setPopup(null)} className="h-full w-full absolute flex flex-col place-content-center">
       <dialog

@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, FormEvent, useContext } from "react";
 import axios from "axios";
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/app/AuthProvider";
 
 export default function FeedbackList() {
   // State variables to store and manage feedback, form data, and application state.

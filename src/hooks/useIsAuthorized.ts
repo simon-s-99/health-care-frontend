@@ -1,4 +1,4 @@
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/app/AuthProvider";
 import { useContext } from "react";
 
 export default function useIsAuthorized(requiredRoles: string[]): boolean {

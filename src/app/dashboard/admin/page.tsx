@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Logo from "@/public/health_care_logo.svg";
 import { useContext } from "react";
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/app/AuthProvider";
 
 export default function AdminDashboard() {
   const { authState } = useContext(AuthContext);

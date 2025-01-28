@@ -1,6 +1,16 @@
+import { AuthenticatedUser, Availability, Popup } from "@/lib/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+interface Props {
+  loggedInUser?: AuthenticatedUser;
+  isAvailable: boolean;
+  createBooking?: (patientId: string, caregiverId: string, dateTime: string) => boolean;
+  date?: string;
+  availability?: Availability;
+  setPopup?: React.Dispatch<React.SetStateAction<Popup>>;
+  time?: string;
+}
 export default function BookingSlot({
   loggedInUser,
   isAvailable,
@@ -8,14 +18,14 @@ export default function BookingSlot({
   date,
   availability,
   setPopup,
-}) {
+}: Props) {
   const [caregiver, setCaregiver] = useState(null);
   const [confirmationMessage, setConfirmationMessage] = useState("");
 
   function handleCreateBooking() {
     setPopup(null);
 
-    const dateTime = date + "T" + new Date(availability.dateTime).toLocaleTimeString("sv-SE", {hour: "2-digit", minute: "2-digit"});
+    const dateTime = date + "T" + new Date(availability.dateTime).toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" });
     const success = createBooking(
       loggedInUser.userId,
       availability.caregiverId,
@@ -27,20 +37,23 @@ export default function BookingSlot({
       setConfirmationMessage("Something went wrong.");
     }
   }
-  async function getCaregiver() {
-    const { data } = await axios.get(
-      `http://localhost:5148/api/user?id=${availability.caregiverId}`,
-      {
-        withCredentials: true,
-      }
-    );
-    setCaregiver(data);
-  }
+  
   useEffect(() => {
+    async function getCaregiver() {
+      const { data } = await axios.get(
+        `http://localhost:5148/api/user?id=${availability!.caregiverId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setCaregiver(data);
+    }
+
     if (availability && availability.caregiverId) {
       getCaregiver();
     }
-  }, []);
+  }, [availability]);
+
   if (isAvailable) {
     return (
       <>
