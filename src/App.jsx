@@ -9,14 +9,14 @@ import {
 import AuthProvider from "./context/AuthContext";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import UserDashboard from "./components/UserDashboard";
-import AdminDashboard from "./components/AdminDashboard";
+import Dashboard from "./components/Dashboard";
 import Unauthorized from "./components/Unauthorized";
 import Home from "./components/Home";
 import RequireAuth from "./components/RequireAuth";
 import FeedbackList from "./components/Feedback";
 import NavBar from "./components/NavBar";
 import BookingsPage from "./components/BookingsPage";
+import Profile from "./components/Profile";
 
 export default function App() {
   return (
@@ -25,23 +25,16 @@ export default function App() {
         <Router>
           <NavBar />
           <Routes>
+            <Route path="/Profile" element={<Profile />} />
             <Route path="/feedback" element={<FeedbackList />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route
-              path="/dashboard/user"
+              path="/dashboard"
               element={
-                <RequireAuth allowedRoles={["User"]}>
-                  <UserDashboard />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/dashboard/admin"
-              element={
-                <RequireAuth allowedRoles={["Admin"]}>
-                  <AdminDashboard />
+                <RequireAuth allowedRoles={["User", "Admin"]}>
+                  <Dashboard />
                 </RequireAuth>
               }
             />
