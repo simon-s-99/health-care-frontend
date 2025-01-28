@@ -1,12 +1,12 @@
 import { FaHeartbeat } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
+import { CgProfile } from "react-icons/cg";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
-import profileIcon from "../assets/profile-icon.jpg";
 import Logout from "./auth/Logout";
 
 import {
@@ -39,14 +39,11 @@ export default function NavBar() {
         {isAdmin ? "caregiver" : "patient"}
       </p>
       <Logout />
+      
       {/* Profile Icon*/}
       {authState.isAuthenticated && (
         <NavLink to="/profile">
-          <img
-            src={profileIcon}
-            alt="Profile icon"
-            className="w-8 h-8 rounded-full border border-gray-300 hover:scale-110"
-          />
+          <CgProfile className="w-8 h-8 hover:scale-105" />
         </NavLink>
       )}
     </div>
@@ -105,7 +102,7 @@ export default function NavBar() {
               <TooltipTrigger asChild>
                 <NavigationMenuItem>
                   <Button variant="ghost" className="rounded-xl" asChild>
-                    <NavLink className="hover:text-blue-700" to={isAdmin ? "/dashboard/admin" : "/dashboard/user"}>
+                    <NavLink className="hover:text-blue-700" to="/dashboard">
                       Dashboard
                     </NavLink>
                   </Button>
