@@ -60,6 +60,7 @@ export default function BookingsList({
 
   function generateBookingSlotsForAvailableTimes(bookingSlots, counter) {
     // Loop through each available time, available times in each available time, and each time slot, if the times match, add the available time to the respective time slot
+
     for (let i = 0; i < availabilites.length; i++) {
       const currentAvailability = availabilites[i];
       for (let k = 0; k < bookingSlots.length; k++) {
