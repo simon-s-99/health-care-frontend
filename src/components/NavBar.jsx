@@ -65,9 +65,17 @@ export default function NavBar() {
       {/* Profile Icon*/}
       {authState.isAuthenticated && (
         <Sheet>
-          <SheetTrigger>
-            <CgProfile className="w-8 h-8 hover:scale-105" />
-          </SheetTrigger>
+          <Tooltip>
+            <TooltipTrigger asChild>
+
+              <SheetTrigger>
+                <CgProfile className="w-8 h-8 hover:scale-105" />
+              </SheetTrigger>
+            </TooltipTrigger>
+            <TooltipContent className="bg-slate-50">
+              <p className="text-black">Display account panel.</p>
+            </TooltipContent>
+          </Tooltip>
           <SheetContent>
             <SheetHeader>
               {/* TODO - move tabs from profile to sheettitle instead */}
@@ -122,7 +130,7 @@ export default function NavBar() {
                 </NavLink>
               </TooltipTrigger>
               <TooltipContent className="bg-slate-100">
-              <p className="text-black">Navigate back to home-page.</p>
+                <p className="text-black">Navigate back to home-page.</p>
               </TooltipContent>
             </Tooltip>
           </NavigationMenuItem>
@@ -137,7 +145,7 @@ export default function NavBar() {
                 </Button>
               </TooltipTrigger>
               <TooltipContent className="bg-slate-100">
-              <p className="text-black">Navigate to {isAdmin ? "schedule" : "booking"} page.</p>
+                <p className="text-black">Navigate to {isAdmin ? "schedule" : "booking"} page.</p>
               </TooltipContent>
             </Tooltip>
           </NavigationMenuItem>
@@ -154,7 +162,7 @@ export default function NavBar() {
               </NavigationMenuItem>
             </TooltipTrigger>
             <TooltipContent className="bg-slate-100">
-            <p className="text-black">Navigate to dashboard.</p>
+              <p className="text-black">Navigate to dashboard.</p>
             </TooltipContent>
           </Tooltip>
 
@@ -169,7 +177,7 @@ export default function NavBar() {
               </NavigationMenuItem>
             </TooltipTrigger>
             <TooltipContent className="bg-slate-100">
-            <p className="text-black">Navigate to feedback/review page.</p>
+              <p className="text-black">Navigate to feedback/review page.</p>
             </TooltipContent>
           </Tooltip>
         </NavigationMenuList>
