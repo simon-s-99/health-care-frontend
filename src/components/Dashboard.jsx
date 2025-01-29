@@ -78,25 +78,21 @@ export default function Dashboard() {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
-        <Tabs defaultValue="upcoming" className="text-gray-800">
-          <TabsList className="flex mb-6 gap-6 justify-center">
-            <TabsTrigger
-              value="upcoming"
-              className="px-8 py-2 rounded-xl text-sm font-semibold bg-gray-100 hover:bg-indigo-200 transition-all"
-            >
-              Upcoming Appointments
-            </TabsTrigger>
-            <TabsTrigger
-              value="history"
-              className="px-8 py-2 rounded-xl text-sm font-semibold bg-gray-100 hover:bg-indigo-200 transition-all"
-            >
-              Appointment History
-            </TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="upcoming">
+          <nav className="text-center">
+            <TabsList className="gap-x-2">
+              <TabsTrigger value="upcoming">
+                Upcoming Appointments
+              </TabsTrigger>
+              <TabsTrigger value="history">
+                Appointment History
+              </TabsTrigger>
+            </TabsList>
+          </nav>
 
           {/* Upcoming Appointments */}
           <TabsContent value="upcoming">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">
+            <h2 className="text-xl font-bold text-center mt-4 mb-6">
               Upcoming Appointments
             </h2>
             {upcomingAppointments.length > 0 ? (
@@ -141,7 +137,7 @@ export default function Dashboard() {
 
           {/* Appointment History */}
           <TabsContent value="history">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">
+            <h2 className="text-xl font-bold text-center mt-4 mb-6">
               Appointment History
             </h2>
             {appointmentHistory.length > 0 ? (
