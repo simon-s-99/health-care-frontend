@@ -4,6 +4,15 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import axios from "axios";
 
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+
+
 export default function Dashboard() {
   const { authState } = useAuth();
   const isAdmin = authState && authState.roles?.includes("Admin");
@@ -96,38 +105,44 @@ export default function Dashboard() {
               Upcoming Appointments
             </h2>
             {upcomingAppointments.length > 0 ? (
-              <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
-                {upcomingAppointments.map((appointment) => (
-                  <Card
-                    key={appointment.id}
-                    className="shadow-lg hover:shadow-xl transition-all border rounded-2xl p-4 max-w-sm mx-auto bg-white"
-                  >
-                    <CardHeader>
-                      <CardTitle className="text-lg font-semibold text-gray-800">
-                        {new Date(appointment.dateTime).toLocaleDateString()}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-gray-600">
-                        Time: {new Date(appointment.dateTime).toLocaleTimeString("sv-SE", {
-                          timeZone: "Europe/Stockholm",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {isAdmin ? "Patient" : "Doctor"}: {userNames[isAdmin ? appointment.patientId : appointment.caregiverId]}
-                      </p>
-                      <button
-                        onClick={() => onCancelAppointment(appointment.id)}
-                        className="mt-4 text-red-600 font-semibold hover:underline"
+              <Carousel orientation="horizontal">
+                <CarouselContent>
+                  {upcomingAppointments.map((appointment) => (
+                    <CarouselItem className="md:basis-1/3 lg:basis-1/4">
+                      <Card
+                        key={appointment.id}
+                        className="rounded-2xl bg-white mb-1"
                       >
-                        Cancel
-                      </button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                        <CardHeader className="text-center">
+                          <CardTitle className="text-lg font-semibold">
+                            {new Date(appointment.dateTime).toLocaleDateString()}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-center">
+                          <p className="text-sm text-gray-600">
+                            Time: {new Date(appointment.dateTime).toLocaleTimeString("sv-SE", {
+                              timeZone: "Europe/Stockholm",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </p>
+                          <p className="text-sm text-gray-600 text-wrap">
+                            {isAdmin ? "Patient" : "Doctor"}: {userNames[isAdmin ? appointment.patientId : appointment.caregiverId]}
+                          </p>
+                          <button
+                            onClick={() => onCancelAppointment(appointment.id)}
+                            className="mt-4 text-red-600 font-semibold hover:underline"
+                          >
+                            Cancel
+                          </button>
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
             ) : (
               <p className="text-center text-gray-500 italic">
                 No upcoming appointments scheduled.
@@ -141,7 +156,7 @@ export default function Dashboard() {
               Appointment History
             </h2>
             {appointmentHistory.length > 0 ? (
-              <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
+              <div className="">
                 {appointmentHistory.map((appointment) => (
                   <Card
                     key={appointment.id}
