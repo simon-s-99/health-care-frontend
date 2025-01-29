@@ -165,9 +165,9 @@ export default function FeedbackList() {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-gray-50">
+    <div className="*:mx-auto p-6 bg-gray-50">
       {/* Feedback Form */}
-      <div className="p-6 bg-white shadow-md rounded-md">
+      <div className="p-6 bg-white shadow-md rounded-md max-w-lg">
         <h2 className="text-xl font-semibold mb-4 text-center">
           Share Your Experience
         </h2>
@@ -205,7 +205,7 @@ export default function FeedbackList() {
       </div>
 
       {/* Feedback Statistics and Reviews */}
-      <div className="p-6 bg-white shadow-md rounded-md mt-6">
+      <div className="p-6 bg-white shadow-md rounded-md mt-6 max-w-lg">
         <h2 className="text-xl font-semibold mb-4 text-center">
           Feedback for Health care AB
         </h2>
