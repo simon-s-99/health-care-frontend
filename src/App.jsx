@@ -15,6 +15,7 @@ import Home from "./components/Home";
 import RequireAuth from "./components/auth/RequireAuth";
 import FeedbackList from "./components/Feedback";
 import NavBar from "./components/navigation/NavBar";
+import NavBarMobile from "./components/navigation/NavBarMobile";
 import BookingsPage from "./components/booking/BookingsPage";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -26,7 +27,14 @@ export default function App() {
         <Toaster />
         <div className="content">
           <Router>
+
+          <nav className="max-md:hidden">
             <NavBar />
+          </nav>
+          <nav className="md:hidden">
+            <NavBarMobile />
+          </nav>
+          
             <Routes>
               <Route path="/feedback" element={<FeedbackList />} />
               <Route path="/register" element={<Register />} />

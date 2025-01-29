@@ -114,7 +114,7 @@ export default function NavBar() {
   );
 
   return (
-    <nav className="flex flex-row justify-between uppercase tracking-wider ml-2 my-1">
+    <div className="flex flex-row justify-between uppercase tracking-wider ml-2 my-1">
       <NavigationMenu>
         <NavigationMenuList className="gap-x-2">
           {/* List of nav-links styled with shadcn/ui */}
@@ -184,41 +184,6 @@ export default function NavBar() {
       </NavigationMenu>
 
       <span className="my-auto ml-2 mr-4">{endContent}</span>
-
-      <button
-        className="md:hidden inline z-10"
-        onClick={() => setIsActive(!isActive)}
-      >
-        {isActive ? (
-          <RiCloseLargeFill className="w-[50px] h-[50px]" />
-        ) : (
-          <RxHamburgerMenu className="w-[50px] h-[50px]" />
-        )}
-      </button>
-
-      {isActive && (
-        <ul className="bg-blue-400 absolute flex text-center flex-col w-full sm:hidden *:mt-10 pb-4">
-          <li>
-            <NavLink className="block w-full" to="/booking">
-              Booking
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="block w-full" to={"/dashboard/user"}>
-              Dashboard
-            </NavLink>
-          </li>
-          <NavLink className="block w-full" to="/feedback">
-            Submit your feedback
-          </NavLink>
-          <li>
-            <span className="*:bg-transparent *:uppercase *:tracking-wider *:w-full *:text-yellow-300 *:hover:bg-transparent *:h-0">
-              {endContent}
-            </span>
-          </li>
-        </ul>
-      )}
-
-    </nav >
+    </div>
   );
 }
