@@ -3,13 +3,15 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 import Logout from "./auth/Logout";
 
 import Profile from "./profile/Profile";
+
+import { useToast } from "@/hooks/use-toast"
 
 import {
   NavigationMenu,
@@ -37,18 +39,28 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { convertToObject } from "typescript";
 
 
 export default function NavBar() {
   const { authState } = useAuth();
   const isAdmin = authState && authState.roles?.includes("Admin");
   const [isActive, setIsActive] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      toast({
+        title: `Welcome ${authState.username}!`,
+        description: `Logged in as ${isAdmin ? "caregiver" : "patient"}.`,
+        duration: 4000, // how long the toast should be on-screen in ms
+      })
+    }
+  }, [authState.isAuthenticated])
+
   const endContent = authState.isAuthenticated ? (
     <div className="flex items-center gap-2">
-      <p>
-        Welcome {authState.username}, logged in as{" "}
-        {isAdmin ? "caregiver" : "patient"}
-      </p>
+      {/* logout button */}
       <Logout />
 
       {/* Profile Icon*/}

@@ -17,10 +17,12 @@ import FeedbackList from "./components/Feedback";
 import NavBar from "./components/NavBar";
 import BookingsPage from "./components/booking/BookingsPage";
 import Profile from "./components/profile/Profile";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function App() {
   return (
     <AuthProvider>
+      <Toaster />
       <div className="content">
         <Router>
           <NavBar />
