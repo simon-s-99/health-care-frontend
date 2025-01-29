@@ -187,6 +187,13 @@ const Profile = () => {
           </TabsList>
         </nav>
 
+        {/* display unchanged/unsaved message to user if they have made changes */}
+        {isDirty &&
+          <p className="mb-1 mt-4 flex flex-col">
+            <em className="mx-auto">Careful! You have unsaved changes.</em>
+          </p>
+        }
+
         {/* Account Tab */}
         <TabsContent value="account">
           <section aria-labelledby="account-section" className="text-center">
