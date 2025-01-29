@@ -10,9 +10,10 @@ import profileIcon from "../assets/profile-icon.jpg";
 import Logout from "./Logout";
 
 export default function NavBar() {
-  const { authState } = useAuth();
-  const isAdmin = authState && authState.roles?.includes("Admin");
+  const { authState, isLoading } = useAuth();
   const [isActive, setIsActive] = useState(false);
+
+  const isAdmin = authState && authState.roles?.includes("Admin");
   const endContent = authState.isAuthenticated ? (
     <div className="flex items-center gap-2">
       <p>
@@ -41,6 +42,11 @@ export default function NavBar() {
       </Button>
     </div>
   );
+
+  if (isLoading) {
+    return <h2>Loading...</h2>;
+  }
+  
   return (
     <nav className="flex flex-row justify-between uppercase tracking-wider">
       <ul className="flex flex-row justify-between w-1/2 xl:w-1/4 *:p-2">
@@ -62,7 +68,10 @@ export default function NavBar() {
           </NavLink>
         </li>
         <li className="sm:visible invisible my-2">
-          <NavLink className="hover:text-blue-700" to={isAdmin ? "/dashboard/admin" : "/dashboard/user"}>
+          <NavLink
+            className="hover:text-blue-700"
+            to={isAdmin ? "/dashboard/admin" : "/dashboard/user"}
+          >
             Dashboard
           </NavLink>
         </li>
