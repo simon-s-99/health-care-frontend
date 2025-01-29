@@ -1,3 +1,4 @@
+// BookingsPage.jsx
 import { Calendar } from "@/components/ui/calendar";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -9,20 +10,27 @@ export default function BookingsPage() {
   const currentDateTime = new Date();
   const { authState } = useAuth();
 
+  // Popup state
   const [popup, setPopup] = useState({
     isOpen: false,
     label: "",
     handleFunction: null,
   });
+
+  // Bookings/availabilities
   const [date, setDate] = useState(null);
   const [error, setError] = useState("");
   const [bookings, setBookings] = useState([]);
   const [allAvailabilities, setAllAvailabilities] = useState([]);
   const [currentAvailabilities, setCurrentAvailabilities] = useState([]);
 
-  // ============================================================
-  // 1) A SINGLE function to fetch appointments depending on role
-  // ============================================================
+  // 1) **Define** the sets used by the calendar for day highlighting
+  const [availabilityDates, setAvailabilityDates] = useState(new Set());
+  const [bookingDates, setBookingDates] = useState(new Set());
+
+  // =============================================
+  // 2) A SINGLE function to fetch appointments for date
+  // =============================================
   async function getAppointmentsForDate() {
     if (!date) return;
     setError("");
@@ -30,7 +38,7 @@ export default function BookingsPage() {
     try {
       let url = "";
       if (authState?.roles?.includes("Admin")) {
-        // CAREGIVER => fetch caretaker's own appointments
+        // CAREGIVER => caretaker's own appointments
         url = `http://localhost:5148/api/appointment/user?id=${authState.userId}&date=${date}&isPatient=false`;
       } else {
         // PATIENT => fetch only that user's appointments
@@ -39,7 +47,7 @@ export default function BookingsPage() {
 
       const { data } = await axios.get(url, { withCredentials: true });
 
-      // Then format dateTime, etc.
+      // Format dateTime to "YYYY-MM-DD HH:mm" in Swedish time
       const formattedData = data.map((item) => {
         const dateTimeSwedish = new Date(item.dateTime).toLocaleDateString(
           "sv-SE",
@@ -64,9 +72,9 @@ export default function BookingsPage() {
     }
   }
 
-  // ======================
-  // 2) Fetch all availabilities
-  // ======================
+  // =============================================
+  // 3) Fetch ALL availabilities
+  // =============================================
   async function getAllAvailabilities() {
     try {
       const { data } = await axios.get(
@@ -75,7 +83,8 @@ export default function BookingsPage() {
           withCredentials: true,
         }
       );
-      // Format them to "YYYY-MM-DD HH:mm" in Swedish time
+
+      // Format each dateTime
       const formatted = data.map((item) => {
         const dateTimeSwedish = new Date(item.dateTime).toLocaleDateString(
           "sv-SE",
@@ -98,9 +107,9 @@ export default function BookingsPage() {
     }
   }
 
-  // ======================
-  // 3) Filter Availabilities => selected date
-  // ======================
+  // =============================================
+  // 4) Filter daily availabilities => selected date
+  // =============================================
   function filterAvailabilitiesForSelectedDate() {
     if (!date) return;
     const matched = allAvailabilities.filter((a) => {
@@ -110,9 +119,9 @@ export default function BookingsPage() {
     setCurrentAvailabilities(matched);
   }
 
-  // ======================
-  // 4) Create booking
-  // ======================
+  // =============================================
+  // 5) Create booking
+  // =============================================
   async function createBooking(patientId, caregiverId, dateTime) {
     setError("");
     // Check if in the past
@@ -132,22 +141,24 @@ export default function BookingsPage() {
         },
         { withCredentials: true }
       );
-      return true; // success
+      return true;
     } catch (err) {
       setError(err.response?.data || "Could not create booking");
       return false;
     }
   }
 
-  // ======================
-  // 5) Cancel booking
-  // ======================
+  // =============================================
+  // 6) Cancel booking
+  // =============================================
   async function cancelBooking(appointmentId) {
     setError("");
     try {
       await axios.delete(
         `http://localhost:5148/api/appointment?id=${appointmentId}`,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       );
       return true;
     } catch (err) {
@@ -156,26 +167,25 @@ export default function BookingsPage() {
     }
   }
 
-  // ======================
-  // 6) Called after booking creation => re-fetch
-  // ======================
+  // =============================================
+  // 7) On booking creation => refresh
+  // =============================================
   function onBookingCreated() {
-    // Re-fetch the new appointments => caretaker sees the booking
     getAppointmentsForDate();
   }
 
-  // ======================
-  // 7) handle calendar select
-  // ======================
+  // =============================================
+  // 8) Calendar select
+  // =============================================
   function handleSetDate(selected) {
     if (!selected) return;
     const formatted = selected.toLocaleDateString("sv-SE");
     setDate(formatted);
   }
 
-  // ======================
-  // 8) Render schedule
-  // ======================
+  // =============================================
+  // 9) Generate main schedule
+  // =============================================
   function generateSchedule() {
     if (!date) return <h2>Select a date to see bookings</h2>;
     return (
@@ -187,41 +197,61 @@ export default function BookingsPage() {
         availabilites={currentAvailabilities}
         createBooking={createBooking}
         cancelBooking={cancelBooking}
-        onBookingCreated={onBookingCreated} // pass callback
+        onBookingCreated={onBookingCreated}
       />
     );
   }
 
-  // ======================
-  // 9) useEffects
-  // ======================
-  // On first mount => fetch all availabilities
+  // =============================================
+  // 10) Build day sets for highlighting
+  // =============================================
+  useEffect(() => {
+    const availSet = new Set();
+    allAvailabilities.forEach((a) => {
+      const d = new Date(a.dateTime).toLocaleDateString("sv-SE");
+      availSet.add(d);
+    });
+    setAvailabilityDates(availSet);
+
+    const bookSet = new Set();
+    bookings.forEach((b) => {
+      const d = new Date(b.dateTime).toLocaleDateString("sv-SE");
+      bookSet.add(d);
+    });
+    setBookingDates(bookSet);
+  }, [allAvailabilities, bookings]);
+
+  // ============ On mount => get all availabilities
   useEffect(() => {
     getAllAvailabilities();
   }, []);
 
-  // Whenever date changes => fetch appointments & filter
+  // ============ Whenever date changes => fetch bookings & filter
   useEffect(() => {
     if (date) {
       getAppointmentsForDate();
       filterAvailabilitiesForSelectedDate();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
 
-  // ======================
-  // 10) Return UI
-  // ======================
+  // =============================================
+  // Return
+  // =============================================
   return (
     <div className="flex flex-col justify-center items-center">
       {error && <span className="text-red-500">{error}</span>}
+
       <Calendar
         timeZone="Europe/Stockholm"
         className="*:bg-white"
         mode="single"
         disabled={{ before: currentDateTime }}
         onSelect={handleSetDate}
+        // Pass the sets for day highlighting
+        availabilityDates={availabilityDates}
+        bookingDates={bookingDates}
       />
+
       <div
         className={
           popup?.isOpen
@@ -231,6 +261,7 @@ export default function BookingsPage() {
       >
         {generateSchedule()}
       </div>
+
       {popup?.isOpen && (
         <BookingPopup
           isOpen={popup.isOpen}
