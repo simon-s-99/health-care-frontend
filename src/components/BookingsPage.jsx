@@ -95,6 +95,13 @@ export default function BookingsPage() {
           </p>
         </div>
       );
+    } else if (date) {
+      result = (
+        <div>
+          <h2 className="font-bold">No bookings for {date}</h2>
+          <h2 className="font-bold">No available times found</h2>
+        </div>
+      );
     } else {
       result = <h2>Select a date to see bookings</h2>;
     }
@@ -137,6 +144,7 @@ export default function BookingsPage() {
     const { data } = await axios.get(
       "http://localhost:5148/api/availability/all"
     );
+    console.log(data);
     const formattedData = [];
     for (let i = 0; i < data.length; i++) {
       const dateTimeSwedish = new Date(data[i].dateTime).toLocaleDateString(
@@ -159,6 +167,7 @@ export default function BookingsPage() {
   }
 
   function filterAvailabilitesForSelectedDate() {
+    console.log(allAvailabilites);
     const allAvailabilitesCopy = allAvailabilites;
     const availabilitesForDate = allAvailabilitesCopy.filter(
       (a) =>
@@ -205,8 +214,8 @@ export default function BookingsPage() {
       <div
         className={
           popup && popup.isOpen
-            ? "-z-10 w-1/2 opacity-50 text-center"
-            : "w-1/2 text-center"
+            ? "-z-10 w-full md:w-1/2 opacity-50 text-center"
+            : "w-full md:w-1/2 text-center"
         }
       >
         {generateSchedule()}

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import BookingPopup from "./BookingPopup";
+
 export default function Booking({ booking, cancelBooking, setPopup }) {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
@@ -44,26 +44,24 @@ export default function Booking({ booking, cancelBooking, setPopup }) {
     <div className="flex flex-row justify-center w-full *:w-1/3 border-[1px] border-gray-500 bg-blue-300 py-4 my-2">
       {!confirmationMessage ? (
         <>
-          <div className="flex flex-row justify-evenly">
+          <div className="flex xl:flex-row justify-evenly flex-col">
             <span>Caregiver: {name}</span>
             <span>{date}</span>
             <span>{time}</span>
           </div>
 
-          <div>
-            <Button
-              onClick={() =>
-                setPopup({
-                  isOpen: true,
-                  label: "Cancel appointment?",
-                  handleFunction: handleCancelBooking,
-                  setPopup: setPopup,
-                })
-              }
-            >
-              Cancel appointment
-            </Button>
-          </div>
+          <Button
+            onClick={() =>
+              setPopup({
+                isOpen: true,
+                label: "Cancel appointment?",
+                handleFunction: handleCancelBooking,
+                setPopup: setPopup,
+              })
+            }
+          >
+            Cancel appointment
+          </Button>
         </>
       ) : (
         <h2>{confirmationMessage}</h2>

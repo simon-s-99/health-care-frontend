@@ -11,11 +11,16 @@ export default function BookingSlot({
 }) {
   const [caregiver, setCaregiver] = useState(null);
   const [confirmationMessage, setConfirmationMessage] = useState("");
-
+  const time = availability
+    ? new Date(availability.dateTime).toLocaleTimeString("sv-SE", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : null;
   function handleCreateBooking() {
     setPopup(null);
 
-    const dateTime = date + "T" + new Date(availability.dateTime).toLocaleTimeString("sv-SE", {hour: "2-digit", minute: "2-digit"});
+    const dateTime = date + "T" + time;
     const success = createBooking(
       loggedInUser.userId,
       availability.caregiverId,
@@ -64,7 +69,7 @@ export default function BookingSlot({
               <>
                 <span>Available, click to book</span>
                 <span>
-                  {date} at {availability.time}
+                  {date} at {time}
                 </span>
                 <span>
                   {caregiver &&
@@ -78,7 +83,7 @@ export default function BookingSlot({
         ) : (
           <div className="flex flex-row justify-evenly w-full *:w-1/3 border-[1px] border-gray-500 bg-green-300 py-4">
             <span>
-              {date} at {availability.time}
+              {date} at {time}
             </span>
             <span>
               {caregiver &&
