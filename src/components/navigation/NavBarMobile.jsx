@@ -122,7 +122,7 @@ export default function NavBarMobile() {
                                     </Sheet>
                                 </div>
                                 :
-                                <div className="flex gap-x-4">
+                                <div className="flex flex-col">
                                     <Button variant="ghost" className="rounded-xl" asChild>
                                         <NavLink to="/register">Register</NavLink>
                                     </Button>
