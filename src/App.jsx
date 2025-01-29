@@ -25,7 +25,6 @@ export default function App() {
         <Router>
           <NavBar />
           <Routes>
-            <Route path="/Profile" element={<Profile />} />
             <Route path="/feedback" element={<FeedbackList />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />

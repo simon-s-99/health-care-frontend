@@ -9,6 +9,8 @@ import { RiCloseLargeFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 import Logout from "./auth/Logout";
 
+import Profile from "./profile/Profile";
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -27,6 +29,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+
 
 export default function NavBar() {
   const { authState } = useAuth();
@@ -39,12 +50,23 @@ export default function NavBar() {
         {isAdmin ? "caregiver" : "patient"}
       </p>
       <Logout />
-      
+
       {/* Profile Icon*/}
       {authState.isAuthenticated && (
-        <NavLink to="/profile">
-          <CgProfile className="w-8 h-8 hover:scale-105" />
-        </NavLink>
+        <Sheet>
+          <SheetTrigger>
+            <CgProfile className="w-8 h-8 hover:scale-105" />
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              {/* TODO - move tabs from profile to sheettitle instead */}
+              <SheetTitle></SheetTitle>
+              <SheetDescription>
+                <Profile />
+              </SheetDescription>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
       )}
     </div>
   ) : (

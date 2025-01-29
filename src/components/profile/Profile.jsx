@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import axios from "axios";
 import InputField from "@/components/profile/InputField";
+import { Button } from "../ui/button";
 
 const Profile = () => {
   // Loading states
@@ -175,179 +176,169 @@ const Profile = () => {
   }
 
   return (
-    <main className="flex justify-center items-center min-h-screen bg-gray-100">
-      <section className="w-full max-w-lg mx-auto bg-white p-6 shadow-md rounded-lg">
-        <Tabs defaultValue="account" className="w-full">
-          {/* Tabs List */}
-          <nav aria-label="Profile Tabs" className="text-center mb-4">
-            <TabsList className="justify-center">
-              <TabsTrigger value="account">Account</TabsTrigger>
-              <TabsTrigger value="password">Password</TabsTrigger>
-            </TabsList>
-          </nav>
+    // <main className="flex justify-center items-center min-h-screen bg-gray-100">
+    <section className="mt-4 rounded-lg">
+      <Tabs defaultValue="account">
+        {/* Tabs List */}
+        <nav aria-label="Profile Tabs" className="text-center">
+          <TabsList className="justify-center">
+            <TabsTrigger value="account">Account</TabsTrigger>
+            <TabsTrigger value="password">Password</TabsTrigger>
+          </TabsList>
+        </nav>
 
-          {/* Account Tab */}
-          <TabsContent value="account">
-            <section aria-labelledby="account-section" className="text-center">
-              <h2 id="account-section" className="text-lg font-semibold mb-4">
-                Account
-              </h2>
-              {error && <p className="text-red-600 mb-2">{error}</p>}
-              {successAccount && (
-                <p className="text-green-600 mb-2">{successAccount}</p>
-              )}
-              <form className="flex flex-col gap-4 items-center">
-                {/* First Name Input */}
-                <InputField
-                  label="First Name"
-                  id="firstname"
-                  value={account.firstname}
-                  onChange={handleAccountChange}
-                  required={true}
-                  className="w-full max-w-lg"
-                />
+        {/* Account Tab */}
+        <TabsContent value="account">
+          <section aria-labelledby="account-section" className="text-center">
+            <h2 id="account-section" className="text-lg font-semibold my-4">
+              Account
+            </h2>
+            {error && <p className="text-red-600 mb-2">{error}</p>}
+            {successAccount && (
+              <p className="text-green-600 mb-2">{successAccount}</p>
+            )}
+            <form className="flex flex-col gap-y-4">
+              {/* First Name Input */}
+              <InputField
+                label="First Name"
+                id="firstname"
+                value={account.firstname}
+                onChange={handleAccountChange}
+                required={true}
+                className="w-full"
+              />
 
-                {/* Last Name Input */}
-                <InputField
-                  label="Last Name"
-                  id="lastname"
-                  value={account.lastname}
-                  onChange={handleAccountChange}
-                  required={true}
-                  className="w-full max-w-md"
-                />
+              {/* Last Name Input */}
+              <InputField
+                label="Last Name"
+                id="lastname"
+                value={account.lastname}
+                onChange={handleAccountChange}
+                required={true}
+                className="w-full"
+              />
 
-                {/* Email Input */}
-                <InputField
-                  label="Email"
-                  id="email"
-                  type="email"
-                  value={account.email}
-                  onChange={handleAccountChange}
-                  required={true}
-                  className="w-full max-w-md"
-                />
+              {/* Email Input */}
+              <InputField
+                label="Email"
+                id="email"
+                type="email"
+                value={account.email}
+                onChange={handleAccountChange}
+                required={true}
+                className="w-full"
+              />
 
-                {/* Phone Number Input */}
-                <InputField
-                  label="Phone Number"
-                  id="phonenumber"
-                  type="tel"
-                  value={account.phonenumber}
-                  onChange={handleAccountChange}
-                  required={true}
-                  className="w-full max-w-md"
-                />
+              {/* Phone Number Input */}
+              <InputField
+                label="Phone Number"
+                id="phonenumber"
+                type="tel"
+                value={account.phonenumber}
+                onChange={handleAccountChange}
+                required={true}
+                className="w-full"
+              />
 
-                {/* Username Input */}
-                <InputField
-                  label="Username"
-                  id="username"
-                  value={account.username}
-                  onChange={handleAccountChange}
-                  required={true}
-                  className="w-full max-w-md"
-                />
+              {/* Username Input */}
+              <InputField
+                label="Username"
+                id="username"
+                value={account.username}
+                onChange={handleAccountChange}
+                required={true}
+                className="w-full"
+              />
 
-                {/* Save Changes Button */}
-                <button
-                  type="button"
-                  onClick={saveAccountDetails}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md mt-4"
-                  disabled={isSavingAccount}
+              {/* Save Changes Button */}
+              <Button onChange={saveAccountDetails} className="bg-green-500">
+                {isSavingAccount ? "Saving..." : "Save Changes"}
+              </Button>
+            </form>
+          </section>
+        </TabsContent>
+
+        {/* Password Tab */}
+        <TabsContent value="password">
+          <section aria-labelledby="password-section" className="text-center">
+            <h2 id="password-section" className="text-lg font-semibold my-4">
+              Password
+            </h2>
+
+            {/* Error and Success Messages */}
+            {error && <p className="text-red-600 mb-2">{error}</p>}
+            {successPassword && (
+              <p className="text-green-600 mb-2">{successPassword}</p>
+            )}
+
+            <form className="flex flex-col gap-y-4 items-center">
+              {/* Current Password Input */}
+              <div className="w-full max-w-md">
+                <label
+                  htmlFor="currentPassword"
+                  className="block text-sm font-medium mb-1"
                 >
-                  {isSavingAccount ? "Saving..." : "Save Changes"}
-                </button>
-              </form>
-            </section>
-          </TabsContent>
+                  Current Password
+                </label>
+                <input
+                  id="currentPassword"
+                  type="password"
+                  name="currentPassword"
+                  value={passwords.currentPassword}
+                  onChange={handlePasswordChange}
+                  className="w-full border rounded-md p-2"
+                  autoComplete="current-password"
+                />
+              </div>
 
-          {/* Password Tab */}
-          <TabsContent value="password">
-            <section aria-labelledby="password-section" className="text-center">
-              <h2 id="password-section" className="text-lg font-semibold mb-4">
-                Password
-              </h2>
-
-              {/* Error and Success Messages */}
-              {error && <p className="text-red-600 mb-2">{error}</p>}
-              {successPassword && (
-                <p className="text-green-600 mb-2">{successPassword}</p>
-              )}
-
-              <form className="flex flex-col gap-4 items-center">
-                {/* Current Password Input */}
-                <div className="w-full max-w-md">
-                  <label
-                    htmlFor="currentPassword"
-                    className="block text-sm font-medium"
-                  >
-                    Current Password
-                  </label>
-                  <input
-                    id="currentPassword"
-                    type="password"
-                    name="currentPassword"
-                    value={passwords.currentPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-2 border rounded-md"
-                    autoComplete="current-password"
-                  />
-                </div>
-
-                {/* New Password Input */}
-                <div className="w-full max-w-md">
-                  <label
-                    htmlFor="newPassword"
-                    className="block text-sm font-medium"
-                  >
-                    New Password
-                  </label>
-                  <input
-                    id="newPassword"
-                    type="password"
-                    name="newPassword"
-                    value={passwords.newPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-2 border rounded-md"
-                    autoComplete="new-password"
-                  />
-                </div>
-
-                {/* Confirm New Password Input */}
-                <div className="w-full max-w-md">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="block text-sm font-medium"
-                  >
-                    Confirm New Password
-                  </label>
-                  <input
-                    id="confirmPassword"
-                    type="password"
-                    name="confirmPassword"
-                    value={passwords.confirmPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-2 border rounded-md"
-                    autoComplete="new-password"
-                  />
-                </div>
-
-                {/* Change Password Button */}
-                <button
-                  type="button"
-                  onClick={changePassword}
-                  className="px-4 py-2 bg-green-500 text-white rounded-md mt-4"
-                  disabled={isChangingPassword}
+              {/* New Password Input */}
+              <div className="w-full max-w-md">
+                <label
+                  htmlFor="newPassword"
+                  className="block text-sm font-medium mb-1"
                 >
-                  {isChangingPassword ? "Changing..." : "Change Password"}
-                </button>
-              </form>
-            </section>
-          </TabsContent>
-        </Tabs>
-      </section>
-    </main>
+                  New Password
+                </label>
+                <input
+                  id="newPassword"
+                  type="password"
+                  name="newPassword"
+                  value={passwords.newPassword}
+                  onChange={handlePasswordChange}
+                  className="w-full border rounded-md p-2"
+                  autoComplete="new-password"
+                />
+              </div>
+
+              {/* Confirm New Password Input */}
+              <div className="w-full max-w-md">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium mb-1"
+                >
+                  Confirm New Password
+                </label>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  name="confirmPassword"
+                  value={passwords.confirmPassword}
+                  onChange={handlePasswordChange}
+                  className="w-full p-2 border rounded-md"
+                  autoComplete="new-password"
+                />
+              </div>
+
+              {/* Change Password Button */}
+              <Button onChange={handlePasswordChange} className="bg-green-500 w-full mt-4">
+                {isChangingPassword ? "Changing..." : "Change Password"}
+              </Button>
+            </form>
+          </section>
+        </TabsContent>
+      </Tabs>
+    </section>
+    // </main>
   );
 };
 
