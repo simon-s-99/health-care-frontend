@@ -94,112 +94,110 @@ export default function NavBar() {
 
   return (
     <nav className="flex flex-row justify-between uppercase tracking-wider">
+      <NavigationMenu>
+        <NavigationMenuList className="gap-x-2">
+          {/* List of nav-links styled with shadcn/ui */}
+          <NavigationMenuItem>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <NavLink to="/">
+                  {isAdmin ?
+                    <FaUserDoctor alt="Doctor icon with navigation when clicked"
+                      className="min-w-16 min-h-16 hover:scale-105" /> :
+                    <FaHeartbeat alt="Heart with heartbeat icon with navigation when clicked"
+                      className="min-w-16 min-h-16 hover:scale-105 text-red-600" />}
+                </NavLink>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Navigate back to home-page.</p>
+              </TooltipContent>
+            </Tooltip>
+          </NavigationMenuItem>
 
-      <TooltipProvider>
-        <NavigationMenu>
-          <NavigationMenuList className="gap-x-2">
-            {/* List of nav-links styled with shadcn/ui */}
-            <NavigationMenuItem>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <NavLink to="/">
-                    {isAdmin ?
-                      <FaUserDoctor alt="Doctor icon with navigation when clicked"
-                        className="min-w-16 min-h-16 hover:scale-105" /> :
-                      <FaHeartbeat alt="Heart with heartbeat icon with navigation when clicked"
-                        className="min-w-16 min-h-16 hover:scale-105 text-red-600" />}
+          <NavigationMenuItem>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" className="rounded-xl" asChild>
+                  <NavLink className={"rounded-md"} to={isAdmin ? "/schedule" : "/booking"}>
+                    {isAdmin ? "Schedule" : "Booking"}
                   </NavLink>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Navigate back to home-page.</p>
-                </TooltipContent>
-              </Tooltip>
-            </NavigationMenuItem>
-
-            <NavigationMenuItem>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" className="rounded-xl" asChild>
-                    <NavLink className={"rounded-md"} to={isAdmin ? "/schedule" : "/booking"}>
-                      {isAdmin ? "Schedule" : "Booking"}
-                    </NavLink>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Navigate to {isAdmin ? "schedule" : "booking"} page.</p>
-                </TooltipContent>
-              </Tooltip>
-            </NavigationMenuItem>
-
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <NavigationMenuItem>
-                  <Button variant="ghost" className="rounded-xl" asChild>
-                    <NavLink className="hover:text-blue-700" to="/dashboard">
-                      Dashboard
-                    </NavLink>
-                  </Button>
-                </NavigationMenuItem>
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Navigate to dashboard.</p>
+                <p>Navigate to {isAdmin ? "schedule" : "booking"} page.</p>
               </TooltipContent>
             </Tooltip>
+          </NavigationMenuItem>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <NavigationMenuItem>
-                  <Button variant="ghost" className="rounded-xl" asChild>
-                    <NavLink className="hover:text-blue-700" to="/feedback">
-                      Submit feedback
-                    </NavLink>
-                  </Button>
-                </NavigationMenuItem>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Navigate to feedback/review page.</p>
-              </TooltipContent>
-            </Tooltip>
-          </NavigationMenuList>
-        </NavigationMenu>
 
-        <span className="sm:inline hidden m-2">{endContent}</span>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <NavigationMenuItem>
+                <Button variant="ghost" className="rounded-xl" asChild>
+                  <NavLink className="hover:text-blue-700" to="/dashboard">
+                    Dashboard
+                  </NavLink>
+                </Button>
+              </NavigationMenuItem>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Navigate to dashboard.</p>
+            </TooltipContent>
+          </Tooltip>
 
-        <button
-          className="sm:hidden inline z-10"
-          onClick={() => setIsActive(!isActive)}
-        >
-          {isActive ? (
-            <RiCloseLargeFill className="w-[50px] h-[50px]" />
-          ) : (
-            <RxHamburgerMenu className="w-[50px] h-[50px]" />
-          )}
-        </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <NavigationMenuItem>
+                <Button variant="ghost" className="rounded-xl" asChild>
+                  <NavLink className="hover:text-blue-700" to="/feedback">
+                    Submit feedback
+                  </NavLink>
+                </Button>
+              </NavigationMenuItem>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Navigate to feedback/review page.</p>
+            </TooltipContent>
+          </Tooltip>
+        </NavigationMenuList>
+      </NavigationMenu>
 
-        {isActive && (
-          <ul className="bg-blue-400 absolute flex text-center flex-col w-full sm:hidden *:mt-10 pb-4">
-            <li>
-              <NavLink className="block w-full" to="/booking">
-                Booking
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className="block w-full" to={"/dashboard/user"}>
-                Dashboard
-              </NavLink>
-            </li>
-            <NavLink className="block w-full" to="/feedback">
-              Submit your feedback
-            </NavLink>
-            <li>
-              <span className="*:bg-transparent *:uppercase *:tracking-wider *:w-full *:text-yellow-300 *:hover:bg-transparent *:h-0">
-                {endContent}
-              </span>
-            </li>
-          </ul>
+      <span className="sm:inline hidden m-2">{endContent}</span>
+
+      <button
+        className="sm:hidden inline z-10"
+        onClick={() => setIsActive(!isActive)}
+      >
+        {isActive ? (
+          <RiCloseLargeFill className="w-[50px] h-[50px]" />
+        ) : (
+          <RxHamburgerMenu className="w-[50px] h-[50px]" />
         )}
-      </TooltipProvider>
+      </button>
+
+      {isActive && (
+        <ul className="bg-blue-400 absolute flex text-center flex-col w-full sm:hidden *:mt-10 pb-4">
+          <li>
+            <NavLink className="block w-full" to="/booking">
+              Booking
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className="block w-full" to={"/dashboard/user"}>
+              Dashboard
+            </NavLink>
+          </li>
+          <NavLink className="block w-full" to="/feedback">
+            Submit your feedback
+          </NavLink>
+          <li>
+            <span className="*:bg-transparent *:uppercase *:tracking-wider *:w-full *:text-yellow-300 *:hover:bg-transparent *:h-0">
+              {endContent}
+            </span>
+          </li>
+        </ul>
+      )}
+
     </nav >
   );
 }

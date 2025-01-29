@@ -16,42 +16,44 @@ import RequireAuth from "./components/auth/RequireAuth";
 import FeedbackList from "./components/Feedback";
 import NavBar from "./components/NavBar";
 import BookingsPage from "./components/booking/BookingsPage";
-import Profile from "./components/profile/Profile";
 import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 export default function App() {
   return (
     <AuthProvider>
-      <Toaster />
-      <div className="content">
-        <Router>
-          <NavBar />
-          <Routes>
-            <Route path="/feedback" element={<FeedbackList />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
-            <Route
-              path="/dashboard"
-              element={
-                <RequireAuth allowedRoles={["User", "Admin"]}>
-                  <Dashboard />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/booking"
-              element={
-                <RequireAuth allowedRoles={["User"]}>
-                  <BookingsPage />
-                </RequireAuth>
-              }
-            />
-            <Route path="/" element={<Home />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Router>
-      </div>
+      <TooltipProvider>
+        <Toaster />
+        <div className="content">
+          <Router>
+            <NavBar />
+            <Routes>
+              <Route path="/feedback" element={<FeedbackList />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <RequireAuth allowedRoles={["User", "Admin"]}>
+                    <Dashboard />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/booking"
+                element={
+                  <RequireAuth allowedRoles={["User"]}>
+                    <BookingsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route path="/" element={<Home />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Router>
+        </div>
+      </TooltipProvider>
     </AuthProvider>
   );
 }
