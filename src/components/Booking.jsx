@@ -2,7 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import BookingPopup from "./BookingPopup";
-export default function Booking({ booking, cancelBooking, setPopup }) {
+export default function Booking({
+  booking,
+  cancelBooking,
+  setPopup,
+  onBookingUpdated,
+}) {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -14,6 +19,9 @@ export default function Booking({ booking, cancelBooking, setPopup }) {
 
     if (success) {
       setConfirmationMessage("Booking cancelled.");
+      if (onBookingUpdated) {
+        onBookingUpdated();
+      }
     } else {
       setConfirmationMessage("Something went wrong.");
     }

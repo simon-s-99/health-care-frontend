@@ -13,12 +13,10 @@ export default function BookingSlot({
   const [caregiver, setCaregiver] = useState(null);
   const isCaregiver = loggedInUser?.roles?.includes("Admin");
 
-  // 1) CREATE availability
+  // 1) CREATE
   async function handleCreateAvailability() {
     setPopup(null);
     try {
-      // If there's an existing availability with dateTime, use that,
-      // otherwise build one from date + time, e.g. "2025-02-01T08:00:00"
       const dateTimeStr = availability?.dateTime
         ? availability.dateTime
         : `${date}T${time}:00`;
@@ -32,13 +30,12 @@ export default function BookingSlot({
         },
         { withCredentials: true }
       );
-      // Optionally re-fetch in BookingsPage
     } catch (err) {
       console.error("Failed to create availability:", err);
     }
   }
 
-  // 2) REMOVE availability
+  // 2) REMOVE
   async function handleRemoveAvailability() {
     setPopup(null);
     try {
@@ -51,15 +48,40 @@ export default function BookingSlot({
     }
   }
 
-  // 3) PATIENT: (Optional) Book the slot
+  // 3) BOOK
+  // function handleCreateBooking() {
+  //   setPopup(null);
+  //   const dateTimeStr = `${date}T${time}`;
+  //   createBooking(loggedInUser.userId, availability?.caregiverId, dateTimeStr);
+  // }
+
   function handleCreateBooking() {
     setPopup(null);
-    // Build a dateTime "YYYY-MM-DDTHH:mm"
-    const dateTimeStr = `${date}T${time}`;
-    createBooking(loggedInUser.userId, availability?.caregiverId, dateTimeStr);
+
+    const dateTime =
+      date +
+      "T" +
+      new Date(availability.dateTime).toLocaleTimeString("sv-SE", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    const success = createBooking(
+      loggedInUser.userId,
+      availability.caregiverId,
+      dateTime
+    );
+    if (success) {
+      setConfirmationMessage("Booking confirmed!");
+      if (onBookingUpdated) {
+        onBookingUpdated();
+        getAllAvailabilities();
+      }
+    } else {
+      setConfirmationMessage("Something went wrong.");
+    }
   }
 
-  // 4) Optionally fetch caretaker info
+  // 4) Fetch caretaker name if needed
   async function fetchCaregiver() {
     if (!availability?.caregiverId) return;
     try {
@@ -77,10 +99,7 @@ export default function BookingSlot({
     fetchCaregiver();
   }, [availability]);
 
-  // -----------------------------
-  // RENDER LOGIC
-  // -----------------------------
-  // A) If the slot is available
+  // A) Slot is available
   if (isAvailable) {
     // A1) Caregiver => remove availability
     if (isCaregiver) {
@@ -98,15 +117,15 @@ export default function BookingSlot({
           <span>
             {date} at {time}
           </span>
-          <span>
-            {caregiver &&
-              `Caregiver: ${caregiver.firstname} ${caregiver.lastname}`}
-          </span>
+          {/* Remove caretaker label altogether, or conditionally hide */}
+          {/* If you prefer to show it only if caregiver.id != loggedInUser.userId, do: 
+            {caregiver && caregiver.id !== loggedInUser.userId && `Caregiver: ${caregiver.firstname} ${caregiver.lastname}`}
+          */}
           <span>(Click to remove)</span>
         </button>
       );
     }
-    // A2) Patient => show "Book" logic
+    // A2) Patient => "Book"
     if (loggedInUser?.roles?.includes("User")) {
       return (
         <button
@@ -121,13 +140,14 @@ export default function BookingSlot({
         >
           <span>{`${date} at ${time}`}</span>
           <span>Available (click to book)</span>
+          {/* If you want to show caretaker name, do: */}
           {caregiver && (
-            <span>{`Caregiver: ${caregiver.firstname} ${caregiver.lastname}`}</span>
+            <span>{`${caregiver.firstname} ${caregiver.lastname}`}</span>
           )}
         </button>
       );
     }
-    // A3) If neither caregiver nor patient => some fallback
+    // A3) Some fallback
     return (
       <div className="flex flex-row justify-evenly w-full border-[1px] border-gray-500 bg-green-300 py-4">
         {`${date} at ${time} — Available`}
@@ -135,7 +155,7 @@ export default function BookingSlot({
     );
   }
 
-  // B) If the slot is NOT available
+  // B) Slot is NOT available
   else {
     // B1) Caregiver => "Set availability"
     if (isCaregiver) {
@@ -154,14 +174,13 @@ export default function BookingSlot({
           <span>(Click to set availability)</span>
         </button>
       );
-    } else {
-      // B2) Patient => "Unavailable"
-      return (
-        <div className="flex flex-row justify-evenly items-center border border-gray-500 bg-gray-50 py-4">
-          <span>{`${date} at ${time}`}</span>
-          <span className="text-red-500">Unavailable</span>
-        </div>
-      );
     }
+    // B2) Patient => "Unavailable"
+    return (
+      <div className="flex flex-row justify-evenly items-center border border-gray-500 bg-gray-50 py-4">
+        <span>{`${date} at ${time}`}</span>
+        <span className="text-red-500">Unavailable</span>
+      </div>
+    );
   }
 }

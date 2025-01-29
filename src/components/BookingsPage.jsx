@@ -174,6 +174,13 @@ export default function BookingsPage() {
     getAppointmentsForDate();
   }
 
+  function onBookingUpdated() {
+    // re-fetch so caretaker sees the new/canceled booking immediately
+    getAppointmentsForDate();
+    getAllAvailabilities();
+    filterAvailabilitiesForSelectedDate();
+  }
+
   // =============================================
   // 8) Calendar select
   // =============================================
@@ -198,6 +205,7 @@ export default function BookingsPage() {
         createBooking={createBooking}
         cancelBooking={cancelBooking}
         onBookingCreated={onBookingCreated}
+        onBookingUpdated={onBookingUpdated}
       />
     );
   }
@@ -211,15 +219,39 @@ export default function BookingsPage() {
       const d = new Date(a.dateTime).toLocaleDateString("sv-SE");
       availSet.add(d);
     });
-    setAvailabilityDates(availSet);
 
     const bookSet = new Set();
     bookings.forEach((b) => {
       const d = new Date(b.dateTime).toLocaleDateString("sv-SE");
       bookSet.add(d);
     });
+
+    // If a day is in BOTH, remove it from availability => day shows as booking
+    bookSet.forEach((ds) => {
+      if (availSet.has(ds)) {
+        availSet.delete(ds);
+      }
+    });
+
+    setAvailabilityDates(availSet);
     setBookingDates(bookSet);
   }, [allAvailabilities, bookings]);
+
+  // useEffect(() => {
+  //   const availSet = new Set();
+  //   allAvailabilities.forEach((a) => {
+  //     const d = new Date(a.dateTime).toLocaleDateString("sv-SE");
+  //     availSet.add(d);
+  //   });
+  //   setAvailabilityDates(availSet);
+
+  //   const bookSet = new Set();
+  //   bookings.forEach((b) => {
+  //     const d = new Date(b.dateTime).toLocaleDateString("sv-SE");
+  //     bookSet.add(d);
+  //   });
+  //   setBookingDates(bookSet);
+  // }, [allAvailabilities, bookings]);
 
   // ============ On mount => get all availabilities
   useEffect(() => {

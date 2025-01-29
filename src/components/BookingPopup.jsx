@@ -7,7 +7,10 @@ export default function BookingPopup({
   handleFunction,
 }) {
   return (
-    <div onClick={() => setPopup(null)} className="h-full w-full absolute flex flex-col place-content-center">
+    <div
+      onClick={() => setPopup(null)}
+      className="h-full w-full absolute flex flex-col place-content-center"
+    >
       <dialog
         className=" w-1/4 h-1/4 mx-auto border-2 border-black flex flex-col items-center justify-evenly"
         open={isOpen}
