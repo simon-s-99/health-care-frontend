@@ -1,15 +1,15 @@
 import { FaHeartbeat } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
-import { useAuth } from "../hooks/useAuth";
-import { Button } from "./ui/button";
+import { useAuth } from "../../hooks/useAuth";
+import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
-import Logout from "./auth/Logout";
+import Logout from "../auth/Logout";
 
-import Profile from "./profile/Profile";
+import Profile from "../profile/Profile";
 
 import { useToast } from "@/hooks/use-toast"
 
@@ -186,7 +186,7 @@ export default function NavBar() {
       <span className="my-auto ml-2 mr-4">{endContent}</span>
 
       <button
-        className="sm:hidden inline z-10"
+        className="md:hidden inline z-10"
         onClick={() => setIsActive(!isActive)}
       >
         {isActive ? (

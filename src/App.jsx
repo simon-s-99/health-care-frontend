@@ -14,7 +14,7 @@ import Unauthorized from "./components/auth/Unauthorized";
 import Home from "./components/Home";
 import RequireAuth from "./components/auth/RequireAuth";
 import FeedbackList from "./components/Feedback";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/navigation/NavBar";
 import BookingsPage from "./components/booking/BookingsPage";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip"
