@@ -27,7 +27,6 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
@@ -82,18 +81,32 @@ export default function NavBar() {
       )}
     </div>
   ) : (
-    <div className="flex gap-4">
-      <Button variant="ghost" className="rounded-xl" asChild>
-        <NavLink to="/register">Register</NavLink>
-      </Button>
-      <Button variant="ghost" className="rounded-xl" asChild>
-        <NavLink to="/login">Log in</NavLink>
-      </Button>
+    <div className="flex gap-x-4">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="ghost" className="rounded-xl" asChild>
+            <NavLink to="/register">Register</NavLink>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent className="bg-slate-100">
+          <p className="text-black">Navigate to register page.</p>
+        </TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="ghost" className="rounded-xl" asChild>
+            <NavLink to="/login">Log in</NavLink>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent className="bg-slate-100">
+          <p className="text-black">Navigate to login page.</p>
+        </TooltipContent>
+      </Tooltip>
     </div>
   );
 
   return (
-    <nav className="flex flex-row justify-between uppercase tracking-wider">
+    <nav className="flex flex-row justify-between uppercase tracking-wider ml-2 my-1">
       <NavigationMenu>
         <NavigationMenuList className="gap-x-2">
           {/* List of nav-links styled with shadcn/ui */}
@@ -108,8 +121,8 @@ export default function NavBar() {
                       className="min-w-16 min-h-16 hover:scale-105 text-red-600" />}
                 </NavLink>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Navigate back to home-page.</p>
+              <TooltipContent className="bg-slate-100">
+              <p className="text-black">Navigate back to home-page.</p>
               </TooltipContent>
             </Tooltip>
           </NavigationMenuItem>
@@ -123,8 +136,8 @@ export default function NavBar() {
                   </NavLink>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Navigate to {isAdmin ? "schedule" : "booking"} page.</p>
+              <TooltipContent className="bg-slate-100">
+              <p className="text-black">Navigate to {isAdmin ? "schedule" : "booking"} page.</p>
               </TooltipContent>
             </Tooltip>
           </NavigationMenuItem>
@@ -140,8 +153,8 @@ export default function NavBar() {
                 </Button>
               </NavigationMenuItem>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>Navigate to dashboard.</p>
+            <TooltipContent className="bg-slate-100">
+            <p className="text-black">Navigate to dashboard.</p>
             </TooltipContent>
           </Tooltip>
 
@@ -155,14 +168,14 @@ export default function NavBar() {
                 </Button>
               </NavigationMenuItem>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>Navigate to feedback/review page.</p>
+            <TooltipContent className="bg-slate-100">
+            <p className="text-black">Navigate to feedback/review page.</p>
             </TooltipContent>
           </Tooltip>
         </NavigationMenuList>
       </NavigationMenu>
 
-      <span className="sm:inline hidden m-2">{endContent}</span>
+      <span className="my-auto ml-2 mr-4">{endContent}</span>
 
       <button
         className="sm:hidden inline z-10"

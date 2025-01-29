@@ -251,7 +251,7 @@ const Profile = () => {
               />
 
               {/* Save Changes Button */}
-              <Button onChange={saveAccountDetails} className="bg-green-500">
+              <Button onChange={saveAccountDetails} className="bg-green-500 hover:bg-blue-500">
                 {isSavingAccount ? "Saving..." : "Save Changes"}
               </Button>
             </form>
@@ -330,7 +330,7 @@ const Profile = () => {
               </div>
 
               {/* Change Password Button */}
-              <Button onChange={handlePasswordChange} className="bg-green-500 w-full mt-4">
+              <Button onChange={handlePasswordChange} className="bg-green-500 w-full mt-4 hover:bg-blue-500">
                 {isChangingPassword ? "Changing..." : "Change Password"}
               </Button>
             </form>

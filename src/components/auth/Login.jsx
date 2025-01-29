@@ -6,6 +6,12 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 export default function Login() {
   const { setAuthState } = useAuth();
   const navigate = useNavigate();
@@ -96,11 +102,18 @@ export default function Login() {
               Login
             </Button>
             <p className="text-center">Dont have an account?
-              <NavLink to="/register"
-                className="pl-1 text-blue-500 hover:underline decoration-blue-500"
-              >
-                Sign up now!
-              </NavLink>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <NavLink to="/register"
+                    className="pl-1 text-blue-500 hover:underline decoration-blue-500"
+                  >
+                    Sign up now!
+                  </NavLink>
+                </TooltipTrigger>
+                <TooltipContent className="bg-white">
+                  <p className="text-black">Navigate to register page.</p>
+                </TooltipContent>
+              </Tooltip>
             </p>
           </form>
         </CardContent>
