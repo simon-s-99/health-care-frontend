@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 
 export default function BookingSlot({
   loggedInUser,
-  isAvailable, // e.g. true/false
-  date, // e.g. "2025-02-01"
-  time, // e.g. "08:00"
-  availability, // might be null if none
+  isAvailable,
+  date,
+  time,
+  availability,
   setPopup,
-  createBooking, // if you need booking logic for patients
+  createBooking,
 }) {
   const [caregiver, setCaregiver] = useState(null);
   const isCaregiver = loggedInUser?.roles?.includes("Admin");
@@ -106,7 +106,7 @@ export default function BookingSlot({
         </button>
       );
     }
-    // A2) Patient => show "Book" logic (if you want)
+    // A2) Patient => show "Book" logic
     if (loggedInUser?.roles?.includes("User")) {
       return (
         <button
@@ -154,10 +154,14 @@ export default function BookingSlot({
           <span>(Click to set availability)</span>
         </button>
       );
+    } else {
+      // B2) Patient => "Unavailable"
+      return (
+        <div className="flex flex-row justify-evenly items-center border border-gray-500 bg-gray-50 py-4">
+          <span>{`${date} at ${time}`}</span>
+          <span className="text-red-500">Unavailable</span>
+        </div>
+      );
     }
-    // B2) Patient => show empty div
-    return (
-      <div className="border-[1px] block h-[7%] w-full border-gray-500 my-2" />
-    );
   }
 }
