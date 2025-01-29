@@ -68,17 +68,17 @@ export default function NavBar() {
             </TooltipContent>
           </Tooltip>
           <SheetContent>
-            <SheetHeader>
-              {/* TODO - move tabs from profile to sheettitle instead */}
-              <SheetTitle></SheetTitle>
-              <SheetDescription>
-                <Profile />
-              </SheetDescription>
-            </SheetHeader>
+            <SheetTitle>
+              {/* TODO - Add content here for accessability */}
+            </SheetTitle>
+            <SheetDescription>
+              {/* TODO - Add content here for accessability */}
+            </SheetDescription>
+            <Profile />
           </SheetContent>
         </Sheet>
       )}
-    </div>
+    </div >
   ) : (
     <div className="flex gap-x-4">
       <Tooltip>

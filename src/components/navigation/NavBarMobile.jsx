@@ -69,73 +69,73 @@ export default function NavBarMobile() {
             </div>
 
             <NavigationMenu className="flex flex-col mx-auto">
-                    {isActive &&
-                        <NavigationMenuList className="flex flex-col">
-                            {/* List of nav-links styled with shadcn/ui */}
+                {isActive &&
+                    <NavigationMenuList className="flex flex-col">
+                        {/* List of nav-links styled with shadcn/ui */}
 
-                            <NavigationMenuItem>
-                                <Button variant="ghost" className="rounded-xl" asChild>
-                                    <NavLink className={"rounded-md"} to={isAdmin ? "/schedule" : "/booking"}>
-                                        {isAdmin ? "Schedule" : "Booking"}
-                                    </NavLink>
-                                </Button>
-                            </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <Button variant="ghost" className="rounded-xl" asChild>
+                                <NavLink className={"rounded-md"} to={isAdmin ? "/schedule" : "/booking"}>
+                                    {isAdmin ? "Schedule" : "Booking"}
+                                </NavLink>
+                            </Button>
+                        </NavigationMenuItem>
 
 
-                            <NavigationMenuItem>
-                                <Button variant="ghost" className="rounded-xl" asChild>
-                                    <NavLink className="hover:text-blue-700" to="/dashboard">
-                                        Dashboard
-                                    </NavLink>
-                                </Button>
-                            </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <Button variant="ghost" className="rounded-xl" asChild>
+                                <NavLink className="hover:text-blue-700" to="/dashboard">
+                                    Dashboard
+                                </NavLink>
+                            </Button>
+                        </NavigationMenuItem>
 
-                            <NavigationMenuItem>
-                                <Button variant="ghost" className="rounded-xl" asChild>
-                                    <NavLink className="hover:text-blue-700" to="/feedback">
-                                        Submit feedback
-                                    </NavLink>
-                                </Button>
-                            </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <Button variant="ghost" className="rounded-xl" asChild>
+                                <NavLink className="hover:text-blue-700" to="/feedback">
+                                    Submit feedback
+                                </NavLink>
+                            </Button>
+                        </NavigationMenuItem>
 
-                            <>
-                                {authState.isAuthenticated ?
-                                    <div className="flex flex-col items-center gap-2">
-                                        {/* logout button */}
-                                        <Logout />
+                        <>
+                            {authState.isAuthenticated ?
+                                <div className="flex flex-col items-center gap-2">
+                                    {/* logout button */}
+                                    <Logout />
 
-                                        {/* Profile Icon*/}
-                                        <Sheet>
-                                            <SheetTrigger className="flex flex-row items-center mb-2">
-                                                <CgProfile className="w-8 h-8 hover:scale-105" />
-                                                <p className="ml-2">Profile</p>
-                                            </SheetTrigger>
-                                            <SheetContent>
-                                                <SheetHeader>
-                                                    {/* TODO - move tabs from profile to sheettitle instead */}
-                                                    <SheetTitle></SheetTitle>
-                                                    <SheetDescription>
-                                                        <Profile />
-                                                    </SheetDescription>
-                                                </SheetHeader>
-                                            </SheetContent>
-                                        </Sheet>
-                                    </div>
-                                    :
-                                    <div className="flex gap-x-4">
-                                        <Button variant="ghost" className="rounded-xl" asChild>
-                                            <NavLink to="/register">Register</NavLink>
-                                        </Button>
-                                        <Button variant="ghost" className="rounded-xl" asChild>
-                                            <NavLink to="/login">Log in</NavLink>
-                                        </Button>
-                                    </div>
-                                }
-                            </>
+                                    {/* Profile Icon*/}
+                                    <Sheet>
+                                        <SheetTrigger className="flex flex-row items-center mb-2">
+                                            <CgProfile className="w-8 h-8 hover:scale-105" />
+                                            <p className="ml-2">Profile</p>
+                                        </SheetTrigger>
+                                        <SheetContent>
+                                            <SheetTitle>
+                                                {/* TODO - Add content here for accessability */}
+                                            </SheetTitle>
+                                            <SheetDescription>
+                                                {/* TODO - Add content here for accessability */}
+                                            </SheetDescription>
+                                            <Profile />
+                                        </SheetContent>
+                                    </Sheet>
+                                </div>
+                                :
+                                <div className="flex gap-x-4">
+                                    <Button variant="ghost" className="rounded-xl" asChild>
+                                        <NavLink to="/register">Register</NavLink>
+                                    </Button>
+                                    <Button variant="ghost" className="rounded-xl" asChild>
+                                        <NavLink to="/login">Log in</NavLink>
+                                    </Button>
+                                </div>
+                            }
+                        </>
 
-                        </NavigationMenuList>
-                    }
-                </NavigationMenu>
+                    </NavigationMenuList>
+                }
+            </NavigationMenu>
         </div >
     );
 }

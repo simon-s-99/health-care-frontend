@@ -176,7 +176,6 @@ const Profile = () => {
   }
 
   return (
-    // <main className="flex justify-center items-center min-h-screen bg-gray-100">
     <section className="mt-4 rounded-lg">
       <Tabs defaultValue="account">
         {/* Tabs List */}
@@ -345,7 +344,6 @@ const Profile = () => {
         </TabsContent>
       </Tabs>
     </section>
-    // </main>
   );
 };
 
