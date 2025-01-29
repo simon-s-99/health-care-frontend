@@ -6,7 +6,7 @@ import { useAuth } from "../hooks/useAuth";
 import BookingPopup from "./BookingPopup";
 
 export default function BookingsPage() {
-  const currentDateTime = new Date(Date.now());
+  const currentDateTime = new Date();
   const { authState } = useAuth();
 
   const [popup, setPopup] = useState({
@@ -17,104 +17,29 @@ export default function BookingsPage() {
   const [date, setDate] = useState(null);
   const [error, setError] = useState("");
   const [bookings, setBookings] = useState([]);
-  const [allAvailabilites, setAllAvailabilites] = useState([]);
-  const [currentAvailabilites, setCurrentAvailabilites] = useState([]);
-  const [firstAvailableSlot, setFirstAvailableSlot] = useState(null);
+  const [allAvailabilities, setAllAvailabilities] = useState([]);
+  const [currentAvailabilities, setCurrentAvailabilities] = useState([]);
 
-  // -----------------------
-  // 1) Create a booking
-  // -----------------------
-  async function createBooking(patientId, caregiverId, dateTime) {
-    setError("");
-
-    // If date is in the past
-    if (new Date(dateTime) < currentDateTime) {
-      setError("Invalid date.");
-      return;
-    }
-
-    // Convert to UTC
-    const utcDateTime = new Date(dateTime).toISOString();
-
-    try {
-      await axios.post(
-        "http://localhost:5148/api/appointment",
-        {
-          PatientId: patientId,
-          CaregiverId: caregiverId,
-          Status: 1,
-          DateTime: utcDateTime,
-        },
-        { withCredentials: true }
-      );
-      // Optionally refresh bookings if needed
-      return true; // Post succeeded
-    } catch (e) {
-      setError(e?.response?.data || "Could not create booking");
-    }
-  }
-
-  // -----------------------
-  // 2) Cancel a booking
-  // -----------------------
-  async function cancelBooking(appointmentId) {
+  // ============================================================
+  // 1) A SINGLE function to fetch appointments depending on role
+  // ============================================================
+  async function getAppointmentsForDate() {
+    if (!date) return;
     setError("");
 
     try {
-      await axios.delete(
-        `http://localhost:5148/api/appointment?id=${appointmentId}`,
-        {
-          withCredentials: true,
-        }
-      );
-      return true;
-    } catch (e) {
-      setError(e?.response?.data || "Could not cancel booking");
-    }
-  }
+      let url = "";
+      if (authState?.roles?.includes("Admin")) {
+        // CAREGIVER => fetch caretaker's own appointments
+        url = `http://localhost:5148/api/appointment/user?id=${authState.userId}&date=${date}&isPatient=false`;
+      } else {
+        // PATIENT => fetch only that user's appointments
+        url = `http://localhost:5148/api/appointment/user?id=${authState.userId}&date=${date}&isPatient=true`;
+      }
 
-  // -----------------------
-  // 3) Handle calendar date select
-  // -----------------------
-  function handleSetDate(selectedDate) {
-    if (!selectedDate) return;
-    const formattedDate = selectedDate.toLocaleDateString("sv-SE");
-    setDate(formattedDate);
-  }
+      const { data } = await axios.get(url, { withCredentials: true });
 
-  // -----------------------
-  // 4) Generate UI for main section
-  // -----------------------
-  function generateSchedule() {
-    if (!date) {
-      return <h2>Select a date to see bookings</h2>;
-    }
-    return (
-      <BookingsList
-        setPopup={setPopup}
-        loggedInUser={authState}
-        createBooking={createBooking}
-        bookings={bookings}
-        availabilites={currentAvailabilites}
-        date={date}
-        cancelBooking={cancelBooking}
-      />
-    );
-  }
-
-  // -----------------------
-  // 5) Fetch user's booked appointments for the date
-  // -----------------------
-  async function getUserAppointmentsForDate() {
-    if (!authState?.userId || !date) return;
-
-    try {
-      const { data } = await axios.get(
-        `http://localhost:5148/api/appointment/user?id=${authState.userId}&isPatient=true&date=${date}`,
-        { withCredentials: true }
-      );
-
-      // Convert dateTime => "YYYY-MM-DD HH:mm" in your local logic
+      // Then format dateTime, etc.
       const formattedData = data.map((item) => {
         const dateTimeSwedish = new Date(item.dateTime).toLocaleDateString(
           "sv-SE",
@@ -134,21 +59,24 @@ export default function BookingsPage() {
 
       setBookings(formattedData);
     } catch (err) {
-      console.error("Error fetching user appointments:", err);
+      setError(err.response?.data || "Error fetching appointments");
+      console.error("Error fetching appointments:", err);
     }
   }
 
-  // -----------------------
-  // 6) Fetch ALL availabilities
-  // -----------------------
-  async function getAllAvailabilites() {
+  // ======================
+  // 2) Fetch all availabilities
+  // ======================
+  async function getAllAvailabilities() {
     try {
       const { data } = await axios.get(
-        "http://localhost:5148/api/availability/all"
+        "http://localhost:5148/api/availability/all",
+        {
+          withCredentials: true,
+        }
       );
-      // Format them similarly
+      // Format them to "YYYY-MM-DD HH:mm" in Swedish time
       const formatted = data.map((item) => {
-        // Convert to "YYYY-MM-DD HH:mm" in Swedish time
         const dateTimeSwedish = new Date(item.dateTime).toLocaleDateString(
           "sv-SE",
           {
@@ -163,60 +91,127 @@ export default function BookingsPage() {
           dateTime: dateTimeSwedish,
         };
       });
-      setAllAvailabilites(formatted);
+      setAllAvailabilities(formatted);
     } catch (err) {
+      setError("Could not fetch availabilities");
       console.error("Error fetching all availabilities:", err);
     }
   }
 
-  // -----------------------
-  // 7) Filter to only the selected date
-  // -----------------------
-  function filterAvailabilitesForSelectedDate() {
+  // ======================
+  // 3) Filter Availabilities => selected date
+  // ======================
+  function filterAvailabilitiesForSelectedDate() {
     if (!date) return;
-    const availabilitiesForDate = allAvailabilites.filter((a) => {
-      const aDate = new Date(a.dateTime).toLocaleDateString("sv-SE");
-      return aDate === date;
+    const matched = allAvailabilities.filter((a) => {
+      const localDate = new Date(a.dateTime).toLocaleDateString("sv-SE");
+      return localDate === date;
     });
-    setCurrentAvailabilites(availabilitiesForDate);
+    setCurrentAvailabilities(matched);
   }
 
-  // -----------------------
-  // 8) Find the first availability *after* the chosen date
-  // (Optional logic for next available slot)
-  // -----------------------
-  function getFirstAvailability() {
-    if (!date) return;
-    const next = allAvailabilites.find(
-      (a) =>
-        new Date(a.dateTime).toLocaleDateString("sv-SE") >
-        new Date(date).toLocaleDateString("sv-SE")
+  // ======================
+  // 4) Create booking
+  // ======================
+  async function createBooking(patientId, caregiverId, dateTime) {
+    setError("");
+    // Check if in the past
+    if (new Date(dateTime) < currentDateTime) {
+      setError("Invalid date.");
+      return false;
+    }
+
+    try {
+      await axios.post(
+        "http://localhost:5148/api/appointment",
+        {
+          PatientId: patientId,
+          CaregiverId: caregiverId,
+          Status: 1,
+          DateTime: new Date(dateTime).toISOString(),
+        },
+        { withCredentials: true }
+      );
+      return true; // success
+    } catch (err) {
+      setError(err.response?.data || "Could not create booking");
+      return false;
+    }
+  }
+
+  // ======================
+  // 5) Cancel booking
+  // ======================
+  async function cancelBooking(appointmentId) {
+    setError("");
+    try {
+      await axios.delete(
+        `http://localhost:5148/api/appointment?id=${appointmentId}`,
+        { withCredentials: true }
+      );
+      return true;
+    } catch (err) {
+      setError(err.response?.data || "Could not cancel booking");
+      return false;
+    }
+  }
+
+  // ======================
+  // 6) Called after booking creation => re-fetch
+  // ======================
+  function onBookingCreated() {
+    // Re-fetch the new appointments => caretaker sees the booking
+    getAppointmentsForDate();
+  }
+
+  // ======================
+  // 7) handle calendar select
+  // ======================
+  function handleSetDate(selected) {
+    if (!selected) return;
+    const formatted = selected.toLocaleDateString("sv-SE");
+    setDate(formatted);
+  }
+
+  // ======================
+  // 8) Render schedule
+  // ======================
+  function generateSchedule() {
+    if (!date) return <h2>Select a date to see bookings</h2>;
+    return (
+      <BookingsList
+        date={date}
+        loggedInUser={authState}
+        setPopup={setPopup}
+        bookings={bookings}
+        availabilites={currentAvailabilities}
+        createBooking={createBooking}
+        cancelBooking={cancelBooking}
+        onBookingCreated={onBookingCreated} // pass callback
+      />
     );
-    setFirstAvailableSlot(next || null);
   }
 
-  // -----------------------
-  // 9) Whenever date changes, fetch relevant data
-  // -----------------------
+  // ======================
+  // 9) useEffects
+  // ======================
+  // On first mount => fetch all availabilities
   useEffect(() => {
-    if (date && authState.userId) {
-      getUserAppointmentsForDate();
-      filterAvailabilitesForSelectedDate();
-      getFirstAvailability();
+    getAllAvailabilities();
+  }, []);
+
+  // Whenever date changes => fetch appointments & filter
+  useEffect(() => {
+    if (date) {
+      getAppointmentsForDate();
+      filterAvailabilitiesForSelectedDate();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
 
-  // -----------------------
-  // 10) On first mount, get all availabilities
-  // -----------------------
-  useEffect(() => {
-    getAllAvailabilites();
-  }, []);
-
-  // -----------------------
-  // 11) RENDER
-  // -----------------------
+  // ======================
+  // 10) Return UI
+  // ======================
   return (
     <div className="flex flex-col justify-center items-center">
       {error && <span className="text-red-500">{error}</span>}
@@ -236,7 +231,6 @@ export default function BookingsPage() {
       >
         {generateSchedule()}
       </div>
-
       {popup?.isOpen && (
         <BookingPopup
           isOpen={popup.isOpen}
