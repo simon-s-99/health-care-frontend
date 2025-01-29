@@ -4,8 +4,6 @@ import { CgProfile } from "react-icons/cg";
 import { useAuth } from "../../hooks/useAuth";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { RiCloseLargeFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 import Logout from "../auth/Logout";
 
@@ -15,13 +13,8 @@ import { useToast } from "@/hooks/use-toast"
 
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu"
 
 import {
@@ -38,8 +31,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { convertToObject } from "typescript";
-
 
 export default function NavBar() {
   const { authState } = useAuth();
