@@ -56,7 +56,6 @@ export default function Booking({ booking, cancelBooking, setPopup }) {
                 isOpen: true,
                 label: "Cancel appointment?",
                 handleFunction: handleCancelBooking,
-                setPopup: setPopup,
               })
             }
           >

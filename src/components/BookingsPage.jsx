@@ -144,7 +144,6 @@ export default function BookingsPage() {
     const { data } = await axios.get(
       "http://localhost:5148/api/availability/all"
     );
-    console.log(data);
     const formattedData = [];
     for (let i = 0; i < data.length; i++) {
       const dateTimeSwedish = new Date(data[i].dateTime).toLocaleDateString(
@@ -167,7 +166,6 @@ export default function BookingsPage() {
   }
 
   function filterAvailabilitesForSelectedDate() {
-    console.log(allAvailabilites);
     const allAvailabilitesCopy = allAvailabilites;
     const availabilitesForDate = allAvailabilitesCopy.filter(
       (a) =>

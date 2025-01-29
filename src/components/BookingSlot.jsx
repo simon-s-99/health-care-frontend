@@ -56,7 +56,6 @@ export default function BookingSlot({
                 isOpen: true,
                 label: "Create booking?",
                 handleFunction: handleCreateBooking,
-                setPopup: setPopup,
               })
             }
             className={
