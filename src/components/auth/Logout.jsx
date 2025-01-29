@@ -20,7 +20,7 @@ export default function Logout() {
   };
 
   return (
-    <Button variant="secondary" className="rounded-xl" onClick={handleLogout}>
+    <Button variant="ghost" className="rounded-xl" onClick={handleLogout}>
       Logout
     </Button>
   );

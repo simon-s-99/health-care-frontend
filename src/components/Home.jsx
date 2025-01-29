@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import Logo from "../assets/health_care_logo.svg";
-import experiencedTeam from "../assets/experienced-team.jpg"; 
+import experiencedTeam from "../assets/experienced-team.jpg";
 import doctorpatient from "../assets/doctorpatient-image.jpg";
 
 export default function Home() {
@@ -19,11 +19,8 @@ export default function Home() {
           experienced professionals is here to provide you with the best care.
         </p>
         <div className="flex justify-center space-x-4 mt-6">
-          <Button asChild variant="outline" size="lg" className="text-black">
-            <Link to="/register">Get Started</Link>
-          </Button>
-          <Button asChild variant="secondary" size="lg">
-            <Link to="/login">Login</Link>
+          <Button asChild variant="primary" size="lg" className="bg-white">
+            <Link to="/login">Get Started</Link>
           </Button>
         </div>
       </div>
@@ -70,8 +67,8 @@ export default function Home() {
           Join our community today and experience world-class healthcare
           services that put you first.
         </p>
-        <Button asChild variant="primary" size="lg" className="bg-white text-green-600">
-          <Link to="/register">Join Now</Link>
+        <Button asChild variant="secondary" size="lg">
+          <Link to="/login">Get Started</Link>
         </Button>
       </div>
     </div>

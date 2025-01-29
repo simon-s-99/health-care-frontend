@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -48,7 +48,7 @@ export default function Login() {
         console.error("Unauthorized access. No valid role found.");
         navigate("/unauthorized", { replace: true }); // Navigate to an unauthorized
       }
-      
+
     } catch (error) {
       console.error("Login failed:", error.response || error);
       setError("Invalid username or password");
@@ -56,7 +56,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+    <div className="flex justify-center items-center min-h-[90vh] bg-gray-50">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-lg font-bold">Login</CardTitle>
@@ -95,6 +95,13 @@ export default function Login() {
             <Button type="submit" className="w-full">
               Login
             </Button>
+            <p className="text-center">Dont have an account?
+              <NavLink to="/register"
+                className="pl-1 text-blue-500 hover:underline decoration-blue-500"
+              >
+                Sign up now!
+              </NavLink>
+            </p>
           </form>
         </CardContent>
       </Card>

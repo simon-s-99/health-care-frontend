@@ -71,10 +71,10 @@ export default function NavBar() {
     </div>
   ) : (
     <div className="flex gap-4">
-      <Button variant="secondary" className="rounded-xl">
+      <Button variant="ghost" className="rounded-xl" asChild>
         <NavLink to="/register">Register</NavLink>
       </Button>
-      <Button variant="secondary" className="rounded-xl">
+      <Button variant="ghost" className="rounded-xl" asChild>
         <NavLink to="/login">Log in</NavLink>
       </Button>
     </div>
