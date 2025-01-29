@@ -38,11 +38,21 @@ export default function App() {
                 </RequireAuth>
               }
             />
+            {/* Booking Pages for Patients & Admins */}
             <Route
-              path="/booking"
+              path="/booking/user"
               element={
                 <RequireAuth allowedRoles={["User"]}>
                   <BookingsPage />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/booking/admin"
+              element={
+                <RequireAuth allowedRoles={["Admin"]}>
+                  <BookingsPage isCaregiverView={true} />
                 </RequireAuth>
               }
             />

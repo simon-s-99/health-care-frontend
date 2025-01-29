@@ -56,13 +56,16 @@ export default function NavBar() {
         <li className="sm:visible invisible my-2">
           <NavLink
             className="hover:text-blue-700"
-            to={isAdmin ? "/schedule" : "/booking"}
+            to={isAdmin ? "/booking/admin" : "/booking/user"}
           >
             {isAdmin ? "Schedule" : "Booking"}
           </NavLink>
         </li>
         <li className="sm:visible invisible my-2">
-          <NavLink className="hover:text-blue-700" to={isAdmin ? "/dashboard/admin" : "/dashboard/user"}>
+          <NavLink
+            className="hover:text-blue-700"
+            to={isAdmin ? "/dashboard/admin" : "/dashboard/user"}
+          >
             Dashboard
           </NavLink>
         </li>
