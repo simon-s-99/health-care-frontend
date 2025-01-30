@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import axios from "axios";
-import InputField from "@/components/InputField";
+import InputField from "@/components/profile/InputField";
 
 const Profile = () => {
   // Loading states
@@ -175,8 +175,8 @@ const Profile = () => {
   }
 
   return (
-    <main className="flex justify-center items-center min-h-screen bg-gray-100">
-      <section className="w-full max-w-lg mx-auto bg-white p-6 shadow-md rounded-lg">
+    <main className="flex justify-center min-h-screen">
+      <section className="mt-4 rounded-lg">
         <Tabs defaultValue="account" className="w-full">
           {/* Tabs List */}
           <nav aria-label="Profile Tabs" className="text-center mb-4">
@@ -185,6 +185,12 @@ const Profile = () => {
               <TabsTrigger value="password">Password</TabsTrigger>
             </TabsList>
           </nav>
+
+          {isDirty &&
+            <p className="mb-1 mt-4 flex flex-col">
+              <em className="mx-auto">Careful! You have unsaved changes.</em>
+            </p>
+          }
 
           {/* Account Tab */}
           <TabsContent value="account">
@@ -253,7 +259,7 @@ const Profile = () => {
                 <button
                   type="button"
                   onClick={saveAccountDetails}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md mt-4"
+                  className="px-4 py-2 bg-green-500 hover:bg-blue-500 text-white rounded-md mt-4"
                   disabled={isSavingAccount}
                 >
                   {isSavingAccount ? "Saving..." : "Save Changes"}
@@ -337,7 +343,7 @@ const Profile = () => {
                 <button
                   type="button"
                   onClick={changePassword}
-                  className="px-4 py-2 bg-green-500 text-white rounded-md mt-4"
+                  className="px-4 py-2 bg-green-500 hover:bg-blue-500 text-white rounded-md mt-4"
                   disabled={isChangingPassword}
                 >
                   {isChangingPassword ? "Changing..." : "Change Password"}
