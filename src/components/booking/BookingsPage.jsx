@@ -3,14 +3,14 @@ import { Calendar } from "@/components/ui/calendar";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import BookingsList from "./BookingsList";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import BookingPopup from "./BookingPopup";
 
 export default function BookingsPage() {
-  const currentDateTime = new Date();
-  const { authState } = useAuth();
+  const { authState, isLoading } = useAuth();
 
   // Popup state
+  const currentDateTime = new Date(Date.now());
   const [popup, setPopup] = useState({
     isOpen: false,
     label: "",
@@ -121,7 +121,10 @@ export default function BookingsPage() {
       setError("Invalid date.");
       return false;
     }
-
+    
+    // Convert to UTC
+    const utcDateTime = new Date(dateTime).toISOString();
+    
     try {
       await axios.post(
         "http://localhost:5148/api/appointment",

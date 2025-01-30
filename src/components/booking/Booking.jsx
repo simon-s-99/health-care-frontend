@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import BookingPopup from "./BookingPopup";
+import { Button } from "@/components/ui/button";
+
 export default function Booking({
   booking,
   cancelBooking,

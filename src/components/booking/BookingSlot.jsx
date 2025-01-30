@@ -155,7 +155,7 @@ export default function BookingSlot({
               handleFunction: handleCreateAvailability,
             })
           }
-          className="flex flex-row justify-evenly w-full border-[1px] border-gray-500 bg-gray-200 py-4"
+          className="flex flex-col md:flex-row justify-evenly min-w-48 items-center md:min-w-full border border-gray-500 bg-gray-200 p-4 my-1"
         >
           <span>{`${date} at ${time}`}</span>
           <span>(Click to set availability)</span>

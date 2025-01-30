@@ -2,8 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import Logo from "../assets/health_care_logo.svg";
-import experiencedTeam from "../assets/experienced-team.jpg"; 
+import experiencedTeam from "../assets/experienced-team.jpg";
 import doctorpatient from "../assets/doctorpatient-image.jpg";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export default function Home() {
   return (
@@ -19,12 +25,16 @@ export default function Home() {
           experienced professionals is here to provide you with the best care.
         </p>
         <div className="flex justify-center space-x-4 mt-6">
-          <Button asChild variant="outline" size="lg" className="text-black">
-            <Link to="/register">Get Started</Link>
-          </Button>
-          <Button asChild variant="secondary" size="lg">
-            <Link to="/login">Login</Link>
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button asChild variant="primary" size="lg" className="rounded-xl bg-white hover:bg-blue-500">
+                <Link to="/login">Get Started</Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="bg-slate-100">
+              <p className="text-black">Navigate to login page.</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
 
@@ -70,9 +80,16 @@ export default function Home() {
           Join our community today and experience world-class healthcare
           services that put you first.
         </p>
-        <Button asChild variant="primary" size="lg" className="bg-white text-green-600">
-          <Link to="/register">Join Now</Link>
-        </Button>
+        <Tooltip>
+            <TooltipTrigger asChild>
+              <Button asChild variant="primary" size="lg" className="bg-white rounded-xl hover:bg-blue-500">
+                <Link to="/login" className="text-black">Get Started</Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="bg-slate-100">
+              <p className="text-black">Navigate to login page.</p>
+            </TooltipContent>
+          </Tooltip>
       </div>
     </div>
   );

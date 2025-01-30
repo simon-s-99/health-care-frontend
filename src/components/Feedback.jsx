@@ -16,16 +16,16 @@ export default function FeedbackList() {
   const [submittedAppointments, setSubmittedAppointments] = useState([]); // Track reviewed appointments
 
   // Fetch the logged-in user's information from authState
-  const { authState } = useAuth();
+  const { authState, isLoading } = useAuth();
   const patientId = authState?.userId;
-  const caregiverId = authState?.userId; // Logged-in caregiver ID
-
+  //const caregiverId = authState?.userId; // Logged-in caregiver ID
+  
   // Log authState and patientId whenever they change
   useEffect(() => {
     console.log("AuthState on mount:", authState);
     console.log("Extracted patientId:", patientId);
   }, [authState, patientId]);
-
+  
   // Fetch the user's appointment ID
   useEffect(() => {
     const fetchAppointmentId = async () => {
@@ -36,7 +36,7 @@ export default function FeedbackList() {
           );
           return;
         }
-
+        
         console.log("Fetching appointments for patientId:", patientId);
         const response = await axios.get(
           "http://localhost:5148/api/appointment/user",
@@ -46,7 +46,7 @@ export default function FeedbackList() {
           }
         );
         console.log("Fetched appointment data:", response.data);
-
+        
         if (response.data?.length > 0) {
           setAppointmentId(response.data[0].id);
           console.log("Set appointmentId:", response.data[0].id);
@@ -64,7 +64,7 @@ export default function FeedbackList() {
         setError("Failed to fetch appointment information.");
       }
     };
-
+    
     fetchAppointmentId();
   }, [patientId]);
 
@@ -98,7 +98,7 @@ export default function FeedbackList() {
       setPage(1);
       setHasMore(true);
     }
-
+    
     setLoading(true); // Show loading spinner
     try {
       const currentPage = reset ? 1 : page;
@@ -130,9 +130,9 @@ export default function FeedbackList() {
         setHasMore(false); // No more feedback available
       } else {
         const updatedFeedback = reset
-          ? response.data // Replace list on reset
-          : [...feedback, ...response.data]; // Append data otherwise
-
+        ? response.data // Replace list on reset
+        : [...feedback, ...response.data]; // Append data otherwise
+        
         setFeedback(updatedFeedback);
         calculateStarDistribution(updatedFeedback);
         setPage((prevPage) => prevPage + 1); // Increment page for next fetch
@@ -144,7 +144,7 @@ export default function FeedbackList() {
       setLoading(false); // Hide loading spinner
     }
   };
-
+  
   // Calculate the distribution of feedback by star ratings
   const calculateStarDistribution = (FeedbackList) => {
     console.log("Calculating star distribution...");
@@ -155,13 +155,13 @@ export default function FeedbackList() {
     console.log("Updated star distribution:", distribution);
     setStarDistribution(distribution); // Update state with the calculated distribution
   };
-
+  
   // Fetch initial feedback when the component mounts
   useEffect(() => {
     console.log("Triggering initial feedback fetch...");
     fetchFeedbackPage(true); // Fetch feedback on component load
   }, []);
-
+  
   // Handle feedback submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -172,7 +172,7 @@ export default function FeedbackList() {
       comment,
       rating,
     });
-
+    
     if (!rating) {
       console.error("Rating is required to submit feedback.");
       setError("Please select a star rating before submitting feedback.");
@@ -207,7 +207,7 @@ export default function FeedbackList() {
         }
       );
       console.log("Feedback submitted successfully:", response.data);
-
+      
       // Add the new feedback to the top of the list
       setFeedback((prevFeedback) => [response.data, ...prevFeedback]);
       setSubmittedAppointments((prev) => [...prev, appointmentId]); // Track reviewed appointments
@@ -219,11 +219,15 @@ export default function FeedbackList() {
       setError("Failed to submit feedback.");
     }
   };
-
+  
+  if (isLoading) {
+    return <h2>Loading...</h2>
+  }
+  
   return (
-    <div className="max-w-lg mx-auto p-6 bg-gray-50">
+    <div className="*:mx-auto p-6 bg-gray-50">
       {/* Feedback Form */}
-      <div className="p-6 bg-white shadow-md rounded-md">
+      <div className="p-6 bg-white shadow-md rounded-md max-w-lg">
         <h2 className="text-xl font-semibold mb-4 text-center">
           Share Your Experience
         </h2>
@@ -261,7 +265,7 @@ export default function FeedbackList() {
       </div>
 
       {/* Feedback Statistics and Reviews */}
-      <div className="p-6 bg-white shadow-md rounded-md mt-6">
+      <div className="p-6 bg-white shadow-md rounded-md mt-6 max-w-lg">
         <h2 className="text-xl font-semibold mb-4 text-center">
           Feedback for Health care AB
         </h2>
