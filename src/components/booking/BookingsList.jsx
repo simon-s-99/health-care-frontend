@@ -224,23 +224,6 @@ export default function BookingsList({
     <div className="flex flex-col w-full h-full px-4 mb-[10%]">
       <h2 className="text-xl text-center font-bold">{dateHeading}</h2>
       <div className="flex flex-row text-center">
-        {/* Left column: times */}
-        {/* <ul className="w-fit">
-          <li>08:00</li>
-          <li>09:00</li>
-          <li>10:00</li>
-          <li>11:00</li>
-          <li>12:00</li>
-          <li>13:00</li>
-          <li>14:00</li>
-          <li>15:00</li>
-          <li>16:00</li>
-          <li>17:00</li>
-          <li>18:00</li>
-          <li>19:00</li>
-          <li>20:00</li>
-        </ul> */}
-        {/* Right column: slots or bookings */}
         <div className="w-full">{generateBookingSlots()}</div>
       </div>
     </div>
