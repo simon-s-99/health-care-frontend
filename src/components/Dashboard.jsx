@@ -108,9 +108,10 @@ export default function Dashboard() {
               <Carousel orientation="horizontal">
                 <CarouselContent>
                   {upcomingAppointments.map((appointment) => (
-                    <CarouselItem className="md:basis-1/3 lg:basis-1/4">
+                    <CarouselItem
+                      key={appointment.id}
+                      className="md:basis-1/3 lg:basis-1/4">
                       <Card
-                        key={appointment.id}
                         className="rounded-2xl bg-white mb-1"
                       >
                         <CardHeader className="text-center">
