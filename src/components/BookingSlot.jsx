@@ -9,7 +9,6 @@ export default function BookingSlot({
   availability,
   setPopup,
   createBooking,
-  setConfirmationMessage
 }) {
   const [caregiver, setCaregiver] = useState(null);
   const isCaregiver = loggedInUser?.roles?.includes("Admin");
@@ -72,13 +71,10 @@ export default function BookingSlot({
       dateTime
     );
     if (success) {
-      setConfirmationMessage("Booking confirmed!");
       if (onBookingUpdated) {
         onBookingUpdated();
         getAllAvailabilities();
       }
-    } else {
-      setConfirmationMessage("Something went wrong.");
     }
   }
 

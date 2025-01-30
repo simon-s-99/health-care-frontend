@@ -12,7 +12,7 @@ const CaregiverAvailability = () => {
   const API_URL = "http://localhost:5148/api/Availability";
 
   // Get caregiver Id from authState.
-  const { authState } = useAuth();
+  const { authState, isLoading } = useAuth();
   const caregiverId = authState?.userId;
 
   // Fetch all availabilities for the caregiver
@@ -99,6 +99,10 @@ const CaregiverAvailability = () => {
   useEffect(() => {
     fetchAvailabilities();
   }, []);
+
+  if (isLoading) {
+    return <h2>Loading...</h2>;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
