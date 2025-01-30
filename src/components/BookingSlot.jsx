@@ -9,6 +9,7 @@ export default function BookingSlot({
   availability,
   setPopup,
   createBooking,
+  setConfirmationMessage
 }) {
   const [caregiver, setCaregiver] = useState(null);
   const isCaregiver = loggedInUser?.roles?.includes("Admin");
