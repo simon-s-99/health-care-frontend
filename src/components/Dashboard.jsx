@@ -89,7 +89,7 @@ export default function Dashboard() {
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
         <Tabs defaultValue="upcoming">
           <nav className="text-center">
-            <TabsList className="gap-x-2">
+            <TabsList className="gap-2 max-sm:bg-white max-sm:flex max-sm:flex-col">
               <TabsTrigger value="upcoming">
                 Upcoming Appointments
               </TabsTrigger>
