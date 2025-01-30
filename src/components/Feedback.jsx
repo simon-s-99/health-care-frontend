@@ -15,15 +15,16 @@ export default function FeedbackList() {
   const [starDistribution, setStarDistribution] = useState({}); // Stores the number of reviews for each star rating
 
   // Fetch the logged-in user's information from authState
-  const { authState } = useAuth();
-  const patientId = authState?.userId;
+  const { authState, isLoading } = useAuth();
 
+  const patientId = authState?.userId;
+  
   // Log authState and patientId whenever they change
   useEffect(() => {
     console.log("AuthState on mount:", authState);
     console.log("Extracted patientId:", patientId);
   }, [authState, patientId]);
-
+  
   // Fetch the user's appointment ID
   useEffect(() => {
     const fetchAppointmentId = async () => {
@@ -34,7 +35,7 @@ export default function FeedbackList() {
           );
           return;
         }
-
+        
         console.log("Fetching appointments for patientId:", patientId);
         const response = await axios.get(
           "http://localhost:5148/api/appointment/user",
@@ -44,7 +45,7 @@ export default function FeedbackList() {
           }
         );
         console.log("Fetched appointment data:", response.data);
-
+        
         if (response.data?.length > 0) {
           setAppointmentId(response.data[0].id);
           console.log("Set appointmentId:", response.data[0].id);
@@ -62,10 +63,10 @@ export default function FeedbackList() {
         setError("Failed to fetch appointment information.");
       }
     };
-
+    
     fetchAppointmentId();
   }, [patientId]);
-
+  
   // Fetch feedback data with pagination
   const fetchFeedback = async (reset = false) => {
     if (reset) {
@@ -73,7 +74,7 @@ export default function FeedbackList() {
       setPage(1);
       setHasMore(true);
     }
-
+    
     setLoading(true); // Show loading spinner
     try {
       const currentPage = reset ? 1 : page;
@@ -82,14 +83,14 @@ export default function FeedbackList() {
         `http://localhost:5148/api/feedback?page=${currentPage}&pageSize=5`
       );
       console.log("Fetched feedback data:", response.data);
-
+      
       if (response.data.length === 0) {
         setHasMore(false); // No more feedback available
       } else {
         const updatedFeedback = reset
-          ? response.data // Replace list on reset
-          : [...feedback, ...response.data]; // Append data otherwise
-
+        ? response.data // Replace list on reset
+        : [...feedback, ...response.data]; // Append data otherwise
+        
         setFeedback(updatedFeedback);
         calculateStarDistribution(updatedFeedback);
         setPage((prevPage) => prevPage + 1); // Increment page for next fetch
@@ -101,7 +102,7 @@ export default function FeedbackList() {
       setLoading(false); // Hide loading spinner
     }
   };
-
+  
   // Calculate the distribution of feedback by star ratings
   const calculateStarDistribution = (FeedbackList) => {
     console.log("Calculating star distribution...");
@@ -112,13 +113,13 @@ export default function FeedbackList() {
     console.log("Updated star distribution:", distribution);
     setStarDistribution(distribution); // Update state with the calculated distribution
   };
-
+  
   // Fetch initial feedback when the component mounts
   useEffect(() => {
     console.log("Triggering initial feedback fetch...");
     fetchFeedback(true); // Fetch feedback on component load
   }, []);
-
+  
   // Handle feedback submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -128,13 +129,13 @@ export default function FeedbackList() {
       comment,
       rating,
     });
-
+    
     if (!rating) {
       console.error("Rating is required to submit feedback.");
       setError("Please select a star rating before submitting feedback.");
       return;
     }
-
+    
     if (!appointmentId || !patientId) {
       console.error("Missing appointmentId or patientId.");
       setError(
@@ -142,7 +143,7 @@ export default function FeedbackList() {
       );
       return;
     }
-
+    
     try {
       const response = await axios.post(
         "http://localhost:5148/api/feedback",
@@ -152,7 +153,7 @@ export default function FeedbackList() {
         }
       );
       console.log("Feedback submitted successfully:", response.data);
-
+      
       // Add the new feedback to the top of the list
       setFeedback((prevFeedback) => [response.data, ...prevFeedback]);
       setComment(""); // Clear comment input
@@ -163,7 +164,11 @@ export default function FeedbackList() {
       setError("Failed to submit feedback.");
     }
   };
-
+  
+  if (isLoading) {
+    return <h2>Loading...</h2>
+  }
+  
   return (
     <div className="*:mx-auto p-6 bg-gray-50">
       {/* Feedback Form */}

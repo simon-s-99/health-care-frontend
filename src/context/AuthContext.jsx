@@ -10,34 +10,42 @@ export default function AuthProvider({ children }) {
     username: "",
     roles: [],
   });
+  const [isLoading, setIsLoading] = useState(true);
 
-  async function getUserData() {
-    axios
-      .get("http://localhost:5148/api/auth/check", {
-        withCredentials: true,
-      })
-      .then((res) => { // If 200, set auth state
-        const data = res.data;
+  useEffect(() => {
+    async function getUserData() {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:5148/api/auth/check",
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (!data) {
+          throw new Error("Invalid user details.");
+        }
+
         setAuthState({
           isAuthenticated: data.message === "Authenticated",
           userId: data.userId,
           username: data.username,
           roles: data.roles,
         });
-      })
-      .catch((error) => {
-        if (error.response && error.response.status !== 401) { // If 404 do not print an error
+      } catch (error) {
+        if (error.response && error.response.status !== 401) {
+          // If 401 do not print an error
           console.log("Error: ", error);
         }
-      });
-  }
-
-  useEffect(() => {
+      } finally {
+        setIsLoading(false);
+      }
+    }
     if (!authState.isAuthenticated) getUserData();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authState, setAuthState }}>
+    <AuthContext.Provider value={{ authState, setAuthState, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
