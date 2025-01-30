@@ -51,12 +51,14 @@ export default function Dashboard() {
           userIds.forEach(async (userId) => {
             try {
               const { data } = await axios.get(
-                `http://localhost:5148/api/user?id=${userId}`
+                `http://localhost:5148/api/user?id=${userId}`,
+                {
+                  withCredentials: true,
+                }
               );
               setUserNames((prevNames) => ({
                 ...prevNames,
                 [userId]: `${data.firstname} ${data.lastname}`,
-                withCredentials: true,
               }));
             } catch (error) {
               console.error("Error fetching user data:", error);
