@@ -13,11 +13,12 @@ export default function FeedbackList() {
   const [page, setPage] = useState(1); // Tracks the current page for pagination
   const [hasMore, setHasMore] = useState(true); // Determines if there is more feedback to fetch
   const [starDistribution, setStarDistribution] = useState({}); // Stores the number of reviews for each star rating
+  const [submittedAppointments, setSubmittedAppointments] = useState([]); // Track reviewed appointments
 
   // Fetch the logged-in user's information from authState
   const { authState, isLoading } = useAuth();
-
   const patientId = authState?.userId;
+  //const caregiverId = authState?.userId; // Logged-in caregiver ID
   
   // Log authState and patientId whenever they change
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function FeedbackList() {
           "http://localhost:5148/api/appointment/user",
           {
             params: { id: patientId },
-            withCredentials: true
+            withCredentials: true,
           }
         );
         console.log("Fetched appointment data:", response.data);
@@ -66,9 +67,32 @@ export default function FeedbackList() {
     
     fetchAppointmentId();
   }, [patientId]);
-  
+
+  // Fetch existing feedback and track reviewed appointment IDs
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
+        console.log("Fetching all feedback...");
+        const response = await axios.get("http://localhost:5148/api/feedback", {
+          withCredentials: true,
+        });
+        setFeedback(response.data || []);
+
+        // Extract appointment IDs with existing feedback
+        const reviewedAppointments = response.data.map(
+          (item) => item.appointmentId
+        );
+        setSubmittedAppointments(reviewedAppointments); // **Track reviewed appointments**
+      } catch (err) {
+        setError("Failed to fetch feedback.");
+      }
+    };
+
+    fetchFeedback();
+  }, []);
+
   // Fetch feedback data with pagination
-  const fetchFeedback = async (reset = false) => {
+  const fetchFeedbackPage = async (reset = false) => {
     if (reset) {
       setFeedback([]); // Clear feedback list on reset
       setPage(1);
@@ -79,11 +103,29 @@ export default function FeedbackList() {
     try {
       const currentPage = reset ? 1 : page;
       console.log(`Fetching feedback for page ${currentPage}...`);
+
       const response = await axios.get(
-        `http://localhost:5148/api/feedback?page=${currentPage}&pageSize=5`
+        `http://localhost:5148/api/feedback?page=${currentPage}&pageSize=5`,
+        { withCredentials: true }
       );
+
+      const fetchedFeedback = response.data;
+
       console.log("Fetched feedback data:", response.data);
-      
+
+      // if (fetchedFeedback.length === 0) {
+      //   setHasMore(false); // No more feedback available
+      // } else {
+      //   // Append new feedback to the existing list
+      //   setFeedback((prevFeedback) =>
+      //     reset ? fetchedFeedback : [...prevFeedback, ...fetchedFeedback]
+      //   );
+      //   calculateStarDistribution(
+      //     reset ? fetchedFeedback : [...feedback, ...fetchedFeedback]
+      //   );
+      //   setPage((prevPage) => prevPage + 1); // Increment page number for next fetch
+      // }
+
       if (response.data.length === 0) {
         setHasMore(false); // No more feedback available
       } else {
@@ -117,12 +159,13 @@ export default function FeedbackList() {
   // Fetch initial feedback when the component mounts
   useEffect(() => {
     console.log("Triggering initial feedback fetch...");
-    fetchFeedback(true); // Fetch feedback on component load
+    fetchFeedbackPage(true); // Fetch feedback on component load
   }, []);
   
   // Handle feedback submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     console.log("Submitting feedback with:", {
       appointmentId,
       patientId,
@@ -135,7 +178,12 @@ export default function FeedbackList() {
       setError("Please select a star rating before submitting feedback.");
       return;
     }
-    
+
+    if (!comment.trim()) {
+      setError("Comment is required.");
+      return;
+    }
+
     if (!appointmentId || !patientId) {
       console.error("Missing appointmentId or patientId.");
       setError(
@@ -143,7 +191,13 @@ export default function FeedbackList() {
       );
       return;
     }
-    
+
+    // Check for duplicate feedback by appointmentId
+    if (submittedAppointments.includes(appointmentId)) {
+      setError("You have already submitted feedback for this appointment.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:5148/api/feedback",
@@ -156,8 +210,9 @@ export default function FeedbackList() {
       
       // Add the new feedback to the top of the list
       setFeedback((prevFeedback) => [response.data, ...prevFeedback]);
-      setComment(""); // Clear comment input
-      setRating(0); // Reset rating
+      setSubmittedAppointments((prev) => [...prev, appointmentId]); // Track reviewed appointments
+      setComment("");
+      setRating(0);
       calculateStarDistribution([response.data, ...feedback]); // Update star distribution
     } catch (err) {
       console.error("Failed to submit feedback:", err);
@@ -244,10 +299,11 @@ export default function FeedbackList() {
         </ul>
         {hasMore ? (
           <button
-            onClick={() => fetchFeedback(false)}
+            onClick={() => fetchFeedbackPage(false)} // Fetch next page
             className="mt-4 w-full bg-gray-300 text-black p-2 rounded hover:bg-gray-400"
+            disabled={loading} // Prevent multiple requests
           >
-            Show More Reviews
+            {loading ? "Loading..." : "Show More Reviews"}
           </button>
         ) : (
           <p className="text-center mt-4 text-gray-500">

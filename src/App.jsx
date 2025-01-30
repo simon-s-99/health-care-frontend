@@ -24,17 +24,16 @@ export default function App() {
   return (
     <AuthProvider>
       <TooltipProvider>
-        <Toaster />
         <div className="content">
           <Router>
 
-          <nav className="max-md:hidden">
-            <NavBar />
-          </nav>
-          <nav className="md:hidden">
-            <NavBarMobile />
-          </nav>
-          
+            <nav className="max-md:hidden">
+              <NavBar />
+            </nav>
+            <nav className="md:hidden">
+              <NavBarMobile />
+            </nav>
+
             <Routes>
               <Route path="/feedback" element={<FeedbackList />} />
               <Route path="/register" element={<Register />} />
@@ -48,11 +47,21 @@ export default function App() {
                   </RequireAuth>
                 }
               />
+              {/* Booking Pages for Patients & Admins */}
               <Route
-                path="/booking"
+                path="/booking/user"
                 element={
                   <RequireAuth allowedRoles={["User"]}>
                     <BookingsPage />
+                  </RequireAuth>
+                }
+              />
+
+              <Route
+                path="/booking/admin"
+                element={
+                  <RequireAuth allowedRoles={["Admin"]}>
+                    <BookingsPage isCaregiverView={true} />
                   </RequireAuth>
                 }
               />

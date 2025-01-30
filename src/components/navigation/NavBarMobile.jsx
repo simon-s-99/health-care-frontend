@@ -75,7 +75,7 @@ export default function NavBarMobile() {
 
                         <NavigationMenuItem>
                             <Button variant="ghost" className="rounded-xl" asChild>
-                                <NavLink className={"rounded-md"} to={isAdmin ? "/schedule" : "/booking"}>
+                                <NavLink className={"rounded-md"} to={isAdmin ? "/booking/admin" : "/booking/user"}>
                                     {isAdmin ? "Schedule" : "Booking"}
                                 </NavLink>
                             </Button>
