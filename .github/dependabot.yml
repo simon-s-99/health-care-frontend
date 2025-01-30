@@ -13,6 +13,9 @@ updates:
       dependencies:
         patterns:
           - "*"
+    ignore:
+      - dependency-name: "react-day-picker" # ignore since this breaks shadcn calendar component
+      - dependency-name: "tailwindcss" # ignore major upgrade to v4 since this breaks current postcss config
     reviewers:
       - "simon-s-99"
       - "Samuel-Loof"
